@@ -1,0 +1,27 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Functional.AspNetCore", "Codehard.Functional.AspNetCore/Codehard.Functional.AspNetCore.csproj", "{55B59340-363A-4E21-86B3-F9CA22040C81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional", "Codehard.Functional\Codehard.Functional.csproj", "{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55B59340-363A-4E21-86B3-F9CA22040C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B59340-363A-4E21-86B3-F9CA22040C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B59340-363A-4E21-86B3-F9CA22040C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B59340-363A-4E21-86B3-F9CA22040C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {47E1412D-E25B-4941-AB50-D584DE27C753}
+	EndGlobalSection
+EndGlobal

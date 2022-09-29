@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>1.0.0</Version>
+        <Description>A library contains common code related to functional programming in ASP.NET Core based on LanguageExt.</Description>
+        <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Codehard.Functional\Codehard.Functional.csproj" />
+    </ItemGroup>
+
+</Project>
