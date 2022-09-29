@@ -1,0 +1,30 @@
+name: Merge to main
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build Codehard.Functional.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+    - name: Publish Codehard.Functional To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: Codehard.Functional/Codehard.Functional.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    - name: Publish Codehard.Functional.AspNetCore To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: Codehard.Functional.AspNetCore/Codehard.Functional.AspNetCore.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
