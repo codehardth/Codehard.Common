@@ -9,7 +9,7 @@
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
         <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
