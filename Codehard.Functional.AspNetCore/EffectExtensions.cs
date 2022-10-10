@@ -3,74 +3,85 @@ namespace Codehard.Functional.AspNetCore;
 
 public static class EffectExtensions
 {
-    public static Eff<A> MapFailToOK<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.OK, _ => errorMessage);
+    public static Eff<A> MapFailToOK<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.OK, message);
 
     public static Eff<A> MapFailToOK<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.OK, messageFunc);
 
-    public static Eff<A> MapFailToCreated<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Created, _ => errorMessage);
+
+    public static Eff<A> MapFailToCreated<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Created, message);
 
     public static Eff<A> MapFailToCreated<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Created, messageFunc);
 
-    public static Eff<A> MapFailToAccepted<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Accepted, _ => errorMessage);
+
+    public static Eff<A> MapFailToAccepted<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Accepted, message);
 
     public static Eff<A> MapFailToAccepted<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Accepted, messageFunc);
 
-    public static Eff<A> MapFailToNoContent<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.NoContent, _ => errorMessage);
+
+    public static Eff<A> MapFailToNoContent<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.NoContent, message);
 
     public static Eff<A> MapFailToNoContent<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.NoContent, messageFunc);
 
-    public static Eff<A> MapFailToBadRequest<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.BadRequest, _ => errorMessage);
+
+    public static Eff<A> MapFailToBadRequest<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.BadRequest, message);
 
     public static Eff<A> MapFailToBadRequest<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.BadRequest, messageFunc);
 
-    public static Eff<A> MapFailToUnauthorized<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Unauthorized, _ => errorMessage);
+
+    public static Eff<A> MapFailToUnauthorized<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Unauthorized, message);
 
     public static Eff<A> MapFailToUnauthorized<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Unauthorized, messageFunc);
 
-    public static Eff<A> MapFailToForbidden<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Forbidden, _ => errorMessage);
+
+    public static Eff<A> MapFailToForbidden<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Forbidden, message);
 
     public static Eff<A> MapFailToForbidden<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Forbidden, messageFunc);
 
-    public static Eff<A> MapFailToNotFound<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.NotFound, _ => errorMessage);
+
+    public static Eff<A> MapFailToNotFound<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.NotFound, message);
 
     public static Eff<A> MapFailToNotFound<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.NotFound, messageFunc);
 
-    public static Eff<A> MapFailToConflict<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Conflict, _ => errorMessage);
+
+    public static Eff<A> MapFailToConflict<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Conflict, message);
 
     public static Eff<A> MapFailToConflict<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Conflict, messageFunc);
 
-    public static Eff<A> MapFailToUnprocessableEntity<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.UnprocessableEntity, _ => errorMessage);
+
+    public static Eff<A> MapFailToUnprocessableEntity<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.UnprocessableEntity, message);
 
     public static Eff<A> MapFailToUnprocessableEntity<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.UnprocessableEntity, messageFunc);
 
-    public static Eff<A> MapFailToLocked<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Locked, _ => errorMessage);
+
+    public static Eff<A> MapFailToLocked<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.Locked, message);
 
     public static Eff<A> MapFailToLocked<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.Locked, messageFunc);
 
-    public static Eff<A> MapFailToInternalServerError<A>(this Eff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.InternalServerError, _ => errorMessage);
+
+    public static Eff<A> MapFailToInternalServerError<A>(this Eff<A> ma, string message = "")
+        => ma.CustomError((int)HttpStatusCode.InternalServerError, message);
 
     public static Eff<A> MapFailToInternalServerError<A>(this Eff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.InternalServerError, messageFunc);
