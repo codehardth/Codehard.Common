@@ -3,6 +3,8 @@ namespace Codehard.Functional.AspNetCore;
 
 public static class AsyncEffectExtensions
 {
+    #region MapFail
+
     public static Aff<A> MapFailToOK<A>(this Aff<A> ma, string errorMessage = "")
         => ma.CustomError((int)HttpStatusCode.OK, errorMessage);
 
@@ -74,7 +76,11 @@ public static class AsyncEffectExtensions
 
     public static Aff<A> MapFailToInternalServerError<A>(this Aff<A> ma, Func<Error, string> messageFunc)
         => ma.CustomError((int)HttpStatusCode.InternalServerError, messageFunc);
-    
+
+    #endregion
+
+    #region Guard
+
     public static Aff<A> GuardWithHttpStatus<A>(
         this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, string message = "")
         => ma.Bind(a =>
@@ -82,126 +88,124 @@ public static class AsyncEffectExtensions
                     ? SuccessAff(a)
                     : FailAff<A>(Error.New((int)httpStatusCode, message)));
 
+    public static Aff<A> GuardWithHttpStatus<A>(
+        this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, Func<A, string> messageFunc)
+        => ma.Bind(a =>
+                predicate(a)
+                    ? SuccessAff(a)
+                    : FailAff<A>(Error.New((int)httpStatusCode, messageFunc(a))));
+
     public static Aff<A> GuardWithOK<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.OK, message);
+
+    public static Aff<A> GuardWithOK<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.OK, messageFunc);
 
     public static Aff<A> GuardWithCreated<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Created, message);
 
+    public static Aff<A> GuardWithCreated<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Created, messageFunc);
+
     public static Aff<A> GuardWithAccepted<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Accepted, message);
+
+    public static Aff<A> GuardWithAccepted<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Accepted, messageFunc);
 
     public static Aff<A> GuardWithNoContent<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NoContent, message);
 
+    public static Aff<A> GuardWithNoContent<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NoContent, messageFunc);
+
     public static Aff<A> GuardWithBadRequest<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.BadRequest, message);
+
+    public static Aff<A> GuardWithBadRequest<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.BadRequest, messageFunc);
 
     public static Aff<A> GuardWithUnauthorized<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Unauthorized, message);
 
+    public static Aff<A> GuardWithUnauthorized<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Unauthorized, messageFunc);
+
     public static Aff<A> GuardWithForbidden<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Forbidden, message);
+
+    public static Aff<A> GuardWithForbidden<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Forbidden, messageFunc);
 
     public static Aff<A> GuardWithNotFound<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NotFound, message);
 
+    public static Aff<A> GuardWithNotFound<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NotFound, messageFunc);
+
     public static Aff<A> GuardWithConflict<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Conflict, message);
+
+    public static Aff<A> GuardWithConflict<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Conflict, messageFunc);
 
     public static Aff<A> GuardWithUnprocessableEntity<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, message);
 
+    public static Aff<A> GuardWithUnprocessableEntity<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, messageFunc);
+
     public static Aff<A> GuardWithLocked<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, message);
+
+    public static Aff<A> GuardWithLocked<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, messageFunc);
 
     public static Aff<A> GuardWithInternalServerError<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.InternalServerError, message);
 
+    public static Aff<A> GuardWithInternalServerError<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.InternalServerError, messageFunc);
+
+    #endregion
+
     #region Aff<Option<A>>
 
     public static Aff<A> MapNoneToOK<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToOK(message));
-
-    public static Aff<A> MapNoneToOK<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToOK(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToOK(message));
 
     public static Aff<A> MapNoneToCreated<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToCreated(message));
-
-    public static Aff<A> MapNoneToCreated<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToCreated(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToCreated(message));
 
     public static Aff<A> MapNoneToAccepted<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToAccepted(message));
-
-    public static Aff<A> MapNoneToAccepted<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToAccepted(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToAccepted(message));
 
     public static Aff<A> MapNoneToNoContent<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToNoContent(message));
-
-    public static Aff<A> MapNoneToNoContent<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToNoContent(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToNoContent(message));
 
     public static Aff<A> MapNoneToBadRequest<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToBadRequest(message));
-
-    public static Aff<A> MapNoneToBadRequest<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToBadRequest(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToBadRequest(message));
 
     public static Aff<A> MapNoneToUnauthorized<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToUnauthorized(message));
-
-    public static Aff<A> MapNoneToUnauthorized<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToUnauthorized(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToUnauthorized(message));
 
     public static Aff<A> MapNoneToForbidden<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToForbidden(message));
-
-    public static Aff<A> MapNoneToForbidden<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToForbidden(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToForbidden(message));
 
     public static Aff<A> MapNoneToNotFound<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToNotFound(message));
-
-    public static Aff<A> MapNoneToNotFound<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToNotFound(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToNotFound(message));
 
     public static Aff<A> MapNoneToConflict<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToConflict(message));
-
-    public static Aff<A> MapNoneToConflict<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToConflict(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToConflict(message));
 
     public static Aff<A> MapNoneToUnprocessableEntity<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToUnprocessableEntity(message));
-
-    public static Aff<A> MapNoneToUnprocessableEntity<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToUnprocessableEntity(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToUnprocessableEntity(message));
 
     public static Aff<A> MapNoneToLocked<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToLocked(message));
-
-    public static Aff<A> MapNoneToLocked<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToLocked(errorMessageFunc));
-
+        => ma.Bind(opt => opt.ToAffWithFailToLocked(message));
 
     public static Aff<A> MapNoneToInternalServerError<A>(this Aff<Option<A>> ma, string message = "")
-        => ma.Bind(opt => opt.ToAff().MapFailToInternalServerError(message));
-
-    public static Aff<A> MapNoneToInternalServerError<A>(this Aff<Option<A>> ma, Func<Error, string> errorMessageFunc)
-        => ma.Bind(opt => opt.ToAff().MapFailToInternalServerError(errorMessageFunc));
+        => ma.Bind(opt => opt.ToAffWithFailToInternalServerError(message));
 
     #endregion
 }
