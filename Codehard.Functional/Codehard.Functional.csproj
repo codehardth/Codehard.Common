@@ -4,11 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>1.0.0</Version>
+        <Version>2.0.0</Version>
         <Description>A library contains common code related to functional programming based on LanguageExt.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+        <PackageReleaseNotes>Bug fixes with additional extensions for more use case.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
