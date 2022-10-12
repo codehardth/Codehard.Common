@@ -1,8 +1,16 @@
-namespace Codehard.Functional.AspNetCore;
+using LanguageExt.Common;
+
+namespace Codehard.Functional.Logger;
 
 public static class LoggerExtensions
 {
-    public static Unit Log(this ILogger logger, Error error)
+    /// <summary>
+    /// Log as error if an error contains exception, otherwise log information if there is a message within an error object.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    public static Unit Log(this ILogger? logger, Error error)
     {
         return error.Exception.Match(
             Some: ex => logger?.LogError(ex, error.Message),

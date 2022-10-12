@@ -1,4 +1,6 @@
-﻿namespace Codehard.Functional.AspNetCore;
+﻿using Codehard.Functional.Logger;
+
+namespace Codehard.Functional.AspNetCore;
 
 public static class ControllerExtensions
 {
