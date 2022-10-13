@@ -27,8 +27,10 @@ public static class ResponseExtensions
                     return
                         !success.IsCompletedSuccessfully
                             ? failure.ToAff()
-                                .Map(f => Error.New(string.Empty,
-                                    (Exception) new MassTransitFaultMessageException<TFail>(f.Message)))
+                                .Map(f =>
+                                    Error.New(
+                                        string.Empty,
+                                        (Exception) new MassTransitFaultMessageException<TFail>(f.Message)))
                                 .Bind(FailAff<TSucc>)
                             : success.ToAff().Map(s => s.Message);
                 });

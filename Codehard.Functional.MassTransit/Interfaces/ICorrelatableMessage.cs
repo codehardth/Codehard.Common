@@ -1,12 +1,10 @@
+using MassTransit;
+
 namespace Codehard.Functional.MassTransit.Interfaces;
 
 /// <summary>
 /// Interface for message that must be correlate-able.
 /// </summary>
-public interface ICorrelatableMessage
+public interface ICorrelatableMessage : CorrelatedBy<Guid>
 {
-    /// <summary>
-    /// Correlation Id for a message.
-    /// </summary>
-    public Guid CorrelationId { get; set; }
 }

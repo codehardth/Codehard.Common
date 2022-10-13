@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Codehard.Functional.Logger\Codehard.Functional.Logger.csproj" />
         <ProjectReference Include="..\Codehard.Functional\Codehard.Functional.csproj" />
     </ItemGroup>
 
