@@ -83,17 +83,11 @@ public static class AsyncEffectExtensions
 
     public static Aff<A> GuardWithHttpStatus<A>(
         this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, string message = "")
-        => ma.Bind(a =>
-                predicate(a)
-                    ? SuccessAff(a)
-                    : FailAff<A>(Error.New((int)httpStatusCode, message)));
+        => ma.Guard(predicate, Error.New((int)httpStatusCode, message));
 
     public static Aff<A> GuardWithHttpStatus<A>(
         this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, Func<A, string> messageFunc)
-        => ma.Bind(a =>
-                predicate(a)
-                    ? SuccessAff(a)
-                    : FailAff<A>(Error.New((int)httpStatusCode, messageFunc(a))));
+        => ma.Guard(predicate, a => Error.New((int)httpStatusCode, messageFunc(a)));
 
     public static Aff<A> GuardWithOK<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.OK, message);

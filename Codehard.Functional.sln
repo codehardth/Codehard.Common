@@ -1,11 +1,17 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Functional.AspNetCore", "Codehard.Functional.AspNetCore/Codehard.Functional.AspNetCore.csproj", "{55B59340-363A-4E21-86B3-F9CA22040C81}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33006.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Functional.AspNetCore", "Codehard.Functional.AspNetCore\Codehard.Functional.AspNetCore.csproj", "{55B59340-363A-4E21-86B3-F9CA22040C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional", "Codehard.Functional\Codehard.Functional.csproj", "{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Functional", "Codehard.Functional\Codehard.Functional.csproj", "{A1F09CED-DBF0-4B7B-BDBD-7BBD729ADEDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MassTransit", "Codehard.Functional.MassTransit\Codehard.Functional.MassTransit.csproj", "{513671A2-1170-4945-AAD8-CE3332BA004E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Logger", "Codehard.Functional.Logger\Codehard.Functional.Logger.csproj", "{B7D8E4C3-C8AC-44AB-9B44-EC85AB98E7BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Tests", "Codehard.Functional.Tests\Codehard.Functional.Tests.csproj", "{13C048DD-80EB-4A71-BB5F-79E3009A9881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +35,10 @@ Global
 		{B7D8E4C3-C8AC-44AB-9B44-EC85AB98E7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7D8E4C3-C8AC-44AB-9B44-EC85AB98E7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7D8E4C3-C8AC-44AB-9B44-EC85AB98E7BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C048DD-80EB-4A71-BB5F-79E3009A9881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C048DD-80EB-4A71-BB5F-79E3009A9881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C048DD-80EB-4A71-BB5F-79E3009A9881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C048DD-80EB-4A71-BB5F-79E3009A9881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

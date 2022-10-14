@@ -163,154 +163,162 @@ public static class TaskExtensions
 
     public static Aff<A> ToAffWithFailToInternalServerError<A>(this ValueTask<A> ma, Func<Error, string> errorMessageFunc)
         => ma.ToAff().MapFailToInternalServerError(errorMessageFunc);
-    
+
     #endregion
-    
+
 #nullable enable
-    
+
+    #region Task<A?>
+
     public static Aff<Option<A>> ToAffOptionWithFailToOK<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToOK(errorMessage);
+        => ma.ToAffOption().MapFailToOK(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToOK<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToOK(errorMessageFunc);
+        => ma.ToAffOption().MapFailToOK(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToCreated<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToCreated(errorMessage);
+        => ma.ToAffOption().MapFailToCreated(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToCreated<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToCreated(errorMessageFunc);
+        => ma.ToAffOption().MapFailToCreated(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToAccepted<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToAccepted(errorMessage);
+        => ma.ToAffOption().MapFailToAccepted(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToAccepted<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToAccepted(errorMessageFunc);
+        => ma.ToAffOption().MapFailToAccepted(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNoContent<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToNoContent(errorMessage);
+        => ma.ToAffOption().MapFailToNoContent(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNoContent<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToNoContent(errorMessageFunc);
+        => ma.ToAffOption().MapFailToNoContent(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToBadRequest<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToBadRequest(errorMessage);
+        => ma.ToAffOption().MapFailToBadRequest(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToBadRequest<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToBadRequest(errorMessageFunc);
+        => ma.ToAffOption().MapFailToBadRequest(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnauthorized<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToUnauthorized(errorMessage);
+        => ma.ToAffOption().MapFailToUnauthorized(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnauthorized<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToUnauthorized(errorMessageFunc);
+        => ma.ToAffOption().MapFailToUnauthorized(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToForbidden<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToForbidden(errorMessage);
+        => ma.ToAffOption().MapFailToForbidden(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToForbidden<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToForbidden(errorMessageFunc);
+        => ma.ToAffOption().MapFailToForbidden(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNotFound<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToNotFound(errorMessage);
+        => ma.ToAffOption().MapFailToNotFound(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNotFound<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToNotFound(errorMessageFunc);
+        => ma.ToAffOption().MapFailToNotFound(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToConflict<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToConflict(errorMessage);
+        => ma.ToAffOption().MapFailToConflict(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToConflict<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToConflict(errorMessageFunc);
+        => ma.ToAffOption().MapFailToConflict(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnprocessableEntity<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToUnprocessableEntity(errorMessage);
+        => ma.ToAffOption().MapFailToUnprocessableEntity(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnprocessableEntity<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToUnprocessableEntity(errorMessageFunc);
+        => ma.ToAffOption().MapFailToUnprocessableEntity(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToLocked<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToLocked(errorMessage);
+        => ma.ToAffOption().MapFailToLocked(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToLocked<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToLocked(errorMessageFunc);
+        => ma.ToAffOption().MapFailToLocked(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToInternalServerError<A>(this Task<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToInternalServerError(errorMessage);
+        => ma.ToAffOption().MapFailToInternalServerError(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToInternalServerError<A>(this Task<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToInternalServerError(errorMessageFunc);
-    
+        => ma.ToAffOption().MapFailToInternalServerError(errorMessageFunc);
+
+    #endregion
+
+    #region ValueTask<A?>
+
     public static Aff<Option<A>> ToAffOptionWithFailToOK<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToOK(errorMessage);
+        => ma.ToAffOption().MapFailToOK(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToOK<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToOK(errorMessageFunc);
+        => ma.ToAffOption().MapFailToOK(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToCreated<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToCreated(errorMessage);
+        => ma.ToAffOption().MapFailToCreated(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToCreated<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToCreated(errorMessageFunc);
+        => ma.ToAffOption().MapFailToCreated(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToAccepted<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToAccepted(errorMessage);
+        => ma.ToAffOption().MapFailToAccepted(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToAccepted<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToAccepted(errorMessageFunc);
+        => ma.ToAffOption().MapFailToAccepted(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNoContent<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToNoContent(errorMessage);
+        => ma.ToAffOption().MapFailToNoContent(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNoContent<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToNoContent(errorMessageFunc);
+        => ma.ToAffOption().MapFailToNoContent(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToBadRequest<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToBadRequest(errorMessage);
+        => ma.ToAffOption().MapFailToBadRequest(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToBadRequest<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToBadRequest(errorMessageFunc);
+        => ma.ToAffOption().MapFailToBadRequest(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnauthorized<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToUnauthorized(errorMessage);
+        => ma.ToAffOption().MapFailToUnauthorized(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnauthorized<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToUnauthorized(errorMessageFunc);
+        => ma.ToAffOption().MapFailToUnauthorized(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToForbidden<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToForbidden(errorMessage);
+        => ma.ToAffOption().MapFailToForbidden(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToForbidden<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToForbidden(errorMessageFunc);
+        => ma.ToAffOption().MapFailToForbidden(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNotFound<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToNotFound(errorMessage);
+        => ma.ToAffOption().MapFailToNotFound(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToNotFound<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToNotFound(errorMessageFunc);
+        => ma.ToAffOption().MapFailToNotFound(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToConflict<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToConflict(errorMessage);
+        => ma.ToAffOption().MapFailToConflict(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToConflict<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToConflict(errorMessageFunc);
+        => ma.ToAffOption().MapFailToConflict(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnprocessableEntity<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToUnprocessableEntity(errorMessage);
+        => ma.ToAffOption().MapFailToUnprocessableEntity(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToUnprocessableEntity<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToUnprocessableEntity(errorMessageFunc);
+        => ma.ToAffOption().MapFailToUnprocessableEntity(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToLocked<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToLocked(errorMessage);
+        => ma.ToAffOption().MapFailToLocked(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToLocked<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToLocked(errorMessageFunc);
+        => ma.ToAffOption().MapFailToLocked(errorMessageFunc);
 
     public static Aff<Option<A>> ToAffOptionWithFailToInternalServerError<A>(this ValueTask<A?> ma, string errorMessage = "")
-        => ma.Map(Optional).ToAff().MapFailToInternalServerError(errorMessage);
+        => ma.ToAffOption().MapFailToInternalServerError(errorMessage);
 
     public static Aff<Option<A>> ToAffOptionWithFailToInternalServerError<A>(this ValueTask<A?> ma, Func<Error, string> errorMessageFunc)
-        => ma.Map(Optional).ToAff().MapFailToInternalServerError(errorMessageFunc);
-    
+        => ma.ToAffOption().MapFailToInternalServerError(errorMessageFunc);
+
+    #endregion
+
 #nullable disable
 }
