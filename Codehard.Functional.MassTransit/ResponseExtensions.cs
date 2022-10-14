@@ -6,18 +6,17 @@ using MassTransit;
 namespace Codehard.Functional.MassTransit;
 
 /// <summary>
-/// Masstransit 
+/// Masstransit <see cref="Response{T1, T2}"/> extensions
 /// </summary>
 public static class ResponseExtensions
 {
     /// <summary>
     /// Run request client as an async effect.
     /// </summary>
-    /// <param name="response"></param>
     /// <typeparam name="TSucc">Success case</typeparam>
     /// <typeparam name="TFail">Failure case</typeparam>
     /// <returns>
-    /// Returns an instance of <see cref="TSucc"/> if the call is success,
+    /// An instance of <see cref="TSucc"/> if the call is success,
     /// otherwise an error with <see cref="MassTransitFaultMessageException{T}"/> of <see cref="TFail"/>.
     /// </returns>
     public static Aff<TSucc> ToAff<TSucc, TFail>(this Task<Response<TSucc, TFail>> response)
