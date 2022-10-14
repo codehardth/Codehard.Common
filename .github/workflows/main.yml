@@ -40,3 +40,8 @@ jobs:
       with:
         PROJECT_FILE_PATH: Codehard.Functional.MassTransit/Codehard.Functional.MassTransit.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    - name: Publish Codehard.Functional.FSharp To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+        PROJECT_FILE_PATH: Codehard.Functional.FSharp/Codehard.Functional.FSharp.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
