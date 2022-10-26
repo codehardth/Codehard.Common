@@ -18,6 +18,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build Codehard.Functional.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+    - Name: Unit Test
+      run: dotnet test Codehard.Functional.sln --no-restore --verbosity normal
     - name: Publish Codehard.Functional To Nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
