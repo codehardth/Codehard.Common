@@ -20,7 +20,7 @@ public class AffOptionPreludeTests
     public async Task WhenCreateAffOptionOnNullString_ShouldReturnedAffOfOption()
     {
         // Act
-        var aff = AffOption(() => ValueTask.FromResult(default(string)));
+        var aff = AffOption(async () => await Task.FromResult(default(string)));
         var fin = await aff.Run();
 
         // Assert
@@ -44,7 +44,7 @@ public class AffOptionPreludeTests
     public async Task WhenCreateAffOptionOnInstance_ShouldReturnedAffOfOption()
     {
         // Act
-        var aff = AffOption(() => ValueTask.FromResult((string?)"1"));
+        var aff = AffOption(async () => await Task.FromResult((string?)"1"));
         var fin = await aff.Run();
 
         // Assert
