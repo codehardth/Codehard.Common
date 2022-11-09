@@ -4,11 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.1.0</Version>
+        <Version>2.2.0</Version>
         <Description>A library contains common code related to functional programming based on LanguageExt.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Additional extensions for more use case.</PackageReleaseNotes>
+        <PackageReleaseNotes>Remove ambiguous functions in AffOption.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
