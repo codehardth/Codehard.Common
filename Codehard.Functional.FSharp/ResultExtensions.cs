@@ -11,7 +11,7 @@ namespace Codehard.Functional.FSharp
     public static class ResultExtensions
     {
         /// <summary>
-        /// Conver F# Result to Fin
+        /// Convert F# Result to Fin
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TError"></typeparam>
@@ -29,7 +29,7 @@ namespace Codehard.Functional.FSharp
         }
 
         /// <summary>
-        /// Conver F# Result to Aff
+        /// Convert F# Result to Aff
         /// </summary>
         public static Aff<T> ToAff<T, TError>(
             this FSharpResult<T, TError> result,
@@ -42,7 +42,7 @@ namespace Codehard.Functional.FSharp
         }
 
         /// <summary>
-        /// Conver F# Result to Eff
+        /// Convert F# Result to Eff
         /// </summary>
         public static Eff<T> ToEff<T, TError>(
             this FSharpResult<T, TError> result,

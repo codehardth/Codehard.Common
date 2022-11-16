@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.0.1</Version>
-    <Description>A library contains common code related to functional programming in F# based on LanguageExt.</Description>
+    <Version>2.2.0</Version>
+    <Description>A library contains common code for convert F# types to LanguageExt types.</Description>
     <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
     <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="6.0.6" />
+    <PackageReference Include="FSharp.Core" Version="6.0.7" />
     <PackageReference Include="LanguageExt.Core" Version="4.2.9" />
   </ItemGroup>
 
