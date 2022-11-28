@@ -16,4 +16,4 @@ module ResultType =
         | Error1 msg ->
             LanguageExt.Common.Error.New msg
         | Error2 code ->
-            LanguageExt.Common.Error.New(code, "Something went wrong")
+            LanguageExt.Common.Error.New (code, "Something went wrong")
