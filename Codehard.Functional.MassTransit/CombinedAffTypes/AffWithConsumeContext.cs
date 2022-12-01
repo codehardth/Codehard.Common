@@ -59,8 +59,7 @@ namespace Codehard.Functional.MassTransit.CombinedAffTypes
             ILogger? logger = default)
             where TSuccResp : class, ICorrelatableMessage
         {
-            var @this = this;
-            var correlationId = @this.consumeContext.CorrelationId;
+            var correlationId = this.consumeContext.CorrelationId;
 
             return RunAndResponseAsync<TSuccResp, IFaultMessage>(
                 err => new

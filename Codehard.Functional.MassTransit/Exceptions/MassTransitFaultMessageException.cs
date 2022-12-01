@@ -6,6 +6,7 @@ namespace Codehard.Functional.MassTransit.Exceptions;
 /// Custom exception that contains failure message from a request via MassTransit's Request Client
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[Serializable]
 public class MassTransitFaultMessageException<T> : Exception
     where T : IFaultMessage
 {
