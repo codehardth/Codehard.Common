@@ -21,6 +21,10 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "CodeHard.Functional.FSharp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Functional.FSharp.Tests", "Codehard.Functional.FSharp.Tests\Codehard.Functional.FSharp.Tests.csproj", "{E714F204-9ACA-4DA5-A85C-454DF1B69271}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Masstransit.Tests", "Codehard.Functional.Masstransit.Tests\Codehard.Functional.Masstransit.Tests.csproj", "{19B29CCF-C553-47C7-9AFA-663BB474249E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,11 +67,22 @@ Global
 		{7AE8A558-899A-4301-BDFA-768C3544C2AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AE8A558-899A-4301-BDFA-768C3544C2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AE8A558-899A-4301-BDFA-768C3544C2AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47E1412D-E25B-4941-AB50-D584DE27C753}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E714F204-9ACA-4DA5-A85C-454DF1B69271} = {457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}
+		{F7B48571-5C78-45AB-A3FD-292043A35692} = {457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}
+		{7AE8A558-899A-4301-BDFA-768C3544C2AF} = {457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}
+		{13C048DD-80EB-4A71-BB5F-79E3009A9881} = {457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}
+		{19B29CCF-C553-47C7-9AFA-663BB474249E} = {457EA8D1-5AFA-4FFE-9881-141E3FD0D82C}
 	EndGlobalSection
 EndGlobal
