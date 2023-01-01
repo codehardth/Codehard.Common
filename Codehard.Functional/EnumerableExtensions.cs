@@ -118,4 +118,17 @@ public static class EnumerableExtensions
     {
         return source == null || !source.Any();
     }
+
+    /// <summary>
+    /// If sequence has no element, returns None instead of true.
+    /// </summary>
+    public static Option<bool> AllIfAny<TSource>(
+        this IEnumerable<TSource> source,
+        Func<TSource, bool> predicate)
+    {
+        return
+            source.Any()
+                ? Some(source.All(predicate))
+                : None;
+    }
 }
