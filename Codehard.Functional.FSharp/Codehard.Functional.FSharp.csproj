@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="6.0.7" />
-    <PackageReference Include="LanguageExt.Core" Version="4.2.9" />
+    <PackageReference Include="LanguageExt.Core" Version="4.4.0" />
   </ItemGroup>
 
 </Project>

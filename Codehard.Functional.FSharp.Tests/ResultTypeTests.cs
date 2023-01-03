@@ -30,7 +30,7 @@ namespace Codehard.Functional.FSharp.Tests
             var fin = fSharpResult.ToFin(ResultType.mapError);
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => fin.ThrowIfFail());
         }
         
@@ -59,7 +59,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -88,7 +88,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = await aff.Run();
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -117,7 +117,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = await aff.Run();
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -146,7 +146,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -175,7 +175,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = await eff.Run();
 
             // Assert
-            Assert.Throws<ErrorException>(
+            Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
         }
     }
