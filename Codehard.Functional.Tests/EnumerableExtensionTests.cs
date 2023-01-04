@@ -137,4 +137,43 @@ public class EnumerableExtensionTests
         // Assert
         Assert.Equal(1, item);
     }
+    
+    [Fact]
+    public void WhenRunAllIfAnyFromListContainSingleItem_ShouldReturnSomeOfTrue()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.AllIfAny(i => i > 0);
+
+        // Assert
+        Assert.Equal(Some(true), res);
+    }
+    
+    [Fact]
+    public void WhenRunAllIfAnyWithFalsePredicateFromListContainSingleItem_ShouldReturnSomeOfFalse()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.AllIfAny(i => i > 1);
+
+        // Assert
+        Assert.Equal(Some(false), res);
+    }
+    
+    [Fact]
+    public void WhenRunAllIfAnyFromListContainNoItem_ShouldReturnNone()
+    {
+        // Arrange
+        var list = new int[] { };
+
+        // Act
+        var res = list.AllIfAny(i => i > 1);
+
+        // Assert
+        Assert.Equal(None, res);
+    }
 }
