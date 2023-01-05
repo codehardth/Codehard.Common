@@ -3,7 +3,7 @@ namespace Codehard.Functional.Logger;
 public static class AffExtensions
 {
     /// <summary>
-    /// Wrap an async effect inside logger which is execute before and after the given async effect. 
+    /// Wrap an async effect inside a logger which is execute before and after the given async effect. 
     /// </summary>
     /// <param name="aff"></param>
     /// <param name="logger"></param>
@@ -22,7 +22,7 @@ public static class AffExtensions
     }
 
     /// <summary>
-    /// Wrap an async effect inside logger which is execute before and after the given async effect.
+    /// Wrap an async effect inside a logger which is execute before and after the given async effect.
     /// </summary>
     /// <param name="aff"></param>
     /// <param name="logger"></param>
@@ -49,18 +49,18 @@ public static class AffExtensions
     }
 
     /// <summary>
-    /// Wrap an effect inside logger which is execute before and after the given effect.
+    /// Wrap an effect inside a logger which is execute before and after the given effect.
     /// </summary>
-    /// <param name="aff"></param>
+    /// <param name="eff"></param>
     /// <param name="logger"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static Eff<T> WithLog<T>(
-        this Eff<T> aff,
+        this Eff<T> eff,
         ILogger logger)
     {
         return WithLog(
-            aff,
+            eff,
             logger,
             LogLevel.Information,
             Some("Executing"),
@@ -68,9 +68,9 @@ public static class AffExtensions
     }
     
     /// <summary>
-    /// Wrap an effect inside logger which is execute before and after the given effect.
+    /// Wrap an effect inside a logger which is execute before and after the given effect.
     /// </summary>
-    /// <param name="aff"></param>
+    /// <param name="eff"></param>
     /// <param name="logger"></param>
     /// <param name="logLevel"></param>
     /// <param name="executingMessage"></param>
@@ -78,7 +78,7 @@ public static class AffExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static Eff<T> WithLog<T>(
-        this Eff<T> aff,
+        this Eff<T> eff,
         ILogger logger,
         LogLevel logLevel,
         Option<string> executingMessage = default,
@@ -88,7 +88,7 @@ public static class AffExtensions
             from executingLog in
                 Eff(() => executingMessage.IfSome(t => logger.Log(logLevel, t)))
             from res in
-                aff
+                eff
             from executedLog in
                 Eff(() => executedMessage.IfSome(f => logger.Log(logLevel, f(res))))
             select res;
