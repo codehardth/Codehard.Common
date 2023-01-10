@@ -1,5 +1,3 @@
-using LanguageExt.SomeHelp;
-
 namespace Codehard.Functional;
 
 public static class EnumerableExtensions
@@ -131,4 +129,35 @@ public static class EnumerableExtensions
                 ? Some(source.All(predicate))
                 : None;
     }
+    
+    public static IEnumerable<T> WhereIfTrue<T>(
+        this IEnumerable<T> source,
+        bool condition,
+        Func<T, bool> ifTrue,
+        Func<T, bool>? ifFalse = default)
+        => condition 
+            ? source.Where(ifTrue) 
+            : ifFalse != null ? source.Where(ifFalse) : source;
+    
+    public static IEnumerable<T1> WhereOptional<T1, T2>(
+        this IEnumerable<T1> source,
+        Option<T2> flagOpt,
+        Func<T2, Func<T1, bool>> predicateConstructor)
+        => flagOpt.Match(
+            Some: val => source.Where(predicateConstructor(val)),
+            None: source);
+    
+    public static IEnumerable<T> WhereOptional<T>(
+        this IEnumerable<T> source,
+        Option<Func<T, bool>> predicateOpt)
+        => predicateOpt.Match(
+            Some: source.Where,
+            None: source);
+
+    public static IEnumerable<T> SkipOptional<T>(
+        this IEnumerable<T> source,
+        Option<int> countOpt)
+        => countOpt.Match(
+            Some: source.Skip,
+            None: source);
 }

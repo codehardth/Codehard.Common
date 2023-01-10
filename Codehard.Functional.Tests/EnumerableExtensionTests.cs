@@ -168,12 +168,101 @@ public class EnumerableExtensionTests
     public void WhenRunAllIfAnyFromListContainNoItem_ShouldReturnNone()
     {
         // Arrange
-        var list = new int[] { };
+        var list = new int [] { };
 
         // Act
         var res = list.AllIfAny(i => i > 1);
 
         // Assert
         Assert.Equal(None, res);
+    }
+    
+    [Fact]
+    public void WhenRunWhereIfTrueFromListWithTrueCondition_ShouldReturnNonEmptyList()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.WhereIfTrue(
+            true,
+            n => n == 1);
+
+        // Assert
+        Assert.Single(res);
+        Assert.Equal(1, res.First());
+    }
+    
+    [Fact]
+    public void WhenRunWhereIfTrueFromListWithFalseCondition_ShouldReturnEmptyList()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.WhereIfTrue(
+            false,
+            n => n == 1,
+            n => n == 0);
+
+        // Assert
+        Assert.Empty(res);
+    }
+    
+    [Fact]
+    public void WhenRunWhereOptionalFromListWithSomePredicate_ShouldReturnNonEmptyList()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.WhereOptional(
+            Some<Func<int, bool>>(n => n == 1));
+
+        // Assert
+        Assert.Single(res);
+        Assert.Equal(1, res.First());
+    }
+    
+    [Fact]
+    public void WhenRunWhereOptionalFromListWithNonePredicate_ShouldNoneEmptyList()
+    {
+        // Arrange
+        var list = new [] { 1 };
+
+        // Act
+        var res = list.WhereOptional(None);
+
+        // Assert
+        Assert.Single(res);
+        Assert.Equal(1, res.First());
+    }
+    
+    [Fact]
+    public void WhenRunSkipOptionalFromListWithSomeCount_ShouldReturnSmallerList()
+    {
+        // Arrange
+        var list = new [] { 1, 2 };
+
+        // Act
+        var res = list.SkipOptional(Some(1));
+
+        // Assert
+        Assert.Single(res);
+        Assert.Equal(2, res.First());
+    }
+    
+    [Fact]
+    public void WhenRunSkipOptionalFromListWithNone_ShouldReturnUnchangedList()
+    {
+        // Arrange
+        var list = new [] { 1, 2 };
+
+        // Act
+        var res = list.SkipOptional(None);
+
+        // Assert
+        Assert.Equal(2, res.Count());
+        Assert.Equal(1, res.First());
     }
 }
