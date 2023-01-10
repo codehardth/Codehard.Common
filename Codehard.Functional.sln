@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{457EA8D1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Masstransit.Tests", "Codehard.Functional.Masstransit.Tests\Codehard.Functional.Masstransit.Tests.csproj", "{19B29CCF-C553-47C7-9AFA-663BB474249E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.EntityFramework", "Codehard.Functional.EntityFramework\Codehard.Functional.EntityFramework.csproj", "{2D86411C-CA12-4FB9-B537-F23BE3F05DE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.EntityFramework", "Codehard.EntityFramework\Codehard.EntityFramework.csproj", "{0F1E35D8-CE0B-4F43-B193-3AEF46188081}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,14 @@ Global
 		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19B29CCF-C553-47C7-9AFA-663BB474249E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D86411C-CA12-4FB9-B537-F23BE3F05DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D86411C-CA12-4FB9-B537-F23BE3F05DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D86411C-CA12-4FB9-B537-F23BE3F05DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D86411C-CA12-4FB9-B537-F23BE3F05DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1E35D8-CE0B-4F43-B193-3AEF46188081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1E35D8-CE0B-4F43-B193-3AEF46188081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1E35D8-CE0B-4F43-B193-3AEF46188081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1E35D8-CE0B-4F43-B193-3AEF46188081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
