@@ -5,9 +5,26 @@ namespace Codehard.Functional.MassTransit.Exceptions;
 /// <summary>
 /// Custom exception that contains failure message from a request via MassTransit's Request Client
 /// </summary>
+[Serializable]
+public abstract class MassTransitFaultMessageException : Exception
+{
+    /// <summary>
+    /// Correlation Id for fault message.
+    /// </summary>
+    public abstract Guid CorrelationId { get; }
+
+    /// <summary>
+    /// A reason for fault message, may be null.
+    /// </summary>
+    public abstract string? Reason { get; }
+}
+
+/// <summary>
+/// Custom exception that contains failure message from a request via MassTransit's Request Client, with error object.
+/// </summary>
 /// <typeparam name="T"></typeparam>
 [Serializable]
-public class MassTransitFaultMessageException<T> : Exception
+public sealed class MassTransitFaultMessageException<T> : MassTransitFaultMessageException
     where T : IFaultMessage
 {
     /// <summary>
@@ -19,18 +36,14 @@ public class MassTransitFaultMessageException<T> : Exception
     /// ctor
     /// </summary>
     /// <param name="object"></param>
-    public MassTransitFaultMessageException(T @object)
+    internal MassTransitFaultMessageException(T @object)
     {
         this.Object = @object;
     }
 
-    /// <summary>
-    /// Correlation Id for fault message.
-    /// </summary>
-    public Guid CorrelationId => this.Object.CorrelationId;
+    /// <inheritdoc/>
+    public override Guid CorrelationId => this.Object.CorrelationId;
 
-    /// <summary>
-    /// A reason for fault message, may be null.
-    /// </summary>
-    public string? Reason => this.Object.Reason;
+    /// <inheritdoc/>
+    public override string? Reason => this.Object.Reason;
 }

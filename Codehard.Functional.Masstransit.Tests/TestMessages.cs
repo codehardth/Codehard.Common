@@ -4,7 +4,9 @@ namespace Codehard.Functional.Masstransit.Tests;
 
 public class PingMessage : ICorrelatableMessage
 {
-    public Guid CorrelationId { get; }
+    public bool ShouldSuccess { get; init; }
+
+    public Guid CorrelationId { get; init; }
 }
 
 public class PongMessage : ICorrelatableMessage
