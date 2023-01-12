@@ -1,4 +1,6 @@
-﻿namespace Codehard.Functional;
+﻿using LanguageExt.Common;
+
+namespace Codehard.Functional;
 
 public static class Prelude
 {
@@ -27,9 +29,17 @@ public static class Prelude
     /// </summary>
     /// <param name="affs"></param>
     /// <returns></returns>
-    public static Aff<Unit> RunParallel<A>(params Aff<A>[] affs)
+    public static Aff<Unit> IterParallel<A>(params Aff<A>[] affs)
     {
         return Aff(async () =>
-            await Task.WhenAll(affs.Map(aff => aff.Run().AsTask())).ToUnit());
+                await Task.WhenAll(affs.Map(aff => aff.Run().AsTask())))
+            .Bind(fins =>
+                fins.Any(f => f.IsFail)
+                    ? FailAff<Unit>(
+                        Error.Many(
+                            fins.Filter(f => f.IsFail)
+                                .Match(Succ: _ => Error.New(string.Empty), Fail: err => err)
+                                .ToArray()))
+                    : unitAff);
     }
 }
