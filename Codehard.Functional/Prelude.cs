@@ -21,4 +21,15 @@ public static class Prelude
         return LanguageExt.Aff<Option<A>>
             .Effect(async () => Optional(await f()));
     }
+
+    /// <summary>
+    /// Run the effects in parallel, wait for them all to finish, then discard all the results into a single unit
+    /// </summary>
+    /// <param name="affs"></param>
+    /// <returns></returns>
+    public static Aff<Unit> RunParallel<A>(params Aff<A>[] affs)
+    {
+        return Aff(async () =>
+            await Task.WhenAll(affs.Map(aff => aff.Run().AsTask())).ToUnit());
+    }
 }
