@@ -7,6 +7,9 @@ module ResultType =
 
     let getOkResult () : Result<int, Error> =
         Ok 0
+        
+    let getUnitOkResult () : Result<unit, Error> =
+        Ok ()
 
     let getErrorResult () : Result<int, Error> =
         Result.Error (Error1 "Something went wrong")

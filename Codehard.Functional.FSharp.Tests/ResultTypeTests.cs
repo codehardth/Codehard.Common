@@ -1,4 +1,5 @@
 using CodeHard.Function.FSharp.Tests.Types;
+using LanguageExt;
 using LanguageExt.Common;
 using static Codehard.Functional.FSharp.Prelude;
 
@@ -177,6 +178,20 @@ namespace Codehard.Functional.FSharp.Tests
             // Assert
             Assert.Throws<ExpectedException>(
                 () => result.ThrowIfFail());
+        }
+        
+        [Fact]
+        public async Task WhenWrapTaskOfUnitOkResultInAff_ShouldRunToSuccess()
+        {
+            // Act
+            var eff = Aff(
+                () => Task.FromResult(ResultType.getUnitOkResult()),
+                ResultType.mapError);
+            
+            var result = await eff.Run();
+            
+            // Assert
+            Assert.IsType<Unit>(result.ThrowIfFail());
         }
     }
 }
