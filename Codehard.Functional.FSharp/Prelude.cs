@@ -2,6 +2,7 @@
 using LanguageExt.Common;
 using Microsoft.FSharp.Core;
 using static LanguageExt.Prelude;
+using Unit = LanguageExt.Unit;
 
 namespace Codehard.Functional.FSharp;
 
@@ -21,6 +22,22 @@ public static class Prelude
                     result.IsError
                         ? FailAff<T>(errorMapper(result.ErrorValue))
                         : SuccessAff(result.ResultValue));
+    }
+    
+    /// <summary>
+    /// Wrap execution that returns Task of F# Unit in Aff
+    /// </summary>
+    public static Aff<Unit> Aff<TError>(
+        Func<Task<FSharpResult<Microsoft.FSharp.Core.Unit, TError>>> resultTaskF,
+        Func<TError, Error> errorMapper)
+    {
+        return
+            LanguageExt.Aff<FSharpResult<Microsoft.FSharp.Core.Unit, TError>>
+                .Effect(async () => await resultTaskF())
+                .Bind(result =>
+                    result.IsError
+                        ? FailAff<Unit>(errorMapper(result.ErrorValue))
+                        : unitAff);
     }
 
     /// <summary>

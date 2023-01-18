@@ -42,4 +42,18 @@ public static class Prelude
                                 .ToArray()))
                     : unitAff);
     }
+    
+    /// <summary>
+    /// Wrap Task of no returned result in Aff&lt;Unit&gt;
+    /// </summary>
+    public static Aff<Unit> AffUnit(Func<ValueTask> f)
+    {
+        return LanguageExt.Aff<Unit>
+            .Effect(async () =>
+            {
+                await f();
+
+                return unit;
+            });
+    }
 }

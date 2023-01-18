@@ -57,11 +57,6 @@ namespace Codehard.Functional.FSharp
         /// <summary>
         /// Convert Task of F# Result to Aff
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TError"></typeparam>
-        /// <param name="resultTask"></param>
-        /// <param name="errorMapper">Function to map <typeparamref name="TError"/> to <see cref="Error"/></param>
-        /// <returns></returns>
         public static Aff<T> ToAff<T, TError>(
             this Task<FSharpResult<T, TError>> resultTask,
             Func<TError, Error> errorMapper)
