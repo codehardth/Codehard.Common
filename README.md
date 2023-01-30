@@ -1,4 +1,6 @@
-# Codehard.Functional
-[![nuget](https://img.shields.io/nuget/v/Codehard.Functional.svg)](https://www.nuget.org/packages/Codehard.Functional/)
+# Codehard.Common
 
-A library contains common code related to functional programming based on LanguageExt.
+A repository contains common code for all Codehard projects.
+
+### Available Projects
+- [Codehard Functional](https://github.com/codehardth/Codehard.Functional/tree/main/src/Codehard.Functional) - A library contains common code related to functional programming based on LanguageExt.
