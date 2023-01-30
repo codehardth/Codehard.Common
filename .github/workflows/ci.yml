@@ -1,0 +1,26 @@
+name: Continuous Integration
+
+on:
+  push:
+
+jobs:
+  build-and-test-functional:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./src/Codehard.Functional
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Install dependencies
+      working-directory: ${{env.working-directory}}
+      run: dotnet restore
+    - name: Build
+      working-directory: ${{env.working-directory}}
+      run: dotnet build Codehard.Functional.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+    - name: Unit Test
+      working-directory: ${{env.working-directory}}
+      run: dotnet test Codehard.Functional.sln --no-restore --verbosity normal
