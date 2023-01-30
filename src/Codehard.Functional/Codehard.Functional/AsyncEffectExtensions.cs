@@ -94,7 +94,7 @@ public static class AsyncEffectExtensions
                     : FailAff<(A, B, C)>(
                         errorMsgFunc(abc.Item1, abc.Item2, abc.Item3)));
 
-    public static Aff<A> GuardNotNone<A>(this Aff<Option<A>> ma, Error error = default)
+    public static Aff<A> GuardNotNone<A>(this Aff<Option<A>> ma, Error? error = default)
         => ma.Bind(a => a.ToAff().MapFail(err => error == default ? err : error));
 
     #endregion
