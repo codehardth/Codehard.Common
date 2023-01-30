@@ -38,7 +38,10 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
 
     public T this[int index] => this.source[index];
 
-    public static IPaginatedQuery<T> Create(IQueryable<T> query, int page, int size)
+    public static IPaginatedQuery<T> Create(
+        IQueryable<T> query,
+        int page,
+        int size)
     {
         var count = query.Count();
         var items = query.Skip(size * (page - 1)).Take(size).ToImmutableList();
@@ -46,12 +49,19 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
         return new PaginatedQuery<T>(items, count, page, size);
     }
 
-    public static IPaginatedQuery<T> Create(IEnumerable<T> source, int count, int page, int size)
+    public static IPaginatedQuery<T> Create(
+        IEnumerable<T> source,
+        int count,
+        int page,
+        int size)
     {
         return new PaginatedQuery<T>(source.ToImmutableArray(), count, page, size);
     }
 
-    public static async Task<IPaginatedQuery<T>> CreateAsync(IQueryable<T> query, int page, int size,
+    public static async Task<IPaginatedQuery<T>> CreateAsync(
+        IQueryable<T> query,
+        int page,
+        int size,
         CancellationToken cancellationToken = default)
     {
         var count = await query.CountAsync(cancellationToken);
