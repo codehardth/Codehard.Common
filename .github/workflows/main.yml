@@ -1,4 +1,4 @@
-name: Merge to main
+name: Package Publish
 
 on:
   push:
@@ -7,37 +7,30 @@ on:
 jobs:
   publish-functional:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./src/Codehard.Functional
 
     steps:
     - name: Publish Codehard.Functional To Nuget
-      working-directory: ${{env.working-directory}}
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-          PROJECT_FILE_PATH: Codehard.Functional/Codehard.Functional.csproj
+          PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional/Codehard.Functional.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
     - name: Publish Codehard.Functional.AspNetCore To Nuget
-      working-directory: ${{env.working-directory}}
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-          PROJECT_FILE_PATH: Codehard.Functional.AspNetCore/Codehard.Functional.AspNetCore.csproj
+          PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.AspNetCore/Codehard.Functional.AspNetCore.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
     - name: Publish Codehard.Functional.Logger To Nuget
-      working-directory: ${{env.working-directory}}
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-        PROJECT_FILE_PATH: Codehard.Functional.Logger/Codehard.Functional.Logger.csproj
+        PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.Logger/Codehard.Functional.Logger.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
     - name: Publish Codehard.Functional.MassTransit To Nuget
-      working-directory: ${{env.working-directory}}
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-        PROJECT_FILE_PATH: Codehard.Functional.MassTransit/Codehard.Functional.MassTransit.csproj
+        PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.MassTransit/Codehard.Functional.MassTransit.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
     - name: Publish Codehard.Functional.FSharp To Nuget
-      working-directory: ${{env.working-directory}}
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-        PROJECT_FILE_PATH: Codehard.Functional.FSharp/Codehard.Functional.FSharp.csproj
+        PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.FSharp/Codehard.Functional.FSharp.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
