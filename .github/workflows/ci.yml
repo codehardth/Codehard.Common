@@ -45,3 +45,24 @@ jobs:
     - name: Unit Test
       working-directory: ${{env.working-directory}}
       run: dotnet test Codehard.Common.sln --no-restore --verbosity normal
+
+  build-and-test-infra:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./src/Codehard.Infrastructure
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Install dependencies
+      working-directory: ${{env.working-directory}}
+      run: dotnet restore
+    - name: Build
+      working-directory: ${{env.working-directory}}
+      run: dotnet build Codehard.Infrastructure.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+    - name: Unit Test
+      working-directory: ${{env.working-directory}}
+      run: dotnet test Codehard.Infrastructure.sln --no-restore --verbosity normal

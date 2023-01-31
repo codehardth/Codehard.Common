@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - name: Publish Codehard.Functional To Nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
@@ -39,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - name: Publish Codehard.Common To Nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
@@ -48,4 +50,20 @@ jobs:
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
           PROJECT_FILE_PATH: src/Codehard.Common/Codehard.Common.AspNetCore/Codehard.Common.AspNetCore.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+  publish-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish Codehard.Infrastructure.EntityFramework To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    - name: Publish Codehard.Infrastructure.EntityFramework.Parser To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework.Parser.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
