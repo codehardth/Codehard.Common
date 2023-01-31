@@ -2,7 +2,7 @@ using Codehard.Common.DomainModel.Extensions;
 
 namespace Codehard.Common.DomainModel;
 
-public abstract record Entity<T>
+public abstract class Entity<T>
     : IEntity<T> where T : struct
 {
     private readonly Action<object, string> lazyLoader;
