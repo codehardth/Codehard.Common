@@ -3,6 +3,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codehard.Common", "Codehard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.AspNetCore", "Codehard.Common.AspNetCore\Codehard.Common.AspNetCore.csproj", "{51B8CD82-584A-4E6D-9E65-5F6A2DD4B7A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.DomainModel", "Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj", "{5BADE5A9-D2A5-4BC5-BC0B-7BC3C9FE5F63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{51B8CD82-584A-4E6D-9E65-5F6A2DD4B7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51B8CD82-584A-4E6D-9E65-5F6A2DD4B7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51B8CD82-584A-4E6D-9E65-5F6A2DD4B7A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BADE5A9-D2A5-4BC5-BC0B-7BC3C9FE5F63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BADE5A9-D2A5-4BC5-BC0B-7BC3C9FE5F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BADE5A9-D2A5-4BC5-BC0B-7BC3C9FE5F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BADE5A9-D2A5-4BC5-BC0B-7BC3C9FE5F63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
