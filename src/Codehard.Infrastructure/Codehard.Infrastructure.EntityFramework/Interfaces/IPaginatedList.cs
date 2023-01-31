@@ -1,6 +1,6 @@
 namespace Codehard.Infrastructure.EntityFramework.Interfaces;
 
-public interface IPaginatedQuery<out T> : IReadOnlyList<T>
+public interface IPaginatedList<out T> : IReadOnlyList<T>
 {
     int CurrentPage { get; }
 
