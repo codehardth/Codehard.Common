@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Codehard.Common.Asp.Middlewares;
+namespace Codehard.Common.AspNetCore.Middlewares;
 
 public class RequestResponseLoggingMiddleware
 {

@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Codehard.Common.Asp.Extensions;
+namespace Codehard.Common.AspNetCore.Extensions;
 
 public static class SwaggerExtensions
 {

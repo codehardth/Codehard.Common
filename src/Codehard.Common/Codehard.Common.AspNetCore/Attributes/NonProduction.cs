@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace Codehard.Common.Asp.Attributes;
+namespace Codehard.Common.AspNetCore.Attributes;
 
 /// <summary>
 /// A filter attribute that prevent the execution of specific action when running in Production environment
