@@ -2,8 +2,7 @@ using Codehard.Common.DomainModel.Extensions;
 
 namespace Codehard.Common.DomainModel;
 
-public abstract class Entity<T>
-    : IEntity<T> where T : struct
+public abstract class Entity : IEntity
 {
     private readonly Action<object, string> lazyLoader;
 
@@ -12,7 +11,7 @@ public abstract class Entity<T>
         this.lazyLoader = lazyLoader;
     }
 
-    public abstract T Id { get; }
+    public abstract EntityKey Id { get; }
 
     protected TRelated LoadNavigationProperty<TRelated>(TRelated refInstance)
         where TRelated : class

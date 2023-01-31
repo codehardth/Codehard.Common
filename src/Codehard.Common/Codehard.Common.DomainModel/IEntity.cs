@@ -1,7 +1,17 @@
 ﻿namespace Codehard.Common.DomainModel;
 
-public interface IEntity<out TId>
-    where TId : struct
+public record EntityKey
 {
-    TId Id { get; }
+    public sealed record Integer(int Value) : EntityKey;
+
+    public sealed record Long(long Value) : EntityKey;
+
+    public sealed record String(string Value) : EntityKey;
+
+    public sealed record GlobalUniqueIdentifier(Guid Value) : EntityKey;
+}
+
+public interface IEntity
+{
+    EntityKey Id { get; }
 }
