@@ -3,16 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codehard.Common.Asp.Attributes;
+namespace Codehard.Common.AspNetCore.Attributes;
 
-/// <summary>
-/// A filter attribute that prevent the execution of specific action when running in specific environment.
-/// </summary>
-public class DisallowOnEnvironmentAttribute : ActionFilterAttribute
+public class AllowOnEnvironmentAttribute : ActionFilterAttribute
 {
     private readonly string environmentName;
 
-    public DisallowOnEnvironmentAttribute(string environmentName)
+    public AllowOnEnvironmentAttribute(string environmentName)
     {
         this.environmentName = environmentName;
     }
@@ -21,7 +18,7 @@ public class DisallowOnEnvironmentAttribute : ActionFilterAttribute
     {
         var environment = context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
 
-        if (environment.EnvironmentName == this.environmentName)
+        if (environment.EnvironmentName != this.environmentName)
         {
             context.Result = new NotFoundResult();
 
