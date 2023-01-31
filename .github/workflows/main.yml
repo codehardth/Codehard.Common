@@ -60,10 +60,10 @@ jobs:
     - name: Publish Codehard.Infrastructure.EntityFramework To Nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework.csproj
+          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework/Codehard.Infrastructure.EntityFramework.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
     - name: Publish Codehard.Infrastructure.EntityFramework.Parser To Nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework.Parser.csproj
+          PROJECT_FILE_PATH: src/Codehard.Infrastructure/Codehard.Infrastructure.EntityFramework.Parser/Codehard.Infrastructure.EntityFramework.Parser.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
