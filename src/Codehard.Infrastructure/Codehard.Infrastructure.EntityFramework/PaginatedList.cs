@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Infrastructure.EntityFramework;
 
-public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
+public sealed class PaginatedList<T> : IPaginatedList<T>
 {
     private readonly int count;
     private readonly int page;
@@ -13,7 +13,7 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
 
     private readonly IReadOnlyList<T> source;
 
-    private PaginatedQuery(IReadOnlyList<T> source, int count, int page, int size)
+    private PaginatedList(IReadOnlyList<T> source, int count, int page, int size)
     {
         this.count = count;
         this.page = page;
@@ -38,7 +38,7 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
 
     public T this[int index] => this.source[index];
 
-    public static IPaginatedQuery<T> Create(
+    public static IPaginatedList<T> Create(
         IQueryable<T> query,
         int page,
         int size)
@@ -46,19 +46,19 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
         var count = query.Count();
         var items = query.Skip(size * (page - 1)).Take(size).ToImmutableList();
 
-        return new PaginatedQuery<T>(items, count, page, size);
+        return new PaginatedList<T>(items, count, page, size);
     }
 
-    public static IPaginatedQuery<T> Create(
+    public static IPaginatedList<T> Create(
         IEnumerable<T> source,
         int count,
         int page,
         int size)
     {
-        return new PaginatedQuery<T>(source.ToImmutableArray(), count, page, size);
+        return new PaginatedList<T>(source.ToImmutableArray(), count, page, size);
     }
 
-    public static async Task<IPaginatedQuery<T>> CreateAsync(
+    public static async Task<IPaginatedList<T>> CreateAsync(
         IQueryable<T> query,
         int page,
         int size,
@@ -67,7 +67,7 @@ public sealed class PaginatedQuery<T> : IPaginatedQuery<T>
         var count = await query.CountAsync(cancellationToken);
         var items = await query.Skip(size * (page - 1)).Take(size).ToListAsync(cancellationToken);
 
-        return new PaginatedQuery<T>(items, count, page, size);
+        return new PaginatedList<T>(items, count, page, size);
     }
 
     public IEnumerator<T> GetEnumerator()
