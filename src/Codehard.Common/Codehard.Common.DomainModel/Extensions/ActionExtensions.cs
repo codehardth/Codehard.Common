@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Codehard.Common.DomainModel.Extensions;
 
-internal static class ActionExtensions
+public static class ActionExtensions
 {
     public static TRelated Load<TRelated>(
         this Action<object, string> loader,
