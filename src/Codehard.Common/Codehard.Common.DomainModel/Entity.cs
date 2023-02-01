@@ -29,4 +29,14 @@ public abstract class Entity<TKey>
         List<TRelated> collection,
         [CallerMemberName] string navigationName = default!)
         => this.lazyLoader.Load(this, ref collection, navigationName);
+
+    public override bool Equals(object? o)
+    {
+        return o is Entity<TKey> e && e.Id.Equals(this.Id);
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id.GetHashCode();
+    }
 }
