@@ -1,17 +1,9 @@
 namespace Codehard.Common.DomainModel;
 
-public record ImmutableEntityWithIntegerKey(IntegerKey Id) : IEntity<IntegerKey>
-{
-}
+public abstract record ImmutableEntityWithIntegerKey(IntegerKey Id) : ImmutableEntity<IntegerKey>(Id);
 
-public record ImmutableEntityWithLongKey(LongKey Id) : IEntity<LongKey>
-{
-}
+public abstract record ImmutableEntityWithLongKey(LongKey Id) : ImmutableEntity<LongKey>(Id);
 
-public record ImmutableEntityWithStringKey(StringKey Id) : IEntity<StringKey>
-{
-}
+public abstract record ImmutableEntityWithStringKey(StringKey Id) : ImmutableEntity<StringKey>(Id);
 
-public record ImmutableEntityWithGuidKey(GuidKey Id) : IEntity<GuidKey>
-{
-}
+public abstract record ImmutableEntityWithGuidKey(GuidKey Id) : ImmutableEntity<GuidKey>(Id);
