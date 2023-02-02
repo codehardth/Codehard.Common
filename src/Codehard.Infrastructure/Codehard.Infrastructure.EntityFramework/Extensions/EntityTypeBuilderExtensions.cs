@@ -29,13 +29,31 @@ public static class EntityTypeBuilderExtensions
         }
 
         return builder;
+    }
 
-        static bool IsEnumOrNullableEnum(PropertyInfo propertyInfo)
+    /// <summary>
+    /// Configure an enum properties on entity type by mapping to its corresponding string value.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <typeparam name="TOwner"></typeparam>
+    /// <typeparam name="TDependant"></typeparam>
+    /// <returns></returns>
+    public static OwnedNavigationBuilder<TOwner, TDependant> MapEnumPropertiesToString<TOwner, TDependant>(
+        this OwnedNavigationBuilder<TOwner, TDependant> builder)
+        where TDependant : class
+        where TOwner : class
+    {
+        var properties =
+            GetPropertyInfoFromCache<TDependant>()
+                .Where(IsEnumOrNullableEnum);
+
+        foreach (var property in properties)
         {
-            var type = propertyInfo.PropertyType;
-
-            return type.IsEnum || Nullable.GetUnderlyingType(type) is { IsEnum: true };
+            builder.Property(property.Name)
+                .HasConversion<string>();
         }
+
+        return builder;
     }
 
     /// <summary>
@@ -58,26 +76,26 @@ public static class EntityTypeBuilderExtensions
                 case var x when x == typeof(IntegerKey):
                     builder.Property<IntegerKey>(property.Name)
                         .HasConversion(
-                            i => i.Value,
+                            k => k.Value,
                             i => new IntegerKey(i));
                     break;
                 case var x when x == typeof(LongKey):
                     builder.Property<LongKey>(property.Name)
                         .HasConversion(
-                            i => i.Value,
-                            i => new LongKey(i));
+                            k => k.Value,
+                            l => new LongKey(l));
                     break;
                 case var x when x == typeof(StringKey):
                     builder.Property<StringKey>(property.Name)
                         .HasConversion(
-                            i => i.Value,
-                            i => new StringKey(i));
+                            k => k.Value,
+                            s => new StringKey(s));
                     break;
                 case var x when x == typeof(GuidKey):
                     builder.Property<GuidKey>(property.Name)
                         .HasConversion(
-                            i => i.Value,
-                            i => new GuidKey(i));
+                            k => k.Value,
+                            g => new GuidKey(g));
                     break;
                 default:
                     continue;
@@ -87,13 +105,69 @@ public static class EntityTypeBuilderExtensions
         return builder;
     }
 
-    private static PropertyInfo[] GetPropertyInfoFromCache<T>(
+    /// <summary>
+    /// Configure an EntityKey properties on entity type by mapping to its corresponding internal value.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static OwnedNavigationBuilder<TOwner, TDependant> MapEntityKeyPropertiesToType<TOwner, TDependant>(
+        this OwnedNavigationBuilder<TOwner, TDependant> builder)
+        where TDependant : class
+        where TOwner : class
+    {
+        var properties =
+            GetPropertyInfoFromCache<TDependant>();
+
+        foreach (var property in properties)
+        {
+            switch (property.PropertyType)
+            {
+                case var x when x == typeof(IntegerKey):
+                    builder.Property<IntegerKey>(property.Name)
+                        .HasConversion(
+                            k => k.Value,
+                            i => new IntegerKey(i));
+                    break;
+                case var x when x == typeof(LongKey):
+                    builder.Property<LongKey>(property.Name)
+                        .HasConversion(
+                            k => k.Value,
+                            l => new LongKey(l));
+                    break;
+                case var x when x == typeof(StringKey):
+                    builder.Property<StringKey>(property.Name)
+                        .HasConversion(
+                            k => k.Value,
+                            s => new StringKey(s));
+                    break;
+                case var x when x == typeof(GuidKey):
+                    builder.Property<GuidKey>(property.Name)
+                        .HasConversion(
+                            k => k.Value,
+                            g => new GuidKey(g));
+                    break;
+                default:
+                    continue;
+            }
+        }
+
+        return builder;
+    }
+
+    private static bool IsEnumOrNullableEnum(PropertyInfo propertyInfo)
+    {
+        var type = propertyInfo.PropertyType;
+
+        return type.IsEnum || Nullable.GetUnderlyingType(type) is { IsEnum: true };
+    }
+
+    private static IEnumerable<PropertyInfo> GetPropertyInfoFromCache<T>(
         BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Public)
     {
         var type = typeof(T);
 
-        if (propertyInfoCache.TryGetValue(type, out var wr1)
-            && wr1.TryGetTarget(out var props))
+        if (propertyInfoCache.TryGetValue(type, out var wr)
+            && wr.TryGetTarget(out var props))
         {
             return props;
         }
