@@ -50,7 +50,7 @@ namespace Codehard.Functional.FSharp.Tests
         }
 
         [Fact]
-        public async Task WhenConvertErrorResultToEff_ShouldRunToFail()
+        public void WhenConvertErrorResultToEff_ShouldRunToFail()
         {
             // Arrange
             var fSharpResult = ResultType.getErrorResult();
