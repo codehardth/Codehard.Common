@@ -17,6 +17,7 @@ public abstract class EntityTypeConfigurationBase<TEntity>
     {
         builder.MapEnumPropertiesToString();
         builder.MapEntityKeyPropertiesToType();
+        builder.MapMoneyPropertiesToOwnedEntity();
 
         this.EntityConfigure(builder);
     }
