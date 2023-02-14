@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Infrastructure.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Infrastructure.EntityFramework.Parser", "Codehard.Infrastructure\Codehard.Infrastructure.EntityFramework.Parser\Codehard.Infrastructure.EntityFramework.Parser.csproj", "{26287D0E-D344-4D3F-8CD6-E3550B70EC29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.EntityFramework", "Codehard.Functional\Codehard.Functional.EntityFramework\Codehard.Functional.EntityFramework.csproj", "{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{26287D0E-D344-4D3F-8CD6-E3550B70EC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26287D0E-D344-4D3F-8CD6-E3550B70EC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26287D0E-D344-4D3F-8CD6-E3550B70EC29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,5 +130,6 @@ Global
 		{F858E5D3-DCF1-4708-8189-0C61B350EC7C} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{E3A71AA8-FF04-4C34-AD33-CB35424BCE04} = {D36E6268-E980-40CF-B1EA-605B400B9EAD}
 		{26287D0E-D344-4D3F-8CD6-E3550B70EC29} = {D36E6268-E980-40CF-B1EA-605B400B9EAD}
+		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 	EndGlobalSection
 EndGlobal
