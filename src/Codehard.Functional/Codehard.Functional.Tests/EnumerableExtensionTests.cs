@@ -50,7 +50,7 @@ public class EnumerableExtensionTests
         var list = new [] { 1 };
 
         // Act
-        var fin = list.SingleOrNoneOrFailFin();
+        var fin = list.SingleFin();
 
         // Assert
         Assert.True(fin.IsSucc);
@@ -64,7 +64,7 @@ public class EnumerableExtensionTests
         var emptySeq = Enumerable.Empty<int>();
 
         // Act
-        var fin = emptySeq.SingleOrNoneOrFailFin();
+        var fin = emptySeq.SingleFin();
 
         // Assert
         Assert.True(fin.IsSucc);
@@ -78,7 +78,7 @@ public class EnumerableExtensionTests
         var list = new [] { 1, 1 };
 
         // Act
-        var fin = list.SingleOrNoneOrFailFin();
+        var fin = list.SingleFin();
 
         // Assert
         Assert.True(fin.IsFail);
@@ -91,7 +91,7 @@ public class EnumerableExtensionTests
         var list = new [] { 1 };
 
         // Act
-        var fin = list.SingleOrNoneOrFailFin(i => i == 1);
+        var fin = list.SingleFin(i => i == 1);
 
         // Assert
         Assert.True(fin.IsSucc);
@@ -105,7 +105,7 @@ public class EnumerableExtensionTests
         var list = new [] { 0 };
 
         // Act
-        var fin = list.SingleOrNoneOrFailFin(i => i == 1);
+        var fin = list.SingleFin(i => i == 1);
 
         // Assert
         Assert.True(fin.IsSucc);
@@ -119,7 +119,7 @@ public class EnumerableExtensionTests
         var list = new [] { 1, 1 };
 
         // Act
-        var fin = list.SingleOrNoneOrFailFin(i => i == 1);
+        var fin = list.SingleFin(i => i == 1);
 
         // Assert
         Assert.True(fin.IsFail);
