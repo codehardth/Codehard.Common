@@ -4,6 +4,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Version>2.4.0</Version>
+        <Description>A functional extensions for Entity Framework queryable extensions.</Description>
+        <PackageProjectUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</RepositoryUrl>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
