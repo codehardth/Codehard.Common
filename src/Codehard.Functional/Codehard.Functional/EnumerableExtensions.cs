@@ -27,7 +27,7 @@ public static class EnumerableExtensions
     /// or a None value if the sequence is empty;
     /// this method return an ExceptionalError if there is more than one element in the sequence.
     /// </summary>
-    public static Eff<Option<T>> SingleOrNoneOrFailEff<T>(this IEnumerable<T> source)
+    public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source)
     {
         return Eff(() => source
             .Map(Optional)
@@ -39,9 +39,19 @@ public static class EnumerableExtensions
     /// or a None value if the sequence is empty;
     /// this method return an ExceptionalError if there is more than one element in the sequence.
     /// </summary>
-    public static Fin<Option<T>> SingleOrNoneOrFailFin<T>(this IEnumerable<T> source)
+    public static Fin<Option<T>> SingleFin<T>(this IEnumerable<T> source)
     {
-        return SingleOrNoneOrFailEff(source).Run();
+        return SingleEff(source).Run();
+    }
+    
+    /// <summary>
+    /// Returns the only element of a sequence,
+    /// or a None value if the sequence is empty;
+    /// this method throw an ExceptionalError if there is more than one element in the sequence.
+    /// </summary>
+    public static Option<T> SingleOrThrow<T>(this IEnumerable<T> source)
+    {
+        return SingleFin(source).ThrowIfFail();
     }
     
     /// <summary>
@@ -51,7 +61,7 @@ public static class EnumerableExtensions
     /// </summary>
     public static Option<T> SingleOrNone<T>(this IEnumerable<T> source)
     {
-        return SingleOrNoneOrFailFin(source)
+        return SingleFin(source)
             .Match(
                 Succ: i => i,
                 Fail: _ => Option<T>.None);
@@ -61,7 +71,7 @@ public static class EnumerableExtensions
     /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
     /// this method return an ExceptionalError if more than one element satisfies the condition.
     /// </summary>
-    public static Eff<Option<T>> SingleOrNoneOrFailEff<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
         return Eff(() => source
             .Map(Optional)
@@ -74,9 +84,19 @@ public static class EnumerableExtensions
     /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
     /// this method return an ExceptionalError if more than one element satisfies the condition.
     /// </summary>
-    public static Fin<Option<T>> SingleOrNoneOrFailFin<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Fin<Option<T>> SingleFin<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
-        return SingleOrNoneOrFailEff(source, predicate).Run();
+        return SingleEff(source, predicate).Run();
+    }
+    
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
+    /// this method throw exception if more than one element satisfies the condition.
+    /// </summary>
+    public static Option<T> SingleOrThrow<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    {
+        return SingleFin(source, predicate)
+            .ThrowIfFail();
     }
     
     /// <summary>
@@ -85,10 +105,10 @@ public static class EnumerableExtensions
     /// </summary>
     public static Option<T> SingleOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
-        return SingleOrNoneOrFailFin(source, predicate)
+        return SingleFin(source, predicate)
             .Match(
                 Succ: i => i,
-                Fail: _ => Option<T>.None);;
+                Fail: _ => Option<T>.None);
     }
 
     /// <summary>
