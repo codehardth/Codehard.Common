@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Test.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20230201091425_init")]
+    [Migration("20230223161501_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -44,6 +44,9 @@ namespace Infrastructure.Test.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("NullableValue")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()

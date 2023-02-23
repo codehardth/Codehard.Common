@@ -42,21 +42,22 @@ public class Program
 
         var dbContext = app.Services.GetRequiredService<TestDbContext>();
 
-        // var model = MyModel.Create();
+        var model = MyModel.Create();
         // model.AddChild("123456");
 
         // dbContext.Models.Add(model);
         // dbContext.SaveChanges();
 
-        var id = Guid.Parse("7dc343a9-9d3e-4c6a-8c80-aeb09bae6e3f");
         var models =
             dbContext.Models
-                .Where(m => m.Id == new GuidKey(id)).ToList();
+                .Filter(m => m.NullableValue.IsSome).ToList();
 
-        var childs = models[0].Childs.ToList();
-
-        var json = JsonSerializer.Serialize(models);
-
-        var deserializedModel = JsonSerializer.Deserialize<MyModel[]>(json);
+        // .Where(m => m.Id == new GuidKey(id)).ToList();
+        //
+        // var childs = models[0].Childs.ToList();
+        //
+        // var json = JsonSerializer.Serialize(models);
+        //
+        // var deserializedModel = JsonSerializer.Deserialize<MyModel[]>(json);
     }
 }

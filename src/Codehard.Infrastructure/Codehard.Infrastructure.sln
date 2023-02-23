@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Infrastructure.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.DomainModel", "..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj", "{73ACAE87-A3E8-4B7C-A8D5-32F651931B79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Test", "Infrastructure.Test\Infrastructure.Test.csproj", "{1DEEC940-1E5C-4EAA-85AE-663CEBE2EE78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{73ACAE87-A3E8-4B7C-A8D5-32F651931B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73ACAE87-A3E8-4B7C-A8D5-32F651931B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73ACAE87-A3E8-4B7C-A8D5-32F651931B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DEEC940-1E5C-4EAA-85AE-663CEBE2EE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DEEC940-1E5C-4EAA-85AE-663CEBE2EE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DEEC940-1E5C-4EAA-85AE-663CEBE2EE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DEEC940-1E5C-4EAA-85AE-663CEBE2EE78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
