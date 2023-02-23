@@ -1,7 +1,10 @@
+using System.Linq.Expressions;
 using System.Text.Json;
 using Codehard.Common.DomainModel;
 using Infrastructure.Test.Entities;
+using LanguageExt;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +13,16 @@ namespace Infrastructure.Test;
 
 public class Program
 {
+    public class DelegateDecompilerQueryPreprocessor : IQueryExpressionInterceptor
+    {
+        Expression IQueryExpressionInterceptor.QueryCompilationStarting(Expression queryExpression, QueryExpressionEventData eventData)
+        {
+            // var left = Expression.Variable()
+            return queryExpression;
+            // return DecompileExpressionVisitor.Decompile(queryExpression);
+        }
+    }
+
     public static void Main(string[] args)
     {
         var hostBuilder = Host.CreateDefaultBuilder(args);
@@ -22,6 +35,7 @@ public class Program
             {
                 options.UseNpgsql(
                     "Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;");
+                options.AddInterceptors(new DelegateDecompilerQueryPreprocessor());
             });
         });
         // var optionBuilder = new DbContextOptionsBuilder<TestDbContext>();
@@ -42,22 +56,26 @@ public class Program
 
         var dbContext = app.Services.GetRequiredService<TestDbContext>();
 
-        var model = MyModel.Create();
+        // var model = MyModel.Create();
         // model.AddChild("123456");
-
+        //
         // dbContext.Models.Add(model);
         // dbContext.SaveChanges();
 
+        // var models =
+        //     dbContext.Models
+        //         .Filter(m => m.NullableValue.IsSome && m.Childs.Count > 0).ToList();
+
         var models =
             dbContext.Models
-                .Filter(m => m.NullableValue.IsSome).ToList();
+                .Filter(m => m.Number.IsSome && m.Text.IsNone).ToList();
 
         // .Where(m => m.Id == new GuidKey(id)).ToList();
         //
         // var childs = models[0].Childs.ToList();
         //
         // var json = JsonSerializer.Serialize(models);
-        //
+        //!
         // var deserializedModel = JsonSerializer.Deserialize<MyModel[]>(json);
     }
 }

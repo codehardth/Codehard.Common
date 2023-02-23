@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using Codehard.Infrastructure.EntityFramework;
+﻿using Codehard.Infrastructure.EntityFramework;
 using Infrastructure.Test.Entities;
-using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Test;

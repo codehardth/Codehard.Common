@@ -41,8 +41,12 @@ public class ModelConfiguration : EntityTypeConfigurationBase<MyModel>
         builder.HasKey(m => m.Id);
         builder.Property(m => m.Value)
             .IsRequired();
-        builder.Property(m => m.NullableValue)
-            .HasConversion(new OptionConverter<int>());
+        // builder.Property(m => m.NullableValue)
+        //     .HasConversion(new OptionConverter<int>());
+        builder.Property("number")
+            .IsRequired(false);
+        builder.Property("text")
+            .IsRequired(false);
 
         builder.HasMany(m => m.Childs)
             .WithOne();

@@ -20,7 +20,13 @@ public class MyModel : Entity<GuidKey>
 
     public string Value { get; init; }
 
-    public Option<int> NullableValue { get; init; }
+    private int? number { get; set; }
+
+    public Option<int> Number => Optional(number);
+
+    public string? text { get; set; }
+
+    public Option<string> Text => Optional(text);
 
     public virtual IReadOnlyCollection<ChildModel> Childs
         => this.LoadNavigationPropertyCollection(this.childs);
@@ -36,7 +42,7 @@ public class MyModel : Entity<GuidKey>
         {
             Id = new GuidKey(Guid.NewGuid()),
             Value = "Hello World",
-            NullableValue = Optional(10),
+            number = 10,
         };
     }
 }

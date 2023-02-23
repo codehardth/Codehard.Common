@@ -42,11 +42,14 @@ namespace Infrastructure.Test.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("NullableValue")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Value")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("text")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
