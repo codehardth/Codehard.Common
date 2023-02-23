@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using LanguageExt;
-using LanguageExt.UnsafeValueAccess;
 
 namespace Infrastructure.Test;
 
@@ -65,13 +64,9 @@ public class OptionExpressionVisitor : ExpressionVisitor
     private Expression GetParameterExpression(Expression expression)
     {
         // Yet another oops.
-        if (expression is ParameterExpression paramExpr)
-        {
-            return paramExpr;
-        }
-
         return expression switch
         {
+            ParameterExpression parameterExpression => parameterExpression,
             MemberExpression memberExpression => GetParameterExpression(memberExpression.Expression!),
             _ => throw new NotSupportedException(),
         };
