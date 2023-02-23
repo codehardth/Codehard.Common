@@ -1,8 +1,4 @@
 using System.Linq.Expressions;
-using System.Text.Json;
-using Codehard.Common.DomainModel;
-using Infrastructure.Test.Entities;
-using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,9 +13,9 @@ public class Program
     {
         Expression IQueryExpressionInterceptor.QueryCompilationStarting(Expression queryExpression, QueryExpressionEventData eventData)
         {
-            // var left = Expression.Variable()
-            return queryExpression;
-            // return DecompileExpressionVisitor.Decompile(queryExpression);
+            var exprVisitor = new OptionExpressionVisitor();
+
+            return exprVisitor.Visit(queryExpression);
         }
     }
 
@@ -68,7 +64,7 @@ public class Program
 
         var models =
             dbContext.Models
-                .Filter(m => m.Number.IsSome && m.Text.IsNone).ToList();
+                .Where(m => m.Number.IsSome && m.Text.IsNone).ToList();
 
         // .Where(m => m.Id == new GuidKey(id)).ToList();
         //
