@@ -14,6 +14,11 @@ public class OptionExpressionVisitor : ExpressionVisitor
     /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     public override Expression? Visit(Expression? node)
     {
+        if (entityType != null)
+        {
+            return base.Visit(node);
+        }
+
         var isGenericType = node?.Type.IsGenericType ?? false;
         var isQueryable = isGenericType && node?.Type.GetGenericTypeDefinition() == typeof(IQueryable<>);
 
@@ -22,7 +27,7 @@ public class OptionExpressionVisitor : ExpressionVisitor
             return base.Visit(node);
         }
 
-        if (this.entityType == null && node != null)
+        if (node != null)
         {
             var type = node.Type.GenericTypeArguments[0];
 
