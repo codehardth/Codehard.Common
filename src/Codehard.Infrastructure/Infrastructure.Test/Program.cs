@@ -37,23 +37,10 @@ public class Program
             sp.AddDbContext<TestDbContext>(options =>
             {
                 options.UseNpgsql(
-                    "Server=127.0.0.1;Port=5438;Database=TestDatabase;User Id=postgres;Password=postgres;IncludeErrorDetail=true;");
+                    "Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;");
                 options.AddInterceptors(new DelegateDecompilerQueryPreprocessor());
             });
         });
-        // var optionBuilder = new DbContextOptionsBuilder<TestDbContext>();
-        // optionBuilder.UseNpgsql(
-        //     "Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;");
-        //
-        // var dbContext = new TestDbContext(optionBuilder.Options);
-        // //
-        // // var model = Model.Create();
-        // //
-        // // dbContext.Models.Add(model);
-        // // dbContext.SaveChanges();
-        //
-        // var models = dbContext.Models.Where(
-        //     m => m.Id.Equals(Guid.Parse("cc24ba41-8202-4492-8283-099dd797d828"))).ToList();
 
         var app = hostBuilder.Build();
 
@@ -65,24 +52,16 @@ public class Program
         dbContext.Models.Add(model);
         dbContext.SaveChanges();
 
-        // var models =
-        //     dbContext.Models
-        //         .Filter(m => m.NullableValue.IsSome && m.Childs.Count > 0).ToList();
-
         var loadedModel =
-            dbContext.Models.FirstOrDefault(m => m.Number.IsSome);
+            dbContext.Models.FirstOrDefault(m => m.Number.IsSome || EF.Functions.Contains(m.Text, "test"));
 
         loadedModel.Number = Option<int>.None;
+        loadedModel.Text = null;
 
         dbContext.Models.Update(loadedModel);
         dbContext.SaveChanges();
 
-        // .Where(m => m.Id == new GuidKey(id)).ToList();
-        //
-        // var childs = models[0].Childs.ToList();
-        //
-        // var json = JsonSerializer.Serialize(models);
-        //!
-        // var deserializedModel = JsonSerializer.Deserialize<MyModel[]>(json);
+        dbContext.Models.Remove(loadedModel);
+        dbContext.SaveChanges();
     }
 }

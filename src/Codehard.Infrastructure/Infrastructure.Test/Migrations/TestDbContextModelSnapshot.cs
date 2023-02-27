@@ -46,11 +46,11 @@ namespace Infrastructure.Test.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("_Number")
+                    b.Property<int?>("_number")
                         .HasColumnType("integer")
                         .HasColumnName("Number");
 
-                    b.Property<string>("_Text")
+                    b.Property<string>("_text")
                         .HasColumnType("text")
                         .HasColumnName("Text");
 
@@ -63,7 +63,8 @@ namespace Infrastructure.Test.Migrations
                 {
                     b.HasOne("Infrastructure.Test.Entities.MyModel", null)
                         .WithMany("Childs")
-                        .HasForeignKey("MyModelId");
+                        .HasForeignKey("MyModelId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Infrastructure.Test.Entities.MyModel", b =>

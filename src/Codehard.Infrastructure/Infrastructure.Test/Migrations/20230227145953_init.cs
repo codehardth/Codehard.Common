@@ -16,9 +16,9 @@ namespace Infrastructure.Test.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: true),
-                    Text = table.Column<string>(type: "text", nullable: true)
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    Value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,8 @@ namespace Infrastructure.Test.Migrations
                         name: "FK_ChildModel_Models_MyModelId",
                         column: x => x.MyModelId,
                         principalTable: "Models",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

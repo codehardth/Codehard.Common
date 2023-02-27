@@ -1,11 +1,8 @@
-using System.Linq.Expressions;
 using Codehard.Functional.EntityFramework;
 using Codehard.Infrastructure.EntityFramework;
 using Infrastructure.Test.Entities;
-using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Test.EntityConfigurations;
 
@@ -20,7 +17,8 @@ public class ModelConfiguration : EntityTypeConfigurationBase<MyModel>
         builder.HasOptionProperty(m => m.Text);
 
         builder.HasMany(m => m.Childs)
-            .WithOne();
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

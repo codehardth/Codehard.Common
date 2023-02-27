@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Test.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20230227133851_init")]
+    [Migration("20230227145953_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -49,11 +49,11 @@ namespace Infrastructure.Test.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("_Number")
+                    b.Property<int?>("_number")
                         .HasColumnType("integer")
                         .HasColumnName("Number");
 
-                    b.Property<string>("_Text")
+                    b.Property<string>("_text")
                         .HasColumnType("text")
                         .HasColumnName("Text");
 
@@ -66,7 +66,8 @@ namespace Infrastructure.Test.Migrations
                 {
                     b.HasOne("Infrastructure.Test.Entities.MyModel", null)
                         .WithMany("Childs")
-                        .HasForeignKey("MyModelId");
+                        .HasForeignKey("MyModelId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Infrastructure.Test.Entities.MyModel", b =>

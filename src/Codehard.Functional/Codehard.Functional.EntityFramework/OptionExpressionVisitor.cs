@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using LanguageExt;
 using LanguageExt.UnsafeValueAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Functional.EntityFramework;
 
@@ -70,10 +71,12 @@ public class OptionExpressionVisitor : ExpressionVisitor
     /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        if (node.Method.ReflectedType == typeof(EF.Functions.StringOption))
+        if (node.Method.ReflectedType == typeof(StringOptionDbFunctionsExtensions))
         {
             var expressions =
-                node.Arguments.Select(this.Visit);
+                node.Arguments
+                    .Where(a => a.Type != typeof(DbFunctions))
+                    .Select(this.Visit);
 
             var first = expressions.First();
             var remaining = expressions.Skip(1);

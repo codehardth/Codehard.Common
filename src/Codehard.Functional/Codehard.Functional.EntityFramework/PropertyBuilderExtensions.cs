@@ -3,8 +3,6 @@ using System.Reflection;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using static LanguageExt.Prelude;
 
 namespace Codehard.Functional.EntityFramework;
 
@@ -31,18 +29,19 @@ public static class PropertyBuilderExtensions
             throw new Exception("Property is not an option.");
         }
 
-        var actualType = propertyType.GenericTypeArguments[0];
-        var nullableType =
-            actualType.IsPrimitive
-                ? typeof(Nullable<>).MakeGenericType(actualType)
-                : actualType;
-
         var backingField = $"_{propertyName.ToLowerInvariant()}";
+        var backingFieldInfo =
+            property.DeclaringType?.GetProperty(backingField, BindingFlags.Instance | BindingFlags.NonPublic);
+
+        if (backingFieldInfo == null)
+        {
+            throw new Exception($"Unable to find backing field '{backingField}' in {property.DeclaringType}.");
+        }
 
         builder.Ignore(propertyName);
 
         return
-            builder.Property(nullableType, backingField)
+            builder.Property(backingFieldInfo.PropertyType, backingField)
                 .HasColumnName(propertyName)
                 .IsRequired(false);
     }
