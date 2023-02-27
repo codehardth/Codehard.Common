@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Test.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20230227145953_init")]
+    [Migration("20230227161455_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -49,11 +49,11 @@ namespace Infrastructure.Test.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("_number")
+                    b.Property<int?>("x")
                         .HasColumnType("integer")
                         .HasColumnName("Number");
 
-                    b.Property<string>("_text")
+                    b.Property<string>("y")
                         .HasColumnType("text")
                         .HasColumnName("Text");
 

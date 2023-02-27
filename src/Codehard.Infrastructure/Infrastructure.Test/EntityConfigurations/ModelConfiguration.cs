@@ -1,4 +1,3 @@
-using Codehard.Functional.EntityFramework;
 using Codehard.Infrastructure.EntityFramework;
 using Infrastructure.Test.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,8 @@ public class ModelConfiguration : EntityTypeConfigurationBase<MyModel>
         builder.HasKey(m => m.Id);
         builder.Property(m => m.Value)
             .IsRequired();
-        builder.HasOptionProperty(m => m.Number);
-        builder.HasOptionProperty(m => m.Text);
+        builder.HasOptionProperty(m => m.Number, "x");
+        builder.HasOptionProperty(m => m.Text, "y");
 
         builder.HasMany(m => m.Childs)
             .WithOne()

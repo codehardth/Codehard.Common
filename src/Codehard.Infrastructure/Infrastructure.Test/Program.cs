@@ -1,9 +1,6 @@
-using System.Linq.Expressions;
-using Codehard.Functional.EntityFramework;
 using Infrastructure.Test.Entities;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,20 +9,6 @@ namespace Infrastructure.Test;
 
 public class Program
 {
-    public class DelegateDecompilerQueryPreprocessor : IQueryExpressionInterceptor
-    {
-        Expression IQueryExpressionInterceptor.QueryCompilationStarting(
-            Expression queryExpression,
-            QueryExpressionEventData eventData)
-        {
-            var exprVisitor = new OptionExpressionVisitor();
-
-            var expression = exprVisitor.Visit(queryExpression);
-
-            return expression;
-        }
-    }
-
     public static void Main(string[] args)
     {
         var hostBuilder = Host.CreateDefaultBuilder(args);
@@ -36,15 +19,34 @@ public class Program
 
             sp.AddDbContext<TestDbContext>(options =>
             {
-                options.UseNpgsql(
-                    "Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;");
-                options.AddInterceptors(new DelegateDecompilerQueryPreprocessor());
+                options
+                    .UseNpgsql("Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;")
+                    .AddOptionalTranslator();
             });
         });
 
         var app = hostBuilder.Build();
 
         var dbContext = app.Services.GetRequiredService<TestDbContext>();
+
+        var q =
+            dbContext.Models.Where(m =>
+                    // m.Number.IsSome &&
+                    m.Number.IsNone ||
+                    // m.Text.IsSome &&
+                    m.Text.IsNone ||
+                    m.Number == 0 &&
+                    m.Number > 0 ||
+                    m.Number < 0 &&
+                    m.Number >= 0 ||
+                    m.Number <= 0 &&
+                    m.Text == "test" ||
+                    EF.Functions.Contains(m.Text, "test") ||
+                    EF.Functions.StartsWith(m.Text, "test") &&
+                    EF.Functions.EndsWith(m.Text, "test") ||
+                    EF.Functions.ToLower(m.Text) == "test" &&
+                    EF.Functions.ToUpper(m.Text) == "test")
+                .ToList();
 
         var model = MyModel.Create();
         model.AddChild("123456");

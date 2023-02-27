@@ -46,11 +46,11 @@ namespace Infrastructure.Test.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("_number")
+                    b.Property<int?>("x")
                         .HasColumnType("integer")
                         .HasColumnName("Number");
 
-                    b.Property<string>("_text")
+                    b.Property<string>("y")
                         .HasColumnType("text")
                         .HasColumnName("Text");
 

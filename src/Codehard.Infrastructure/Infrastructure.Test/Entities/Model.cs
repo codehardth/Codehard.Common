@@ -5,9 +5,9 @@ namespace Infrastructure.Test.Entities;
 
 public class MyModel : Entity<GuidKey>
 {
-    private int? _number { get; set; }
+    private int? x;
 
-    private string? _text { get; set; }
+    private string? y;
 
     public MyModel()
     {
@@ -26,14 +26,14 @@ public class MyModel : Entity<GuidKey>
 
     public Option<int> Number
     {
-        get => Optional(this._number);
-        set => this._number = value.MatchUnsafe(x => x, () => (int?)default);
+        get => Optional(this.x);
+        set => this.x = value.MatchUnsafe(x => x, () => (int?)default);
     }
 
     public Option<string> Text
     {
-        get => Optional(this._text);
-        set => this._text = value.MatchUnsafe(identity, () => default);
+        get => Optional(this.y);
+        set => this.y = value.MatchUnsafe(identity, () => default);
     }
 
     public virtual IReadOnlyCollection<ChildModel> Childs
