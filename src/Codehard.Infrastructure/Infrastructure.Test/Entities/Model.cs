@@ -5,6 +5,10 @@ namespace Infrastructure.Test.Entities;
 
 public class MyModel : Entity<GuidKey>
 {
+    private int? _number { get; set; }
+
+    private string? _text { get; set; }
+
     public MyModel()
     {
     }
@@ -20,13 +24,17 @@ public class MyModel : Entity<GuidKey>
 
     public string Value { get; init; }
 
-    private int? number { get; set; }
+    public Option<int> Number
+    {
+        get => Optional(this._number);
+        set => this._number = value.MatchUnsafe(x => x, () => (int?)default);
+    }
 
-    public Option<int> Number => Optional(number);
-
-    public string? text { get; set; }
-
-    public Option<string> Text => Optional(text);
+    public Option<string> Text
+    {
+        get => Optional(this._text);
+        set => this._text = value.MatchUnsafe(identity, () => default);
+    }
 
     public virtual IReadOnlyCollection<ChildModel> Childs
         => this.LoadNavigationPropertyCollection(this.childs);
@@ -42,7 +50,7 @@ public class MyModel : Entity<GuidKey>
         {
             Id = new GuidKey(Guid.NewGuid()),
             Value = "Hello World",
-            number = 10,
+            Number = 10,
         };
     }
 }

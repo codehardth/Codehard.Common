@@ -1,4 +1,7 @@
 using System.Linq.Expressions;
+using Codehard.Functional.EntityFramework;
+using Infrastructure.Test.Entities;
+using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +14,15 @@ public class Program
 {
     public class DelegateDecompilerQueryPreprocessor : IQueryExpressionInterceptor
     {
-        Expression IQueryExpressionInterceptor.QueryCompilationStarting(Expression queryExpression, QueryExpressionEventData eventData)
+        Expression IQueryExpressionInterceptor.QueryCompilationStarting(
+            Expression queryExpression,
+            QueryExpressionEventData eventData)
         {
             var exprVisitor = new OptionExpressionVisitor();
 
-            return exprVisitor.Visit(queryExpression);
+            var expression = exprVisitor.Visit(queryExpression);
+
+            return expression;
         }
     }
 
@@ -30,7 +37,7 @@ public class Program
             sp.AddDbContext<TestDbContext>(options =>
             {
                 options.UseNpgsql(
-                    "Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;");
+                    "Server=127.0.0.1;Port=5438;Database=TestDatabase;User Id=postgres;Password=postgres;IncludeErrorDetail=true;");
                 options.AddInterceptors(new DelegateDecompilerQueryPreprocessor());
             });
         });
@@ -52,19 +59,23 @@ public class Program
 
         var dbContext = app.Services.GetRequiredService<TestDbContext>();
 
-        // var model = MyModel.Create();
-        // model.AddChild("123456");
-        //
-        // dbContext.Models.Add(model);
-        // dbContext.SaveChanges();
+        var model = MyModel.Create();
+        model.AddChild("123456");
+
+        dbContext.Models.Add(model);
+        dbContext.SaveChanges();
 
         // var models =
         //     dbContext.Models
         //         .Filter(m => m.NullableValue.IsSome && m.Childs.Count > 0).ToList();
 
-        var models =
-            dbContext.Models
-                .Where(m => m.Number.IsSome && m.Text.IsNone).ToList();
+        var loadedModel =
+            dbContext.Models.FirstOrDefault(m => m.Number.IsSome);
+
+        loadedModel.Number = Option<int>.None;
+
+        dbContext.Models.Update(loadedModel);
+        dbContext.SaveChanges();
 
         // .Where(m => m.Id == new GuidKey(id)).ToList();
         //

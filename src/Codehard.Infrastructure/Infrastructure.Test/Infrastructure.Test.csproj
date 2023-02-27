@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Codehard.Functional\Codehard.Functional.EntityFramework\Codehard.Functional.EntityFramework.csproj" />
         <ProjectReference Include="..\Codehard.Infrastructure.EntityFramework\Codehard.Infrastructure.EntityFramework.csproj" />
     </ItemGroup>
 
@@ -25,6 +26,11 @@
         <None Update="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="OptionExpressionVisitor.cs" />
+      <Compile Remove="StringOptionExtensions.cs" />
     </ItemGroup>
 
 </Project>

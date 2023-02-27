@@ -17,8 +17,8 @@ namespace Infrastructure.Test.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: false),
-                    number = table.Column<int>(type: "integer", nullable: true),
-                    text = table.Column<string>(type: "text", nullable: true)
+                    Number = table.Column<int>(type: "integer", nullable: true),
+                    Text = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

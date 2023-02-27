@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using LanguageExt;
 using LanguageExt.UnsafeValueAccess;
 
@@ -108,7 +107,7 @@ public class OptionExpressionVisitor : ExpressionVisitor
         var leftName = ((MemberExpression)exprNode).Member.Name;
         var param = GetParameterExpression(exprNode);
 
-        var backingField = Expression.Property(param, GetBackingField(leftName));
+        var backingField = Expression.Property(param, $"_{leftName.ToLowerInvariant()}");
 
         // Expression.Default(node.Expression.Type) is not a correct solution
         // as it is a default(T), in case of primitive type it will yield an incorrect behavior
@@ -120,11 +119,6 @@ public class OptionExpressionVisitor : ExpressionVisitor
         };
 
         return expr;
-
-        PropertyInfo GetBackingField(string expressionName)
-        {
-            return EntityOptionMapping.OptionBackingFieldMapping[(this.entityType, expressionName)];
-        }
 
         static ConstantExpression GetNullConstant(Type type)
         {

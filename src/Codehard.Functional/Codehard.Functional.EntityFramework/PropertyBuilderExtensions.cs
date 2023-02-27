@@ -1,36 +1,49 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using static LanguageExt.Prelude;
 
 namespace Codehard.Functional.EntityFramework;
 
 public static class PropertyBuilderExtensions
 {
-    public static void HasOptionProperty<TEntity, TProperty>(
+    public static PropertyBuilder HasOptionProperty<TEntity, TProperty>(
         this EntityTypeBuilder<TEntity> builder,
-        Expression<Func<TEntity, TProperty>> propertyExpression,
-        string? backingFieldName = default,
-        string? columnName = default) where TEntity : class
+        Expression<Func<TEntity, TProperty>> propertyExpression)
+        where TEntity : class
     {
-        var type = typeof(TEntity);
-        var propertyName = ((MemberExpression)propertyExpression.Body).Member.Name;
+        var property =
+            ((MemberExpression)propertyExpression.Body).Member;
 
-        // TODO: Convert `propertyName` into a camel-case
-        var backingField = backingFieldName ?? propertyName.ToLowerInvariant();
+        var propertyName = property.Name;
+        var propertyType = propertyExpression.Body.Type;
 
-        var key = (type, propertyName);
+        if (propertyType == null)
+        {
+            throw new Exception($"Unable to read type from {propertyName}");
+        }
 
-        var props = type.GetRuntimeProperties();
-        var propertyInfo =
-            props.SingleOrDefault(p => p.Name == backingField);
+        if (!(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Option<>)))
+        {
+            throw new Exception("Property is not an option.");
+        }
 
-        EntityOptionMapping.OptionBackingFieldMapping.Add(
-            key,
-            propertyInfo ?? throw new Exception($"Unable to find property '{backingField}'"));
+        var actualType = propertyType.GenericTypeArguments[0];
+        var nullableType =
+            actualType.IsPrimitive
+                ? typeof(Nullable<>).MakeGenericType(actualType)
+                : actualType;
 
-        builder.Property(backingField)
-            .HasColumnName(columnName ?? backingField)
-            .IsRequired(false);
+        var backingField = $"_{propertyName.ToLowerInvariant()}";
+
+        builder.Ignore(propertyName);
+
+        return
+            builder.Property(nullableType, backingField)
+                .HasColumnName(propertyName)
+                .IsRequired(false);
     }
 }
