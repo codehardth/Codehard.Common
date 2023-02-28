@@ -190,6 +190,26 @@ public class OptionExpressionVisitor : ExpressionVisitor
         };
     }
 
+    /// <summary>Visits the <see cref="T:System.Linq.Expressions.ParameterExpression" />.</summary>
+    /// <param name="node">The expression to visit.</param>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        if (!IsOptionType(node))
+        {
+            return base.VisitParameter(node);
+        }
+
+        var actualType = node.Type.GenericTypeArguments[0];
+        var newType = actualType.IsPrimitive || actualType.IsValueType
+            ? typeof(Nullable<>).MakeGenericType(actualType)
+            : actualType;
+
+        var newParam = Expression.Parameter(newType, node.Name);
+
+        return newParam;
+    }
+
     private static ParameterExpression GetParameterExpression(Expression expression)
     {
         // This will need more intensive tests.

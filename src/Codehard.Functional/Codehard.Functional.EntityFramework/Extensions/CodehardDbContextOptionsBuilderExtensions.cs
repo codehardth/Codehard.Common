@@ -5,5 +5,7 @@ namespace Microsoft.EntityFrameworkCore;
 public static class CodehardDbContextOptionsBuilderExtensions
 {
     public static DbContextOptionsBuilder AddOptionalTranslator(this DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.AddInterceptors(new OptionalTranslatorExpressionInterceptor());
+        => optionsBuilder
+            .AddInterceptors(new OptionalTranslatorExpressionInterceptor())
+            .AddInterceptors(new OptionalQueryInterceptor());
 }
