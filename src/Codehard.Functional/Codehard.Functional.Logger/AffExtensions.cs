@@ -42,7 +42,7 @@ public static class AffExtensions
             from executingLog in
                 Eff(() => executingMessage.IfSome(t => logger.Log(logLevel, t)))
             from res in
-                aff
+                aff.MapFail(err => logger.Log(err, LogLevel.Error))
             from executedLog in
                 Eff(() => executedMessage.IfSome(f => logger.Log(logLevel, f(res))))
             select res;
@@ -66,7 +66,7 @@ public static class AffExtensions
             Some("Executing"),
             Some(fun((T _) => "Executed")));
     }
-    
+
     /// <summary>
     /// Wrap an effect inside a logger which is execute before and after the given effect.
     /// </summary>
@@ -88,7 +88,7 @@ public static class AffExtensions
             from executingLog in
                 Eff(() => executingMessage.IfSome(t => logger.Log(logLevel, t)))
             from res in
-                eff
+                eff.MapFail(err => logger.Log(err, LogLevel.Error))
             from executedLog in
                 Eff(() => executedMessage.IfSome(f => logger.Log(logLevel, f(res))))
             select res;
