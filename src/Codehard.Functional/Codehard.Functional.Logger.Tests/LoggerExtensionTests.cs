@@ -1,6 +1,8 @@
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
+using static LanguageExt.Prelude;
 
 namespace Codehard.Functional.Logger.Tests
 {
@@ -25,13 +27,71 @@ namespace Codehard.Functional.Logger.Tests
             void VerifyLogMessage(string message)
             {
                 mockedLogger.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((o, t) => string.Equals(message, o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                Times.Once);
+                    x => x.Log(
+                        LogLevel.Information,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((o, t) =>
+                            string.Equals(message, o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
+                        It.IsAny<Exception>(),
+                        It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                    Times.Once);
+            }
+        }
+
+        [Fact]
+        public async Task WhenRunFailAff_WithLog_ShouldLogInformation_ThenLogError()
+        {
+            // Arrange
+            const string failMessage = "fail successfully.";
+
+            Mock<ILogger> mockedLogger = new Mock<ILogger>();
+
+            var aff = FailAff<Unit>(Error.New(failMessage));
+
+            // Act
+            _ = await aff.WithLog(mockedLogger.Object).Run();
+
+            // Assert
+            VerifyLogLevel(LogLevel.Information, 1);
+            VerifyLogLevel(LogLevel.Error, 1);
+
+            void VerifyLogLevel(LogLevel logLevel, int times)
+            {
+                mockedLogger.Verify(
+                    x => x.Log(
+                        logLevel,
+                        It.IsAny<EventId>(),
+                        It.IsAny<It.IsAnyType>(),
+                        It.IsAny<Exception>(),
+                        It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                    Times.Exactly(times));
+            }
+        }
+
+        [Fact]
+        public async Task WhenRunAff_WithLog_ShouldLogInformation_Twice()
+        {
+            // Arrange
+            Mock<ILogger> mockedLogger = new Mock<ILogger>();
+
+            var aff = SuccessAff(unit);
+
+            // Act
+            _ = await aff.WithLog(mockedLogger.Object).Run();
+
+            // Assert
+            VerifyLogLevel(LogLevel.Information, 2);
+
+            void VerifyLogLevel(LogLevel logLevel, int times)
+            {
+                mockedLogger.Verify(
+                    x => x.Log(
+                        logLevel,
+                        It.IsAny<EventId>(),
+                        It.IsAny<It.IsAnyType>(),
+                        It.IsAny<Exception>(),
+                        It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                    Times.Exactly(times));
             }
         }
     }
