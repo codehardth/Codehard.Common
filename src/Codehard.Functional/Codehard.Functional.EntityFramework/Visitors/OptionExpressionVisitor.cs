@@ -14,7 +14,7 @@ public class OptionExpressionVisitor : ExpressionVisitor
     /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     public override Expression? Visit(Expression? node)
     {
-        if (entityType != null)
+        if (this.entityType != null)
         {
             return base.Visit(node);
         }
@@ -55,7 +55,7 @@ public class OptionExpressionVisitor : ExpressionVisitor
 
         var genericType = node.Left.Type.GenericTypeArguments[0];
 
-        if (genericType.IsPrimitive)
+        if (genericType.IsPrimitive || genericType.IsValueType)
         {
             var methodName = node.Method!.Name.Replace("op_", "");
             var method = genericType.GetMethod(methodName);
@@ -121,7 +121,7 @@ public class OptionExpressionVisitor : ExpressionVisitor
         {
             "IsSome" => Expression.NotEqual(backingField, GetNullConstant(genericType)),
             "IsNone" => Expression.Equal(backingField, GetNullConstant(genericType)),
-            _ => base.VisitMember(node),
+            _ => backingField,
         };
 
         static ConstantExpression GetNullConstant(Type type)
@@ -153,6 +153,10 @@ public class OptionExpressionVisitor : ExpressionVisitor
             _ when genericType == typeof(decimal) => ((Option<decimal>)node.Value!).ValueUnsafe(),
             _ when genericType == typeof(Guid) => ((Option<Guid>)node.Value!).ValueUnsafe(),
             _ when genericType == typeof(string) => ((Option<string>)node.Value!).ValueUnsafe(),
+            _ when genericType == typeof(DateTime) => ((Option<DateTime>)node.Value!).ValueUnsafe(),
+            _ when genericType == typeof(DateTimeOffset) => ((Option<DateTimeOffset>)node.Value!).ValueUnsafe(),
+            _ when genericType == typeof(DateOnly) => ((Option<DateOnly>)node.Value!).ValueUnsafe(),
+            _ when genericType == typeof(TimeOnly) => ((Option<TimeOnly>)node.Value!).ValueUnsafe(),
             _ => throw new NotSupportedException($"Type '{genericType}' is not supported in this context."),
         };
 
@@ -162,6 +166,28 @@ public class OptionExpressionVisitor : ExpressionVisitor
         var constant = Expression.Constant(value, type);
 
         return constant;
+    }
+
+    /// <summary>Visits the children of the <see cref="T:System.Linq.Expressions.UnaryExpression" />.</summary>
+    /// <param name="node">The expression to visit.</param>
+    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+    protected override Expression VisitUnary(UnaryExpression node)
+    {
+        if (!IsOptionType(node))
+        {
+            return base.VisitUnary(node);
+        }
+
+        var operand = node.Operand;
+
+        return node.NodeType switch
+        {
+            ExpressionType.Convert =>
+                operand.Type.IsPrimitive || operand.Type.IsValueType
+                    ? Expression.Convert(operand, typeof(Nullable<>).MakeGenericType(operand.Type))
+                    : operand,
+            _ => throw new Exception($"{node.NodeType} is not supported in this context."),
+        };
     }
 
     private static ParameterExpression GetParameterExpression(Expression expression)
