@@ -24,6 +24,50 @@ public static class OptionPropertyBuilderExtensions
         string? backingField = default)
         where TEntity : class
     {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(propertyExpression, backingField);
+
+        builder.Ignore(propertyName);
+
+        return
+            builder.Property(backingFieldInfo.FieldType, backingFieldName)
+                .HasColumnName(propertyName)
+                .IsRequired(false);
+    }
+
+    /// <summary>
+    /// Configure a property of <see cref="Option{TEntity}"/> using a backing field.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="propertyExpression"></param>
+    /// <param name="backingField"></param>
+    /// <typeparam name="TOwner"></typeparam>
+    /// <typeparam name="TProperty"></typeparam>
+    /// <typeparam name="TDependent"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static PropertyBuilder HasOptionProperty<TOwner, TDependent, TProperty>(
+        this OwnedNavigationBuilder<TOwner, TDependent> builder,
+        Expression<Func<TDependent, TProperty>> propertyExpression,
+        string? backingField = default)
+        where TOwner : class
+        where TDependent : class
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(propertyExpression, backingField);
+
+        builder.Ignore(propertyName);
+
+        return
+            builder.Property(backingFieldInfo.FieldType, backingFieldName)
+                .HasColumnName(propertyName)
+                .IsRequired(false);
+    }
+
+    private static (FieldInfo BackingField, string BackingFieldName, string PropertyName) GetBackingField<TEntity,
+        TProperty>(
+        Expression<Func<TEntity, TProperty>> propertyExpression,
+        string? backingField)
+        where TEntity : class
+    {
         var property =
             ((MemberExpression)propertyExpression.Body).Member;
 
@@ -40,10 +84,10 @@ public static class OptionPropertyBuilderExtensions
             throw new Exception("Property is not an option.");
         }
 
-        backingField ??= property.GetBackingFieldName();
+        var actualBackingField = backingField ?? property.GetBackingFieldName();
 
         var backingFieldInfo =
-            property.DeclaringType?.GetField(backingField, BindingFlags.Instance | BindingFlags.NonPublic);
+            property.DeclaringType?.GetField(actualBackingField, BindingFlags.Instance | BindingFlags.NonPublic);
 
         if (backingFieldInfo == null)
         {
@@ -55,18 +99,13 @@ public static class OptionPropertyBuilderExtensions
 
         if (ConfigurationCache.BackingField.ContainsKey(cacheKey))
         {
-            ConfigurationCache.BackingField[cacheKey] = backingField;
+            ConfigurationCache.BackingField[cacheKey] = actualBackingField;
         }
         else
         {
-            ConfigurationCache.BackingField.Add(cacheKey, backingField);
+            ConfigurationCache.BackingField.Add(cacheKey, actualBackingField);
         }
 
-        builder.Ignore(propertyName);
-
-        return
-            builder.Property(backingFieldInfo.FieldType, backingField)
-                .HasColumnName(propertyName)
-                .IsRequired(false);
+        return (backingFieldInfo, actualBackingField, propertyName);
     }
 }
