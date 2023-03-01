@@ -2,6 +2,6 @@
 
 internal static class ConfigurationCache
 {
-    // (Entity Type, Property Name) -> Backing Field Name
-    public static readonly Dictionary<(Type, string), string> BackingField = new();
+    // (Entity Type FullName, Property Name) -> Backing Field Name
+    public static readonly Dictionary<(string, string), string> BackingField = new();
 }

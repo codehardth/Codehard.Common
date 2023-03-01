@@ -7,13 +7,6 @@ namespace Codehard.Functional.EntityFramework.Visitors;
 
 public class OptionExpressionVisitor : ExpressionVisitor
 {
-    private Type? entityType;
-
-    public OptionExpressionVisitor(Type entityType)
-    {
-        this.entityType = entityType;
-    }
-
     protected override Expression VisitBinary(BinaryExpression node)
     {
         var isLeftOpt = IsOptionType(node.Left);
@@ -80,13 +73,19 @@ public class OptionExpressionVisitor : ExpressionVisitor
             return base.VisitMember(node);
         }
 
-        var genericType = exprNode.Type.GenericTypeArguments[0];
+        if (exprNode is not MemberExpression memberExpression)
+        {
+            return base.VisitMember(node);
+        }
+
+        var genericType = memberExpression.Type.GenericTypeArguments[0];
 
         var memberName = member.Name;
-        var left = ((MemberExpression)exprNode).Member;
-        var param = GetParameterExpression(exprNode);
+        var left = memberExpression.Member;
+        var param = memberExpression.Expression;
 
-        var backingField = Expression.Field(param, ConfigurationCache.BackingField[(this.entityType!, left.Name)]);
+        var backingField =
+            Expression.Field(param, ConfigurationCache.BackingField[(left.DeclaringType?.FullName, left.Name)]);
 
         return memberName switch
         {
@@ -165,16 +164,6 @@ public class OptionExpressionVisitor : ExpressionVisitor
             genericType.IsPrimitive ? typeof(Nullable<>).MakeGenericType(genericType) : genericType;
 
         return Expression.Parameter(type, node.Name);
-    }
-
-    private static ParameterExpression GetParameterExpression(Expression expression)
-    {
-        return expression switch
-        {
-            ParameterExpression parameterExpression => parameterExpression,
-            MemberExpression memberExpression => GetParameterExpression(memberExpression.Expression!),
-            _ => throw new NotSupportedException(),
-        };
     }
 
     private static bool IsOptionType(Expression expression)
