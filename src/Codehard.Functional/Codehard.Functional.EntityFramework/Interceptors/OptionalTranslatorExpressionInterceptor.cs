@@ -6,20 +6,13 @@ namespace Codehard.Functional.EntityFramework.Interceptors;
 
 public sealed class OptionalTranslatorExpressionInterceptor : IQueryExpressionInterceptor
 {
+    private static OptionExpressionVisitor Visitor = new();
+
     Expression IQueryExpressionInterceptor.QueryCompilationStarting(
         Expression queryExpression,
         QueryExpressionEventData eventData)
     {
-        var nodeType = queryExpression.Type;
-
-        var entityType =
-            nodeType.IsGenericType && nodeType.GetGenericTypeDefinition() == typeof(IQueryable<>)
-                ? nodeType.GenericTypeArguments[0]
-                : nodeType;
-
-        var exprVisitor = new OptionExpressionVisitor(entityType);
-
-        var translatedExpression = exprVisitor.Visit(queryExpression)!;
+        var translatedExpression = Visitor.Visit(queryExpression)!;
 
         return translatedExpression;
     }

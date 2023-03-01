@@ -30,7 +30,8 @@ namespace Infrastructure.Test.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    MyModelId = table.Column<Guid>(type: "uuid", nullable: true)
+                    MyModelId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ValueOpt = table.Column<decimal>(type: "numeric", nullable: true)
                 },
                 constraints: table =>
                 {

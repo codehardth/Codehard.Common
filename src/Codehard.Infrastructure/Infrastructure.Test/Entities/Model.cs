@@ -24,6 +24,8 @@ public class MyModel : Entity<GuidKey>
 
     public string Value { get; init; }
 
+    public OwnedEntity OwnedTestEntity { get; set; }
+
     public Option<int> Number
     {
         get => Optional(this.x);

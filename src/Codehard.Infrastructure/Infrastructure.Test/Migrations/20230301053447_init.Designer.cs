@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Test.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20230227161455_init")]
+    [Migration("20230301053447_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -32,6 +32,10 @@ namespace Infrastructure.Test.Migrations
 
                     b.Property<Guid?>("MyModelId")
                         .HasColumnType("uuid");
+
+                    b.Property<decimal?>("valueOpt")
+                        .HasColumnType("numeric")
+                        .HasColumnName("ValueOpt");
 
                     b.HasKey("Id");
 

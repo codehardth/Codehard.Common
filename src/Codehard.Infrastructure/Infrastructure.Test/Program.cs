@@ -20,7 +20,8 @@ public class Program
             sp.AddDbContext<TestDbContext>(options =>
             {
                 options
-                    .UseNpgsql("Server=127.0.0.1;Port=5452;Database=TestDatabase;User Id=postgres;Password=Lt&R_6M6dR>=V6yz;IncludeErrorDetail=true;")
+                    .UseNpgsql(
+                        "Server=127.0.0.1;Port=5438;Database=TestDatabase;User Id=postgres;Password=postgres;IncludeErrorDetail=true;")
                     .AddOptionalTranslator();
             });
         });
@@ -29,17 +30,25 @@ public class Program
 
         var dbContext = app.Services.GetRequiredService<TestDbContext>();
 
+        var some = Some(6);
+        var none = Option<int>.None;
+        var nullable = (int?)7;
+
         var q =
             dbContext.Models.Where(m =>
+                    m.OwnedTestEntity.Value2 == none &&
+                    m.Number == some ||
+                    m.Number == none ||
+                    m.Number != Optional(nullable) ||
                     // m.Number.IsSome &&
                     m.Number.IsNone ||
                     // m.Text.IsSome &&
                     m.Text.IsNone ||
-                    m.Number == 0 &&
-                    m.Number > 0 ||
-                    m.Number < 0 &&
-                    m.Number >= 0 ||
-                    m.Number <= 0 &&
+                    m.Number == 1 &&
+                    m.Number > 2 ||
+                    m.Number < 3 &&
+                    m.Number >= 4 ||
+                    m.Number <= 5 &&
                     m.Text == "test" ||
                     EF.Functions.Contains(m.Text, "test") ||
                     EF.Functions.StartsWith(m.Text, "test") &&

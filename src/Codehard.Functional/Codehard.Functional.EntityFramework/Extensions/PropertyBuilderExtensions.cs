@@ -56,16 +56,18 @@ public static class OptionPropertyBuilderExtensions
 
         builder.Ignore(propertyName);
 
+        var ownerName = builder.Metadata.PrincipalToDependent?.Name;
+
         return
             builder.Property(backingFieldInfo.FieldType, backingFieldName)
-                .HasColumnName(propertyName)
+                .HasColumnName($"{ownerName}_{propertyName}")
                 .IsRequired(false);
     }
 
-    private static (FieldInfo BackingField, string BackingFieldName, string PropertyName) GetBackingField<TEntity,
-        TProperty>(
-        Expression<Func<TEntity, TProperty>> propertyExpression,
-        string? backingField)
+    private static (FieldInfo BackingField, string BackingFieldName, string PropertyName) GetBackingField
+        <TEntity, TProperty>(
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            string? backingField)
         where TEntity : class
     {
         var property =
@@ -88,14 +90,17 @@ public static class OptionPropertyBuilderExtensions
 
         var backingFieldInfo =
             property.DeclaringType?.GetField(actualBackingField, BindingFlags.Instance | BindingFlags.NonPublic);
+        var genericType = propertyType.GenericTypeArguments[0];
+        var expectedType = genericType.IsValueType ? typeof(Nullable<>).MakeGenericType(genericType) : genericType;
 
-        if (backingFieldInfo == null)
+        if (backingFieldInfo == null || backingFieldInfo.FieldType != expectedType)
         {
-            throw new Exception($"Unable to find backing field '{backingField}' in {property.DeclaringType}.");
+            throw new Exception(
+                $"Unable to find backing field '{actualBackingField}' with type {expectedType} in {property.DeclaringType}.");
         }
 
         var entityType = property.DeclaringType!;
-        var cacheKey = (entityType, propertyName);
+        var cacheKey = (entityType.FullName, propertyName);
 
         if (ConfigurationCache.BackingField.ContainsKey(cacheKey))
         {

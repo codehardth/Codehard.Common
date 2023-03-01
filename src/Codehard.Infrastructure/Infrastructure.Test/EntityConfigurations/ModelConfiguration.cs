@@ -15,6 +15,11 @@ public class ModelConfiguration : EntityTypeConfigurationBase<MyModel>
         builder.HasOptionProperty(m => m.Number, "x");
         builder.HasOptionProperty(m => m.Text, "y");
 
+        builder.OwnsOne(m => m.OwnedTestEntity, oeBuilder =>
+        {
+            oeBuilder.Property(e => e.Value1);
+            oeBuilder.HasOptionProperty(e => e.Value2);
+        });
         builder.HasMany(m => m.Childs)
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
@@ -26,5 +31,6 @@ public class ChildModelConfiguration : EntityTypeConfigurationBase<ChildModel>
     protected override void EntityConfigure(EntityTypeBuilder<ChildModel> builder)
     {
         builder.HasKey(c => c.Id);
+        builder.HasOptionProperty(c => c.ValueOpt);
     }
 }
