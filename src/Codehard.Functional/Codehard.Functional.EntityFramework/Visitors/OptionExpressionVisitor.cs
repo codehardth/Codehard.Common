@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using LanguageExt;
-using LanguageExt.UnsafeValueAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Functional.EntityFramework.Visitors;
@@ -9,37 +9,11 @@ public class OptionExpressionVisitor : ExpressionVisitor
 {
     private Type? entityType;
 
-    /// <summary>Dispatches the expression to one of the more specialized visit methods in this class.</summary>
-    /// <param name="node">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-    public override Expression? Visit(Expression? node)
+    public OptionExpressionVisitor(Type entityType)
     {
-        if (this.entityType != null)
-        {
-            return base.Visit(node);
-        }
-
-        var isGenericType = node?.Type.IsGenericType ?? false;
-        var isQueryable = isGenericType && node?.Type.GetGenericTypeDefinition() == typeof(IQueryable<>);
-
-        if (!isQueryable)
-        {
-            return base.Visit(node);
-        }
-
-        if (node != null)
-        {
-            var type = node.Type.GenericTypeArguments[0];
-
-            this.entityType = type;
-        }
-
-        return base.Visit(node);
+        this.entityType = entityType;
     }
 
-    /// <summary>Visits the children of the <see cref="T:System.Linq.Expressions.BinaryExpression" />.</summary>
-    /// <param name="node">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitBinary(BinaryExpression node)
     {
         var isLeftOpt = IsOptionType(node.Left);
@@ -71,9 +45,6 @@ public class OptionExpressionVisitor : ExpressionVisitor
         };
     }
 
-    /// <summary>Visits the children of the <see cref="T:System.Linq.Expressions.MethodCallExpression" />.</summary>
-    /// <param name="node">The expression to visit.</param>
-    /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
         if (node.Method.ReflectedType == typeof(StringOptionDbFunctionsExtensions))
@@ -143,22 +114,11 @@ public class OptionExpressionVisitor : ExpressionVisitor
         }
 
         var genericType = node.Type.GenericTypeArguments[0];
+        var enumerable = (IEnumerable)node.Value!;
+        var enumerator = enumerable.GetEnumerator();
+        var hasValue = enumerator.MoveNext();
 
-        object value = genericType switch
-        {
-            _ when genericType == typeof(bool) => ((Option<bool>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(int) => ((Option<int>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(float) => ((Option<float>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(double) => ((Option<double>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(decimal) => ((Option<decimal>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(Guid) => ((Option<Guid>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(string) => ((Option<string>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(DateTime) => ((Option<DateTime>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(DateTimeOffset) => ((Option<DateTimeOffset>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(DateOnly) => ((Option<DateOnly>)node.Value!).ValueUnsafe(),
-            _ when genericType == typeof(TimeOnly) => ((Option<TimeOnly>)node.Value!).ValueUnsafe(),
-            _ => throw new NotSupportedException($"Type '{genericType}' is not supported in this context."),
-        };
+        var value = hasValue ? enumerator.Current : null;
 
         var type =
             genericType.IsPrimitive ? typeof(Nullable<>).MakeGenericType(genericType) : genericType;
@@ -200,19 +160,15 @@ public class OptionExpressionVisitor : ExpressionVisitor
             return base.VisitParameter(node);
         }
 
-        var actualType = node.Type.GenericTypeArguments[0];
-        var newType = actualType.IsPrimitive || actualType.IsValueType
-            ? typeof(Nullable<>).MakeGenericType(actualType)
-            : actualType;
+        var genericType = node.Type.GenericTypeArguments[0];
+        var type =
+            genericType.IsPrimitive ? typeof(Nullable<>).MakeGenericType(genericType) : genericType;
 
-        var newParam = Expression.Parameter(newType, node.Name);
-
-        return newParam;
+        return Expression.Parameter(type, node.Name);
     }
 
     private static ParameterExpression GetParameterExpression(Expression expression)
     {
-        // This will need more intensive tests.
         return expression switch
         {
             ParameterExpression parameterExpression => parameterExpression,
