@@ -56,7 +56,22 @@ public static class LoggerExtensions
     /// <param name="error"></param>
     /// <param name="logLevel"></param>
     /// <returns></returns>
-    public static Error Log(this ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
+    public static Unit Log(this ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
+    {
+        Log(logger, Some(error), logLevel);
+
+        return unit;
+    }
+
+    /// <summary>
+    /// Log as error if an error contains exception, otherwise log information if there is a message within an error object.
+    /// Then returns the error back.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="error"></param>
+    /// <param name="logLevel"></param>
+    /// <returns></returns>
+    public static Error DoLog(this ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
     {
         Log(logger, Some(error), logLevel);
 

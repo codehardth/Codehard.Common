@@ -42,7 +42,7 @@ public static class AffExtensions
             from executingLog in
                 Eff(() => executingMessage.IfSome(t => logger.Log(logLevel, t)))
             from res in
-                aff.MapFail(err => logger.Log(err, LogLevel.Error))
+                aff.MapFail(err => logger.DoLog(err, LogLevel.Error))
             from executedLog in
                 Eff(() => executedMessage.IfSome(f => logger.Log(logLevel, f(res))))
             select res;
@@ -88,7 +88,7 @@ public static class AffExtensions
             from executingLog in
                 Eff(() => executingMessage.IfSome(t => logger.Log(logLevel, t)))
             from res in
-                eff.MapFail(err => logger.Log(err, LogLevel.Error))
+                eff.MapFail(err => logger.DoLog(err, LogLevel.Error))
             from executedLog in
                 Eff(() => executedMessage.IfSome(f => logger.Log(logLevel, f(res))))
             select res;
