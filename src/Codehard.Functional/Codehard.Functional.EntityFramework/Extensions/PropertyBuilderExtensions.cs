@@ -64,10 +64,33 @@ public static class OptionPropertyBuilderExtensions
                 .IsRequired(false);
     }
 
+    private static ReferenceNavigationBuilder HasOneOption<TEntity, TRelatedEntity>(
+            this EntityTypeBuilder<TEntity> builder,
+            Expression<Func<TEntity, TRelatedEntity?>> navigationExpression)
+        // Action<OwnedNavigationBuilder<TEntity, TRelatedEntity>> buildAction)
+        where TEntity : class
+        where TRelatedEntity : IOptional
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(navigationExpression, default);
+
+        return builder.HasOne(backingFieldInfo.FieldType, backingFieldName);
+    }
+
+    private static ReferenceReferenceBuilder WithOneOption<TEntity, TRelation>(
+            this ReferenceNavigationBuilder builder,
+            Expression<Func<TEntity, TRelation>> navigationExpression)
+        // Action<OwnedNavigationBuilder<TEntity, TRelatedEntity>> buildAction)
+        where TEntity : class
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(navigationExpression);
+
+        return builder.WithOne(backingFieldName);
+    }
+
     private static (FieldInfo BackingField, string BackingFieldName, string PropertyName) GetBackingField
         <TEntity, TProperty>(
             Expression<Func<TEntity, TProperty>> propertyExpression,
-            string? backingField)
+            string? backingField = default)
         where TEntity : class
     {
         var property =
