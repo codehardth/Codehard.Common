@@ -2,6 +2,10 @@ using System.Linq.Expressions;
 
 namespace Codehard.Infrastructure.EntityFramework.Interfaces;
 
+/// <summary>
+/// Defines a generic repository interface for entities of type T.
+/// </summary>
+/// <typeparam name="T">The type of entity to be stored in the repository.</typeparam>
 public interface IRepository<T> : IQueryable<T>
     where T : class
 {
@@ -59,26 +63,6 @@ public interface IRepository<T> : IQueryable<T>
     void UpdateRange(IEnumerable<T> entities);
 
     /// <summary>
-    /// Determines whether any entity satisfies a condition.
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <returns></returns>
-    bool Any(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
-    /// Returns the number of entities in a repository.
-    /// </summary>
-    /// <returns></returns>
-    int Count();
-
-    /// <summary>
-    /// Returns the number of entities in a repository that satisfies a condition.
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <returns></returns>
-    int Count(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
     /// Saves all changes made in this repository context to the database.
     /// </summary>
     /// <returns></returns>
@@ -126,28 +110,6 @@ public interface IRepository<T> : IQueryable<T>
     /// <param name="entities"></param>
     /// <param name="cancellationToken"></param>
     Task UpdateRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Determines whether any entity satisfies a condition in an asynchronous manner.
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Returns the number of entities in a repository in an asynchronous manner.
-    /// </summary>
-    /// <returns></returns>
-    Task<int> CountAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Returns the number of entities in a repository that satisfies a condition in an asynchronous manner.
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Saves all changes made in this repository context to the database in an asynchronous manner.
