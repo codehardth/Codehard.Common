@@ -2,7 +2,8 @@ using System.Linq.Expressions;
 
 namespace Codehard.Infrastructure.EntityFramework.Interfaces;
 
-public interface IRepository<T> where T : class
+public interface IRepository<T> : IQueryable<T>
+    where T : class
 {
     /// <summary>
     /// Get an entity using its identity in an asynchronous manner.
