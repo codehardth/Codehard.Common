@@ -82,24 +82,6 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
     }
 
     /// <inheritdoc />
-    public virtual bool Any(Expression<Func<T, bool>> predicate)
-    {
-        return this.Set.Any(predicate);
-    }
-
-    /// <inheritdoc />
-    public virtual int Count()
-    {
-        return this.Set.Count();
-    }
-
-    /// <inheritdoc />
-    public virtual int Count(Expression<Func<T, bool>> predicate)
-    {
-        return this.Set.Count(predicate);
-    }
-
-    /// <inheritdoc />
     public virtual int SaveChanges()
     {
         return this.dbContext.SaveChanges();
@@ -149,28 +131,6 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
         this.Set.UpdateRange(entities);
 
         return Task.CompletedTask;
-    }
-
-    /// <inheritdoc />
-    public virtual Task<bool> AnyAsync(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken = default)
-    {
-        return this.Set.AnyAsync(predicate, cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
-    {
-        return this.Set.CountAsync(cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public virtual Task<int> CountAsync(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken = default)
-    {
-        return this.Set.CountAsync(predicate, cancellationToken);
     }
 
     /// <inheritdoc />
