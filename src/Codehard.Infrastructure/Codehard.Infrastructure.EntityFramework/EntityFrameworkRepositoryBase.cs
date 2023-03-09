@@ -18,7 +18,7 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
         this.dbContext = dbContext;
     }
 
-    protected abstract DbSet<T> Set { get; }
+    protected virtual DbSet<T> Set => this.dbContext.Set<T>();
 
     public virtual ValueTask<T?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
     {
@@ -122,7 +122,8 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
         return Task.CompletedTask;
     }
 
-    public virtual Task<bool> AnyAsync(Expression<Func<T, bool>> predicate,
+    public virtual Task<bool> AnyAsync(
+        Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
         return this.Set.AnyAsync(predicate, cancellationToken);
@@ -133,7 +134,8 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
         return this.Set.CountAsync(cancellationToken);
     }
 
-    public virtual Task<int> CountAsync(Expression<Func<T, bool>> predicate,
+    public virtual Task<int> CountAsync(
+        Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
         return this.Set.CountAsync(predicate, cancellationToken);
