@@ -20,6 +20,8 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
 
     protected virtual DbSet<T> Set => this.dbContext.Set<T>();
 
+    public IQueryable<T> Query => this.Set;
+
     public virtual ValueTask<T?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
     {
         return this.GetByIdAsync(new[] { id }, cancellationToken);
