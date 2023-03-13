@@ -67,7 +67,6 @@ public static class OptionPropertyBuilderExtensions
     private static ReferenceNavigationBuilder HasOneOption<TEntity, TRelatedEntity>(
             this EntityTypeBuilder<TEntity> builder,
             Expression<Func<TEntity, TRelatedEntity?>> navigationExpression)
-        // Action<OwnedNavigationBuilder<TEntity, TRelatedEntity>> buildAction)
         where TEntity : class
         where TRelatedEntity : IOptional
     {
@@ -79,7 +78,6 @@ public static class OptionPropertyBuilderExtensions
     private static ReferenceReferenceBuilder WithOneOption<TEntity, TRelation>(
             this ReferenceNavigationBuilder builder,
             Expression<Func<TEntity, TRelation>> navigationExpression)
-        // Action<OwnedNavigationBuilder<TEntity, TRelatedEntity>> buildAction)
         where TEntity : class
     {
         var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(navigationExpression);
