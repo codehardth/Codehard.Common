@@ -5,77 +5,230 @@ public static class AsyncEffectExtensions
 {
     #region MapFail
 
-    public static Aff<A> MapFailToOK<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.OK, errorMessage);
+    public static Aff<A> MapFailToActionResult<A>(
+        this Aff<A> ma,
+        IActionResult actionResult,
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.OK, errorCode, message, (object)actionResult, @override);
 
-    public static Aff<A> MapFailToOK<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.OK, messageFunc);
+    public static Aff<A> MapFailToOK<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.OK, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToCreated<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Created, errorMessage);
+    public static Aff<A> MapFailToOK<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.OK, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToCreated<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Created, messageFunc);
+    public static Aff<A> MapFailToCreated<A>(
+        this Aff<A> ma,
+        Option<string> errorCode = default,
+        Option<string> errorMessage = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Created, errorCode, errorMessage, data, @override);
 
-    public static Aff<A> MapFailToAccepted<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Accepted, errorMessage);
+    public static Aff<A> MapFailToCreated<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Created, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToAccepted<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Accepted, messageFunc);
+    public static Aff<A> MapFailToAccepted<A>(
+        this Aff<A> ma,
+        Option<string> errorCode = default,
+        Option<string> errorMessage = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Accepted, errorCode, errorMessage, data, @override);
 
-    public static Aff<A> MapFailToNoContent<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.NoContent, errorMessage);
+    public static Aff<A> MapFailToAccepted<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Accepted, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToNoContent<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.NoContent, messageFunc);
+    public static Aff<A> MapFailToNoContent<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.NoContent, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToBadRequest<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.BadRequest, errorMessage);
+    public static Aff<A> MapFailToNoContent<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.NoContent, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToBadRequest<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.BadRequest, messageFunc);
+    public static Aff<A> MapFailToBadRequest<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.BadRequest, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToUnauthorized<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Unauthorized, errorMessage);
+    public static Aff<A> MapFailToBadRequest<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.BadRequest, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToUnauthorized<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Unauthorized, messageFunc);
+    public static Aff<A> MapFailToUnauthorized<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Unauthorized, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToForbidden<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Forbidden, errorMessage);
+    public static Aff<A> MapFailToUnauthorized<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Unauthorized, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToForbidden<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Forbidden, messageFunc);
+    public static Aff<A> MapFailToForbidden<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Forbidden, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToNotFound<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.NotFound, errorMessage);
+    public static Aff<A> MapFailToForbidden<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Forbidden, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToNotFound<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.NotFound, messageFunc);
+    public static Aff<A> MapFailToNotFound<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.NotFound, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToConflict<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Conflict, errorMessage);
+    public static Aff<A> MapFailToNotFound<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.NotFound, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToConflict<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Conflict, messageFunc);
+    public static Aff<A> MapFailToConflict<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Conflict, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToUnprocessableEntity<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.UnprocessableEntity, errorMessage);
+    public static Aff<A> MapFailToConflict<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Conflict, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToUnprocessableEntity<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.UnprocessableEntity, messageFunc);
+    public static Aff<A> MapFailToUnprocessableEntity<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.UnprocessableEntity, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToLocked<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.Locked, errorMessage);
+    public static Aff<A> MapFailToUnprocessableEntity<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.UnprocessableEntity, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToLocked<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.Locked, messageFunc);
+    public static Aff<A> MapFailToLocked<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Locked, errorCode, message, data, @override);
 
-    public static Aff<A> MapFailToInternalServerError<A>(this Aff<A> ma, string errorMessage = "")
-        => ma.CustomError((int)HttpStatusCode.InternalServerError, errorMessage);
+    public static Aff<A> MapFailToLocked<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.Locked, messageFunc, errorCode, data, @override);
 
-    public static Aff<A> MapFailToInternalServerError<A>(this Aff<A> ma, Func<Error, string> messageFunc)
-        => ma.CustomError((int)HttpStatusCode.InternalServerError, messageFunc);
+    public static Aff<A> MapFailToInternalServerError<A>(
+        this Aff<A> ma, 
+        Option<string> errorCode = default,
+        Option<string> message = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.InternalServerError, errorCode, message, data, @override);
+
+    public static Aff<A> MapFailToInternalServerError<A>(
+        this Aff<A> ma,
+        Func<Error, string> messageFunc,
+        Option<string> errorCode = default,
+        Option<object> data = default,
+        bool @override = true)
+        => ma.MapFailToHttpResultError(
+            HttpStatusCode.InternalServerError, messageFunc, errorCode, data, @override);
 
     #endregion
 

@@ -20,18 +20,28 @@ public static class ControllerExtensions
 
     private static IActionResult MapErrorToActionResult(Error err)
     {
-        return new ObjectResult(err.Message)
-        {
-            StatusCode =
-                Enum.IsDefined(typeof(HttpStatusCode), err.Code)
-                    ? err.Code
-                    : (int)HttpStatusCode.InternalServerError,
-        };
+        return
+            err switch
+            {
+                HttpResultError hre => new ErrorWrapperActionResult(hre),
+                _ => new ObjectResult(err.Message)
+                {
+                    StatusCode =
+                        Enum.IsDefined(typeof(HttpStatusCode), err.Code)
+                            ? err.Code
+                            : (int)HttpStatusCode.InternalServerError,
+                }
+            };
     }
 
-    /// <summary>
-    /// Match a Fin of <typeparamref name="T"/> into IActionResult.
+    //// <summary>
+    /// Matches a Fin of <typeparamref name="T"/> into an <see cref="IActionResult"/>.
     /// </summary>
+    /// <typeparam name="T">The type of the successful result.</typeparam>
+    /// <param name="fin">The <see cref="Fin{T}"/> to match.</param>
+    /// <param name="successStatusCode">The HTTP status code to return on success.</param>
+    /// <param name="logger">An optional <see cref="ILogger"/> instance used for logging.</param>
+    /// <returns>An <see cref="IActionResult"/> that represents the result of matching <paramref name="fin"/>.</returns>
     public static IActionResult MatchToResult<T>(
         this Fin<T> fin,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
@@ -42,9 +52,15 @@ public static class ControllerExtensions
                 res => MapToActionResult(successStatusCode, res),
                 err =>
                 {
-                    logger?.Log(err);
-
-                    return MapErrorToActionResult(err);
+                    switch (err)
+                    {
+                        case HttpResultError hre:
+                            logger?.Log(hre);
+                            return MapErrorToActionResult(hre);
+                        default:
+                            logger?.Log(err);
+                            return MapErrorToActionResult(err);
+                    }
                 });
     }
 
@@ -65,9 +81,15 @@ public static class ControllerExtensions
                         None: new NotFoundResult()),
                 err =>
                 {
-                    logger?.Log(err);
-
-                    return MapErrorToActionResult(err);
+                    switch (err)
+                    {
+                        case HttpResultError hre:
+                            logger?.Log(hre);
+                            return MapErrorToActionResult(hre);
+                        default:
+                            logger?.Log(err);
+                            return MapErrorToActionResult(err);
+                    }
                 });
     }
 
@@ -90,5 +112,20 @@ public static class ControllerExtensions
                 .MatchToResult(
                     successStatusCode: successStatusCode,
                     logger: logger));
+    }
+    
+    /// <summary>
+    /// Run the effect into IActionResult in a synchronous manner.
+    /// </summary>
+    public static IActionResult RunToResult<T>(
+        this Eff<T> eff,
+        HttpStatusCode successStatusCode = HttpStatusCode.OK,
+        ILogger? logger = default)
+    {
+        return eff
+            .Run()
+            .MatchToResult(
+                successStatusCode: successStatusCode,
+                logger: logger);
     }
 }
