@@ -34,7 +34,7 @@ public static class ControllerExtensions
             };
     }
 
-    //// <summary>
+    /// <summary>
     /// Matches a Fin of <typeparamref name="T"/> into an <see cref="IActionResult"/>.
     /// </summary>
     /// <typeparam name="T">The type of the successful result.</typeparam>

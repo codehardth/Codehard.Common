@@ -30,14 +30,8 @@ public class ErrorWrapperActionResult : IActionResult
     /// </summary>
     /// <param name="context">The context in which the result is executed.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="context"/> parameter is <c>null</c>.</exception>
     public async Task ExecuteResultAsync(ActionContext context)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-        
         Error.ErrorCode.IfSome(errCode =>
             context.HttpContext.Response.Headers.Add("x-error-code", errCode));
 

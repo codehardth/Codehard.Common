@@ -19,16 +19,12 @@ public static class Commons
             return
                 err switch
                 {
-                    HttpResultError when @override => 
-                        HttpResultError.New(
-                            code, message, errorCode, data, err),
                     HttpResultError hre when !@override => hre,
                     _ => 
                         HttpResultError.New(
                             code, message, errorCode, data, err),
                 };
         });
-            
     
     internal static Aff<A> MapFailToHttpResultError<A>(
         this Aff<A> ma,
@@ -47,11 +43,8 @@ public static class Commons
             return
                 err switch
                 {
-                    HttpResultError when @override =>
-                        HttpResultError.New(
-                            code, message, errorCode, data, err),
                     HttpResultError hre when !@override => hre,
-                    _ =>
+                    _ => 
                         HttpResultError.New(
                             code, message, errorCode, data, err),
                 };
