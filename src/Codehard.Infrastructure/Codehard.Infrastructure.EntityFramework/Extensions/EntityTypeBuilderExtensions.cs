@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Codehard.Infrastructure.EntityFramework.Extensions;
 
+/// <summary>
+/// Contains extension methods for <see cref="EntityTypeBuilder"/> and <see cref="OwnedNavigationBuilder"/> to simplify
+/// entity configuration.
+/// </summary>
 public static class EntityTypeBuilderExtensions
 {
     private static Dictionary<Type, WeakReference<PropertyInfo[]>> propertyInfoCache = new();

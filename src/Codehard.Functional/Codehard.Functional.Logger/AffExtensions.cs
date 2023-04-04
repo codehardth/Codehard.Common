@@ -1,5 +1,8 @@
 namespace Codehard.Functional.Logger;
 
+/// <summary>
+/// Provides extension methods for wrapping asynchronous effects and effects inside a logger.
+/// </summary>
 public static class AffExtensions
 {
     /// <summary>
