@@ -28,3 +28,19 @@ public abstract class EntityTypeConfigurationBase<TEntity>
     /// <param name="builder"></param>
     protected abstract void EntityConfigure(EntityTypeBuilder<TEntity> builder);
 }
+
+/// <summary>
+/// A base class for EntityTypeConfiguration with default option
+/// that mapping all enum properties to string. 
+/// </summary>
+/// <typeparam name="TEntity">The entity type that is being configured.</typeparam>
+/// <typeparam name="TContext">The target DbContext.</typeparam>
+public abstract class EntityTypeConfigurationBase<TEntity, TContext> : EntityTypeConfigurationBase<TEntity>
+    where TEntity : class
+    where TContext : DbContext
+{
+    /// <summary>
+    /// Gets the type of the DbContext that this configuration applies to.
+    /// </summary>
+    public Type ContextType => typeof(TContext);
+}
