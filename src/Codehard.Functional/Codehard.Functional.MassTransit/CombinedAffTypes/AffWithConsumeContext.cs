@@ -36,15 +36,12 @@ namespace Codehard.Functional.MassTransit.CombinedAffTypes
             var consumeContext = this.consumeContext;
 
             var respAff =
-                aff.MatchAff(
-                    Succ: res =>
-                        consumeContext.RespondAsync<TSuccResp>(res)
-                             .ToUnit()
-                             .ToAff(),
-                    Fail: err =>
-                        consumeContext.RespondAsync<TFailResp>(errorRespMsgFunc(err))
-                             .ToUnit()
-                             .ToAff());
+                aff.Match(
+                        Succ: res =>
+                            consumeContext.RespondAsync<TSuccResp>(res),
+                        Fail: err =>
+                            consumeContext.RespondAsync<TFailResp>(errorRespMsgFunc(err)))
+                    .Map(static _ => unit);
 
             var respFin = await respAff.Run();
             logger?.LogIfFail(respFin);

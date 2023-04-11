@@ -1,8 +1,7 @@
 ﻿using Codehard.Functional.MassTransit.CombinedAffTypes;
-using MassTransit;
 using System.Diagnostics.Contracts;
 
-namespace Codehard.Functional.MassTransit;
+namespace MassTransit;
 
 /// <summary>
 /// The Collection of Async Effect extension
