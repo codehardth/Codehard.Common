@@ -1,6 +1,4 @@
-using MassTransit;
-
-namespace Codehard.Functional.MassTransit;
+namespace MassTransit;
 
 /// <summary>
 /// The Collection of Masstransit bus extension

@@ -1,7 +1,6 @@
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Codehard.Functional.MassTransit;
 using Codehard.Functional.MassTransit.Exceptions;
 using static LanguageExt.Prelude;
 

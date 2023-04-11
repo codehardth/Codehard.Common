@@ -1,9 +1,8 @@
 ﻿using Codehard.Functional.MassTransit.Exceptions;
 using Codehard.Functional.MassTransit.Interfaces;
 using LanguageExt.Common;
-using MassTransit;
 
-namespace Codehard.Functional.MassTransit;
+namespace MassTransit;
 
 /// <summary>
 /// Masstransit <see cref="Response{T1, T2}"/> extensions
