@@ -58,6 +58,24 @@ public class QueryableExtensionsTests
     }
     
     [Fact]
+    public void WhenRunWhereOptionalFromListOfDateTimeOffsetWithSomePredicate_ShouldReturnNonEmptyList()
+    {
+        // Arrange
+        var date = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        var list = new [] { date };
+
+        // Act
+        var res = list
+            .AsQueryable()
+            .WhereOptional(
+                Some(date).ToPredExpr<DateTimeOffset>(n => d => n == d));
+
+        // Assert
+        Assert.Single(res);
+        Assert.Equal(date, res.First());
+    }
+    
+    [Fact]
     public void WhenRunWhereOptionalFromListWithNonePredicate_ShouldNoneEmptyList()
     {
         // Arrange
