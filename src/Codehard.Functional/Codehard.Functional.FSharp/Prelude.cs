@@ -6,6 +6,9 @@ using Unit = LanguageExt.Unit;
 
 namespace Codehard.Functional.FSharp;
 
+/// <summary>
+/// Provides a collection of utility methods for working with functional programming constructs in C#.
+/// </summary>
 public static class Prelude
 {
     /// <summary>

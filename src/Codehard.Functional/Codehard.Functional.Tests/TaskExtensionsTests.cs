@@ -36,7 +36,10 @@ public class TaskExtensionsTests
     public async Task WhenRunToUnitAffWithValueTask_ShouldReturnFailAffOfUnit()
     {
         // Arrange
+        // Do not remove async keyword!
+#pragma warning disable CS1998
         async ValueTask Task()
+#pragma warning restore CS1998
         {
             throw new Exception("Some error");
         }
@@ -54,7 +57,10 @@ public class TaskExtensionsTests
     public async Task WhenRunToUnitAffWithTask_ShouldReturnFailAffOfUnit()
     {
         // Arrange
+        // Do not remove async keyword!
+#pragma warning disable CS1998
         async Task Task()
+#pragma warning restore CS1998
         {
             throw new Exception("Some error");
         }

@@ -15,8 +15,8 @@ public static class ResponseExtensions
     /// <typeparam name="TSucc">Success case</typeparam>
     /// <typeparam name="TFail">Failure case</typeparam>
     /// <returns>
-    /// An instance of <see cref="TSucc"/> if the call is success,
-    /// otherwise an error with <see cref="MassTransitFaultMessageException{T}"/> of <see cref="TFail"/>.
+    /// An instance of <typeparamref name="TSucc"/> if the call is success,
+    /// otherwise an error with <see cref="MassTransitFaultMessageException{T}"/> of <typeparamref name="TFail"/>.
     /// </returns>
     public static Aff<TSucc> ToAff<TSucc, TFail>(this Task<Response<TSucc, TFail>> response)
         where TSucc : class, ICorrelatableMessage

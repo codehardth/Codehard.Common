@@ -13,6 +13,10 @@ public abstract class EntityTypeConfigurationBase<TEntity>
     : IEntityTypeConfiguration<TEntity>
     where TEntity : class
 {
+    /// <summary>
+    /// Configures the entity type for the specified entity.
+    /// </summary>
+    /// <param name="builder">The builder used to configure the entity.</param>
     public void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.MapEnumPropertiesToString();

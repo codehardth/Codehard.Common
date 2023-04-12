@@ -2,6 +2,9 @@ using LanguageExt.Common;
 
 namespace Codehard.Functional.Logger;
 
+/// <summary>
+/// Contains extension methods for logging with an <see cref="ILogger"/> instance.
+/// </summary>
 public static class LoggerExtensions
 {
     private static Unit Log(this ILogger logger, Option<Error> errorOpt, LogLevel logLevel = LogLevel.Information)

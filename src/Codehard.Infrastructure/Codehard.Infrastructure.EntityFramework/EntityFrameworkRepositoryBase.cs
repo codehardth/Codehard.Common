@@ -27,7 +27,7 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
     }
 
     /// <summary>
-    /// Provides access to the DbSet of <see cref="T"/> object used by the repository to interact with the database.
+    /// Provides access to the DbSet of <typeparamref name="T"/> object used by the repository to interact with the database.
     /// </summary>
     protected virtual DbSet<T> Set => this.dbContext.Set<T>();
 

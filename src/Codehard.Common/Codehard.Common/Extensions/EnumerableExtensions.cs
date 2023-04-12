@@ -1,7 +1,23 @@
 namespace Codehard.Common.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="IEnumerable{T}"/>.
+/// </summary>
 public static class EnumerableExtensions
 {
+    /// <summary>
+    /// Performs a left outer join on two sequences based on the specified key selectors and result selector.
+    /// </summary>
+    /// <typeparam name="TLeft">The type of elements in the left sequence.</typeparam>
+    /// <typeparam name="TRight">The type of elements in the right sequence.</typeparam>
+    /// <typeparam name="TKey">The type of the keys returned by the key selector functions.</typeparam>
+    /// <typeparam name="TResult">The type of the result elements.</typeparam>
+    /// <param name="left">The left sequence to join.</param>
+    /// <param name="right">The right sequence to join.</param>
+    /// <param name="leftKeySelector">A function to extract the join key from each element of the left sequence.</param>
+    /// <param name="rightKeySelector">A function to extract the join key from each element of the right sequence.</param>
+    /// <param name="resultSelector">A function to create a result element from an element from the left sequence and an optional matching element from the right sequence.</param>
+    /// <returns>An <see cref="IEnumerable{TResult}"/> that contains the result elements of the left outer join operation.</returns>
     public static IEnumerable<TResult> LeftJoin<TLeft, TRight, TKey, TResult>(
         this IEnumerable<TLeft> left,
         IEnumerable<TRight> right,
@@ -18,6 +34,19 @@ public static class EnumerableExtensions
             select resultSelector(l, nr);
     }
 
+    /// <summary>
+    /// Performs a right outer join on two sequences based on the specified key selectors and result selector.
+    /// </summary>
+    /// <typeparam name="TLeft">The type of elements in the left sequence.</typeparam>
+    /// <typeparam name="TRight">The type of elements in the right sequence.</typeparam>
+    /// <typeparam name="TKey">The type of the keys returned by the key selector functions.</typeparam>
+    /// <typeparam name="TResult">The type of the result elements.</typeparam>
+    /// <param name="left">The left sequence to join.</param>
+    /// <param name="right">The right sequence to join.</param>
+    /// <param name="leftKeySelector">A function to extract the join key from each element of the left sequence.</param>
+    /// <param name="rightKeySelector">A function to extract the join key from each element of the right sequence.</param>
+    /// <param name="resultSelector">A function to create a result element from an optional matching element from the left sequence and an element from the right sequence.</param>
+    /// <returns>An <see cref="IEnumerable{TResult}"/> that contains the result elements of the right outer join operation.</returns>
     public static IEnumerable<TResult> RightJoin<TLeft, TRight, TKey, TResult>(
         this IEnumerable<TLeft> left,
         IEnumerable<TRight> right,

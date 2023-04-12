@@ -10,6 +10,11 @@ namespace Codehard.Infrastructure.EntityFramework;
 public abstract class DesignTimeDbContextBase<TContext> : IDesignTimeDbContextFactory<TContext>
     where TContext : DbContext
 {
+    /// <summary>
+    /// Creates and returns a new instance of the specified DbContext class using pre-configured options and routine.
+    /// </summary>
+    /// <param name="args">The command-line arguments.</param>
+    /// <returns>A new instance of the specified DbContext class.</returns>
     public TContext CreateDbContext(string[] args)
     {
         var options = this.GetMigrationOptions(args);
