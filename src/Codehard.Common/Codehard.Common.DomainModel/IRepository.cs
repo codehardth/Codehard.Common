@@ -1,6 +1,4 @@
-using System.Linq.Expressions;
-
-namespace Codehard.Infrastructure.EntityFramework.Interfaces;
+namespace Codehard.Common.DomainModel;
 
 /// <summary>
 /// Defines a generic repository interface for entities of type T.

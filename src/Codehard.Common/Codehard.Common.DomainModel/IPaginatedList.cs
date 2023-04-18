@@ -1,4 +1,4 @@
-namespace Codehard.Infrastructure.EntityFramework.Interfaces;
+namespace Codehard.Common.DomainModel;
 
 /// <summary>
 /// Represents a paginated list of items.
