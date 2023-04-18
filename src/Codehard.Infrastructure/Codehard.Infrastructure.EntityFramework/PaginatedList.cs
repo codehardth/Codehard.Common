@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Immutable;
-using Codehard.Infrastructure.EntityFramework.Interfaces;
+using Codehard.Common.DomainModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Infrastructure.EntityFramework;
