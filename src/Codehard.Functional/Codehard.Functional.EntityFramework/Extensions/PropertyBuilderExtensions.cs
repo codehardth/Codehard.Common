@@ -24,6 +24,73 @@ public static class OptionPropertyBuilderExtensions
         string? backingField = default)
         where TEntity : class
     {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(propertyExpression, backingField);
+
+        builder.Ignore(propertyName);
+
+        return
+            builder.Property(backingFieldInfo.FieldType, backingFieldName)
+                .HasColumnName(propertyName)
+                .IsRequired(false);
+    }
+
+    /// <summary>
+    /// Configure a property of <see cref="Option{TEntity}"/> using a backing field.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="propertyExpression"></param>
+    /// <param name="backingField"></param>
+    /// <typeparam name="TOwner"></typeparam>
+    /// <typeparam name="TProperty"></typeparam>
+    /// <typeparam name="TDependent"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static PropertyBuilder HasOptionProperty<TOwner, TDependent, TProperty>(
+        this OwnedNavigationBuilder<TOwner, TDependent> builder,
+        Expression<Func<TDependent, TProperty>> propertyExpression,
+        string? backingField = default)
+        where TOwner : class
+        where TDependent : class
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(propertyExpression, backingField);
+
+        builder.Ignore(propertyName);
+
+        var ownerName = builder.Metadata.PrincipalToDependent?.Name;
+
+        return
+            builder.Property(backingFieldInfo.FieldType, backingFieldName)
+                .HasColumnName($"{ownerName}_{propertyName}")
+                .IsRequired(false);
+    }
+
+    private static ReferenceNavigationBuilder HasOneOption<TEntity, TRelatedEntity>(
+            this EntityTypeBuilder<TEntity> builder,
+            Expression<Func<TEntity, TRelatedEntity?>> navigationExpression)
+        where TEntity : class
+        where TRelatedEntity : IOptional
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(navigationExpression, default);
+
+        return builder.HasOne(backingFieldInfo.FieldType, backingFieldName);
+    }
+
+    private static ReferenceReferenceBuilder WithOneOption<TEntity, TRelation>(
+            this ReferenceNavigationBuilder builder,
+            Expression<Func<TEntity, TRelation>> navigationExpression)
+        where TEntity : class
+    {
+        var (backingFieldInfo, backingFieldName, propertyName) = GetBackingField(navigationExpression);
+
+        return builder.WithOne(backingFieldName);
+    }
+
+    private static (FieldInfo BackingField, string BackingFieldName, string PropertyName) GetBackingField
+        <TEntity, TProperty>(
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            string? backingField = default)
+        where TEntity : class
+    {
         var property =
             ((MemberExpression)propertyExpression.Body).Member;
 
@@ -40,33 +107,31 @@ public static class OptionPropertyBuilderExtensions
             throw new Exception("Property is not an option.");
         }
 
-        backingField ??= property.GetBackingFieldName();
+        var actualBackingField = backingField ?? property.GetBackingFieldName();
 
         var backingFieldInfo =
-            property.DeclaringType?.GetField(backingField, BindingFlags.Instance | BindingFlags.NonPublic);
+            property.DeclaringType?.GetField(actualBackingField, BindingFlags.Instance | BindingFlags.NonPublic);
+        var genericType = propertyType.GenericTypeArguments[0];
+        var expectedType = genericType.IsValueType ? typeof(Nullable<>).MakeGenericType(genericType) : genericType;
 
-        if (backingFieldInfo == null)
+        if (backingFieldInfo == null || backingFieldInfo.FieldType != expectedType)
         {
-            throw new Exception($"Unable to find backing field '{backingField}' in {property.DeclaringType}.");
+            throw new Exception(
+                $"Unable to find backing field '{actualBackingField}' with type {expectedType} in {property.DeclaringType}.");
         }
 
         var entityType = property.DeclaringType!;
-        var cacheKey = (entityType, propertyName);
+        var cacheKey = (entityType.FullName, propertyName);
 
         if (ConfigurationCache.BackingField.ContainsKey(cacheKey))
         {
-            ConfigurationCache.BackingField[cacheKey] = backingField;
+            ConfigurationCache.BackingField[cacheKey] = actualBackingField;
         }
         else
         {
-            ConfigurationCache.BackingField.Add(cacheKey, backingField);
+            ConfigurationCache.BackingField.Add(cacheKey, actualBackingField);
         }
 
-        builder.Ignore(propertyName);
-
-        return
-            builder.Property(backingFieldInfo.FieldType, backingField)
-                .HasColumnName(propertyName)
-                .IsRequired(false);
+        return (backingFieldInfo, actualBackingField, propertyName);
     }
 }
