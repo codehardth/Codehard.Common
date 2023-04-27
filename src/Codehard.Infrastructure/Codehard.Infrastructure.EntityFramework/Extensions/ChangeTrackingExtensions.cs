@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using static Codehard.Infrastructure.EntityFramework.Helpers.ChangeTrackingHelpers;
 
 namespace Codehard.Infrastructure.EntityFramework.Extensions;
 
@@ -24,8 +25,7 @@ internal class CompositeEqualityComparer<T> :
         if (x == null || y == null)
             return false;
 
-        var hashCodesEqual = true;
-        foreach (var getter in propertyGetters)
+        foreach (var getter in this.propertyGetters)
         {
             var xValue = getter(x);
             var yValue = getter(y);
@@ -35,28 +35,26 @@ internal class CompositeEqualityComparer<T> :
 
             if (xValue == null || yValue == null)
             {
-                hashCodesEqual = false;
-                break;
+                return false;
             }
 
             if (!xValue.Equals(yValue))
             {
-                hashCodesEqual = false;
-                break;
+                return false;
             }
         }
 
-        return hashCodesEqual;
+        return true;
     }
 
     public bool Equals(T? x, T? y)
     {
-        return Equals(x, (object?)y);
+        return this.Equals(x, (object?)y);
     }
 
     public int GetHashCode(T? obj)
     {
-        return GetHashCode((object?)obj);
+        return this.GetHashCode((object?)obj);
     }
 
     public int GetHashCode(object? obj)
@@ -66,7 +64,7 @@ internal class CompositeEqualityComparer<T> :
 
         var hashCode = 17;
 
-        foreach (var getter in propertyGetters)
+        foreach (var getter in this.propertyGetters)
         {
             var value = getter(obj);
             hashCode = hashCode * 23 + (value?.GetHashCode() ?? 0);
@@ -90,7 +88,9 @@ public static class ChangeTrackingExtensions
     /// <param name="modifiedEntity">The modified entity.</param>
     /// <returns>The modified entity.</returns>
     public static TEntity? UpdateIfChanged<TEntity>(
-        this DbContext context, TEntity? originalEntity, TEntity? modifiedEntity)
+        this DbContext context,
+        TEntity? originalEntity,
+        TEntity? modifiedEntity)
         where TEntity : class
     {
         if (originalEntity == null && modifiedEntity == null)
@@ -120,7 +120,8 @@ public static class ChangeTrackingExtensions
     }
 
     private static void UpdateIfChanged(
-        this EntityEntry originalEntityEntry, object? modifiedEntity)
+        this EntityEntry originalEntityEntry,
+        object? modifiedEntity)
     {
         if (originalEntityEntry.Entity == modifiedEntity)
         {
@@ -141,7 +142,8 @@ public static class ChangeTrackingExtensions
     }
 
     private static void UpdateIfScalarPropertiesChanged(
-        this EntityEntry originalEntityEntry, object modifiedEntity)
+        this EntityEntry originalEntityEntry,
+        object modifiedEntity)
     {
         var scalarProperties = originalEntityEntry.Metadata.GetProperties().ToList();
 
@@ -166,7 +168,8 @@ public static class ChangeTrackingExtensions
     }
 
     private static void UpdateIfNavigationPropertiesChanged(
-        this EntityEntry originalEntityEntry, object modifiedEntity)
+        this EntityEntry originalEntityEntry,
+        object modifiedEntity)
     {
         var navigationProperties = originalEntityEntry.Metadata.GetNavigations().ToList();
 
@@ -182,7 +185,7 @@ public static class ChangeTrackingExtensions
             if (property.IsCollection)
             {
                 originalEntityEntry.Collection(property.Name)
-                                   .UpdateIfChanged((IEnumerable?)modifiedValue);
+                    .UpdateIfChanged((IEnumerable?)modifiedValue);
 
                 continue;
             }
@@ -198,7 +201,7 @@ public static class ChangeTrackingExtensions
                 }
 
                 originalEntityEntry.Reference(property.Name).TargetEntry
-                                   ?.UpdateIfChanged(modifiedValue);
+                    ?.UpdateIfChanged(modifiedValue);
 
                 continue;
             }
@@ -208,15 +211,16 @@ public static class ChangeTrackingExtensions
     }
 
     private static void UpdateIfChanged(
-        this CollectionEntry collectionEntry, IEnumerable? modifiedCollection)
+        this CollectionEntry collectionEntry,
+        IEnumerable? modifiedCollection)
     {
         var collectionType = collectionEntry.Metadata.ClrType;
         var elementType = collectionType.GetGenericArguments()[0];
 
-        IEnumerable originalCollection = 
+        IEnumerable originalCollection =
             collectionEntry.CurrentValue?.Cast<object>().ToArray()
             ?? Array.CreateInstance(elementType, 0);
-        
+
         originalCollection = CastToIEnumerable(originalCollection);
         modifiedCollection ??= Array.CreateInstance(elementType, 0);
 
@@ -225,112 +229,89 @@ public static class ChangeTrackingExtensions
         {
             return;
         }
-        
-        var primaryKeyComparer = CreatePrimaryKeyComparer();
+
+        var primaryKeyComparer = CreatePrimaryKeyComparer(elementType, collectionEntry);
 
         // Set new item states to Added
         var itemsToAdd = Except(
             modifiedCollection, originalCollection, primaryKeyComparer);
-        
+
         var itemsToRemove = Except(
             originalCollection, modifiedCollection, primaryKeyComparer);
-        
+
         var itemsToModify = Except(
             originalCollection, itemsToRemove, primaryKeyComparer);
 
         SetItemAsAdded(itemsToAdd);
         SetItemAsDeleted(itemsToRemove);
         SetItemAsModified(itemsToModify);
-        
+
         IEnumerable CastToIEnumerable(object? collection)
         {
             // Get the Cast<T>() method from the Enumerable class using reflection
-            var castMethod = typeof(Enumerable)
-                .GetMethod(nameof(Enumerable.Cast))!
-                .MakeGenericMethod(elementType);
+            var castMethod = GetCastMethod(elementType);
 
             // Invoke the Cast<T>() method with the original and modified collections
-            return (IEnumerable)castMethod.Invoke(
-                null, new[] { collection })!;
+            return (IEnumerable)castMethod.Invoke(null, new[] { collection })!;
         }
-        
+
         bool SequenceEqual(IEnumerable collection, IEnumerable otherCollection)
         {
             // Get the SequenceEqual<T>() method from the Enumerable class using reflection
-            var sequenceEqualMethod = typeof(Enumerable)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .First(m =>
-                    m.Name == nameof(Enumerable.SequenceEqual) &&
-                    m.GetParameters().Length == 2)
-                .MakeGenericMethod(elementType);
+            var sequenceEqualMethod = GetSeqEqualMethod(elementType);
 
             // Invoke the SequenceEqual<T>() method with the original and modified collections
-            return (bool)sequenceEqualMethod.Invoke(
-                null, 
-                new[] { (object)collection, otherCollection })!;
+            return (bool)sequenceEqualMethod.Invoke(null, new[] { (object)collection, otherCollection })!;
         }
 
-        IEqualityComparer CreatePrimaryKeyComparer()
+        static IEqualityComparer CreatePrimaryKeyComparer(Type elementType, NavigationEntry collectionEntry)
         {
-            // Get the type of the CompositeEqualityComparer<T> class
-            var compositeEqualityComparerType = typeof(CompositeEqualityComparer<>);
-
-            // Construct a type argument for the CompositeEqualityComparer<T> class
-            var genericCompositeEqualityComparerType =
-                compositeEqualityComparerType.MakeGenericType(elementType);
-
             // Get the constructor for the CompositeEqualityComparer<T> class that takes an IReadOnlyCollection<Func<object, object?>> parameter
-            var constructor = genericCompositeEqualityComparerType.GetConstructor(
-                new[] { typeof(IReadOnlyCollection<Func<object, object?>>) });
+            var constructor = GetConstructorInfo(elementType);
 
             var primaryKeyProperties =
-                collectionEntry.Metadata.TargetEntityType.FindPrimaryKey()
+                collectionEntry.Metadata.TargetEntityType
+                    .FindPrimaryKey()!
                     .Properties;
 
-            var propertyGetters = primaryKeyProperties
-                .Select(p => (Func<object, object?>)(entity => p.PropertyInfo!.GetValue(entity)))
-                .ToArray();
-            
+            var propertyGetters =
+                primaryKeyProperties
+                    .Select(p => (Func<object, object?>)(entity => p.PropertyInfo!.GetValue(entity)))
+                    .ToArray();
+
             // Call the constructor to create an instance of the CompositeEqualityComparer<T> class
             var compositeEqualityComparerInstance =
                 constructor.Invoke(new object[] { propertyGetters });
 
             return (IEqualityComparer)compositeEqualityComparerInstance;
         }
-        
+
         IEnumerable Except(object? collection, object? otherCollection, object comparer)
         {
             // Get the Except<T>() method from the Enumerable class using reflection
-            var exceptMethod = typeof(Enumerable)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .First(m => m.Name == nameof(Enumerable.Except) && m.GetParameters().Length == 3)
-                .MakeGenericMethod(elementType);
+            var exceptMethod = GetExceptMethod(elementType);
 
             // Invoke the Except<T>() method with the original and modified collections
-            return (IEnumerable)exceptMethod.Invoke(
-                        null,
-                        new[] { collection, otherCollection, comparer })!;
+            return (IEnumerable)exceptMethod.Invoke(null, new[] { collection, otherCollection, comparer })!;
         }
-        
+
         void SetItemAsAdded(IEnumerable items)
         {
-            if (collectionType.IsGenericType 
+            if (collectionType.IsGenericType
                 && collectionType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                var listType = typeof(List<>).MakeGenericType(elementType);
-
                 // Get the MethodInfo object for the AddRange method
-                var addRangeMethod = listType.GetMethod(nameof(List<object>.AddRange));
+                var addRangeMethod = GetAddRangeMethod(elementType);
 
                 // Call the AddRange method on the list object
                 addRangeMethod!.Invoke(
                     collectionEntry.CurrentValue,
                     new object[] { items });
-                
+
                 foreach (var item in items)
                 {
                     var itemEntry = collectionEntry.FindEntry(item);
-                
+
                     itemEntry!.State = EntityState.Added;
                 }
             }
@@ -339,11 +320,11 @@ public static class ChangeTrackingExtensions
         void SetItemAsDeleted(IEnumerable items)
         {
             // Find items to remove
-            foreach (var entityEntry 
+            foreach (var entityEntry
                      in items
-                        .Cast<object>()
-                        .Select(collectionEntry.FindEntry)
-                        .Where(entityEntry => entityEntry != null))
+                         .Cast<object>()
+                         .Select(collectionEntry.FindEntry)
+                         .Where(entityEntry => entityEntry != null))
             {
                 entityEntry!.State = EntityState.Deleted;
             }
@@ -358,7 +339,7 @@ public static class ChangeTrackingExtensions
                     modifiedCollection
                         .Cast<object>()
                         .FirstOrDefault(
-                            modifiedEntity => 
+                            modifiedEntity =>
                                 primaryKeyComparer.Equals(originalItem, modifiedEntity));
 
                 if (originalItem.Equals(newItem))
@@ -391,7 +372,7 @@ public static class ChangeTrackingExtensions
             if (property.IsCollection
                 && property.ClrType.GetGenericArguments().Any())
             {
-                var collection = 
+                var collection =
                     propertyValue as IEnumerable
                     ?? Array.CreateInstance(property.ClrType.GetGenericArguments()[0], 0);
 
