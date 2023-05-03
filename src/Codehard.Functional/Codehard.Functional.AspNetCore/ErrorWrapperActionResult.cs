@@ -32,32 +32,39 @@ public class ErrorWrapperActionResult : IActionResult
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task ExecuteResultAsync(ActionContext context)
     {
-        Error.ErrorCode.IfSome(errCode =>
+        this.Error.ErrorCode.IfSome(errCode =>
             context.HttpContext.Response.Headers.Add("x-error-code", errCode));
 
-        await Error.Data
+        await this.Error.Data
             .Map(
                 data =>
                     data switch
                     {
                         ObjectResult objectResult => AddErrorInfo(objectResult),
-                        StatusCodeResult statusCodeResult => 
+                        StatusCodeResult statusCodeResult =>
                             new ObjectResult(
                                 new
                                 {
-                                    ErrorCode = Error.ErrorCode.IfNoneUnsafe(default(string)),
-                                    ErrorMessage = Error.Message,
+                                    ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
+                                    ErrorMessage = this.Error.Message,
                                 })
                             {
-                                StatusCode = statusCodeResult.StatusCode
+                                StatusCode = statusCodeResult.StatusCode,
                             },
                         IActionResult ar => ar,
                         _ => AddErrorInfo(new ObjectResult(data)
                         {
-                            StatusCode = Error.Code
+                            StatusCode = this.Error.Code,
                         })
                     })
-            .IfSomeAsync(ar => ar.ExecuteResultAsync(context));
+            .Match(
+                ar => ar.ExecuteResultAsync(context),
+                None: () =>
+                {
+                    context.HttpContext.Response.StatusCode = (int)this.Error.StatusCode;
+
+                    return Task.CompletedTask;
+                });
 
         ObjectResult AddErrorInfo(ObjectResult objectResult)
         {
@@ -75,13 +82,13 @@ public class ErrorWrapperActionResult : IActionResult
             expando["ErrorInfo"] =
                 new
                 {
-                    ErrorCode = Error.ErrorCode.IfNoneUnsafe(default(string)),
-                    ErrorMessage = Error.Message,
+                    ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
+                    ErrorMessage = this.Error.Message,
                 };
 
             return new ObjectResult(expando)
             {
-                StatusCode = Error.Code
+                StatusCode = this.Error.Code
             };
         }
     }
