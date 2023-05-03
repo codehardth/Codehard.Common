@@ -18,13 +18,9 @@ public record HttpResultError : Error, ISerializable
     public override Option<Error> Inner { get; }
 
     public override bool IsExceptional =>
-        StatusCode switch
-        {
-            _ when (int)StatusCode < 500 => false,
-            _ => true
-        };
+        (int)this.StatusCode >= 500;
     
-    public override bool IsExpected => !IsExceptional;
+    public override bool IsExpected => !this.IsExceptional;
 
     private HttpResultError(
         HttpStatusCode statusCode,
@@ -33,12 +29,12 @@ public record HttpResultError : Error, ISerializable
         Option<object> data,
         Option<Error> inner)
     {
-        Code = (int)statusCode;
-        StatusCode = statusCode;
-        Message = message;
-        ErrorCode = errorCode;
-        Data = data;
-        Inner = inner;
+        this.Code = (int)statusCode;
+        this.StatusCode = statusCode;
+        this.Message = message;
+        this.ErrorCode = errorCode;
+        this.Data = data;
+        this.Inner = inner;
     }
     
     public HttpResultError(SerializationInfo info, StreamingContext context)
@@ -65,8 +61,7 @@ public record HttpResultError : Error, ISerializable
     
     public override bool Is<E>()
     {
-        return
-            Exception
+        return this.Exception
                 .Match(
                     Some: ex => ex is E,
                     None: () => false);
@@ -74,11 +69,10 @@ public record HttpResultError : Error, ISerializable
 
     public override ErrorException ToErrorException()
     {
-        return
-            Exception
+        return this.Exception
                 .Match(
                     Some: ex => new ExceptionalException(ex),
-                    None: () => new ExceptionalException(Message, Code));
+                    None: () => new ExceptionalException(this.Message, this.Code));
     }
 
     public static HttpResultError New(
