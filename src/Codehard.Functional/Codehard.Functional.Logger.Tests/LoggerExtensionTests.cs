@@ -1,3 +1,5 @@
+using System.Net;
+using Codehard.Functional.AspNetCore;
 using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
@@ -92,6 +94,41 @@ namespace Codehard.Functional.Logger.Tests
                         It.IsAny<Exception>(),
                         It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                     Times.Exactly(times));
+            }
+        }
+
+        [Fact]
+        public void WhenLogWithHttpResultErrorWithInnerError_ShouldLogAllError()
+        {
+            // Arrange
+            var innerError = HttpResultError.New(
+                HttpStatusCode.NotFound,
+                "Inner not found");
+            var error = HttpResultError.New(
+                HttpStatusCode.InternalServerError,
+                "Outer error",
+                error: innerError);
+
+            var mockedLogger = new Mock<ILogger>();
+
+            // Act
+            LoggerExtensions.Log(mockedLogger.Object, error);
+
+            // Assert
+            VerifyLogMessage("404 : Inner not found", LogLevel.Information);
+            VerifyLogMessage("Outer error", LogLevel.Error);
+
+            void VerifyLogMessage(string message, LogLevel logLevel)
+            {
+                mockedLogger.Verify(
+                    x => x.Log(
+                        logLevel,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((o, t) =>
+                            string.Equals(message, o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
+                        It.IsAny<Exception>(),
+                        It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                    Times.Once);
             }
         }
     }
