@@ -8,11 +8,23 @@ public record ImmutableEntityB
     
     public ImmutableEntityA A { get; private init; }
     
+    public Guid AId { get; private init; }
+    
     public List<ImmutableEntityC> Cs { get; private init; }
     
     public ImmutableEntityB UpdateScalar(string value)
     {
         return this with { Value = value };
+    }
+    
+    public ImmutableEntityB UpdateReference(ImmutableEntityA a)
+    {
+        return this with { A = a };
+    }
+    
+    public ImmutableEntityB UpdateForeignKey(Guid aId)
+    {
+        return this with { AId = aId };
     }
     
     public static ImmutableEntityB Create(
