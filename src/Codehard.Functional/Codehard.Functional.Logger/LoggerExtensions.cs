@@ -22,11 +22,11 @@ public static class LoggerExtensions
                             {
                                 if (string.IsNullOrWhiteSpace(error.Message))
                                 {
-                                    logger.Log(logLevel, "{code}", error.Code);
+                                    logger.Log(logLevel, "{Code}", error.Code);
                                 }
                                 else
                                 {
-                                    logger.Log(logLevel, "{code} : {message}", error.Code, error.Message);
+                                    logger.Log(logLevel, "{Code} : {Message}", error.Code, error.Message);
                                 }
                             });
                 },

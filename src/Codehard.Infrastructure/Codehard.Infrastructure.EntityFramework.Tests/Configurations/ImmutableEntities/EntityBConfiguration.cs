@@ -12,6 +12,11 @@ public class EntityBConfiguration : EntityTypeConfigurationBase<ImmutableEntityB
         builder.Property(e => e.Value)
                .IsRequired();
 
+        builder
+            .HasOne(b => b.A)
+            .WithMany(a => a.Bs)
+            .HasForeignKey(e => e.AId);
+
         builder.HasMany(e => e.Cs)
                .WithOne()
                .OnDelete(DeleteBehavior.Cascade);

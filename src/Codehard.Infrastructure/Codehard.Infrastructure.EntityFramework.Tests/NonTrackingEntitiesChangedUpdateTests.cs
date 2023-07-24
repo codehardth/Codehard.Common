@@ -49,6 +49,130 @@ public class NonTrackingEntitiesChangedUpdateTests
     }
     
     [Fact]
+    public void WhenAddNewEntitiesWithSameReference_ShouldPersistedToDb()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<TestDbContext>()
+            .UseSqlite(CreateInMemoryDatabase())
+            .Options;
+        
+        var assembly = Assembly.GetExecutingAssembly();
+        
+        using var context = new TestDbContext(
+            options,
+            builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly));
+        
+        context.Database.EnsureCreated();
+        
+        var entityA = ImmutableEntityA.Create(
+            "text of A",
+            Array.Empty<ImmutableEntityB>());
+        
+        context.ImmAs.Add(entityA);
+        context.SaveChanges();
+        context.Entry(entityA).State = EntityState.Detached;
+        context.ChangeTracker.Clear();
+        
+        // Act
+        var entityB1 =
+            ImmutableEntityB
+                .Create("text of B2-1")
+                .UpdateReference(entityA);
+        
+        var entityB2 =
+            ImmutableEntityB
+                .Create("text of B2-2")
+                .UpdateReference(entityA);
+
+        context.AddRange(entityB1, entityB2);
+        
+        context.Entry(entityB1).Reference(nameof(ImmutableEntityB.A)).TargetEntry!.State = EntityState.Unchanged;
+
+        context.SaveChanges();
+        context.Entry(entityB1).State = EntityState.Detached;
+        context.Entry(entityB2).State = EntityState.Detached;
+        context.ChangeTracker.Clear();
+
+        // Assert
+        var actual = 
+            context.ImmBs
+                .Include(b => b.A)
+                .AsNoTracking()
+                .ToList();
+        
+        Assert.NotNull(actual);
+        
+        Assert.Equal(2, actual.Count);
+        
+        Assert.NotNull(actual[0].A);
+        Assert.NotNull(actual[1].A);
+        
+        Assert.Equal(entityA.Id, actual[0].A.Id);
+        Assert.Equal(entityA.Id, actual[1].A.Id);
+    }
+    
+    [Fact]
+    public void WhenAddNewEntitiesWithSameForeignKeyId_ShouldPersistedToDb()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<TestDbContext>()
+            .UseSqlite(CreateInMemoryDatabase())
+            .Options;
+        
+        var assembly = Assembly.GetExecutingAssembly();
+        
+        using var context = new TestDbContext(
+            options,
+            builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly));
+        
+        context.Database.EnsureCreated();
+        
+        var entityA = ImmutableEntityA.Create(
+            "text of A",
+            Array.Empty<ImmutableEntityB>());
+        
+        context.ImmAs.Add(entityA);
+        context.SaveChanges();
+        context.Entry(entityA).State = EntityState.Detached;
+        context.ChangeTracker.Clear();
+        
+        // Act
+        var entityB1 =
+            ImmutableEntityB
+                .Create("text of B2-1")
+                .UpdateForeignKey(entityA.Id);
+        
+        var entityB2 =
+            ImmutableEntityB
+                .Create("text of B2-2")
+                .UpdateForeignKey(entityA.Id);
+
+        context.AddRange(entityB1, entityB2);
+
+        context.SaveChanges();
+        context.Entry(entityB1).State = EntityState.Detached;
+        context.Entry(entityB2).State = EntityState.Detached;
+        context.ChangeTracker.Clear();
+
+        // Assert
+        var actual = 
+            context.ImmBs
+                .Include(b => b.A)
+                .AsNoTracking()
+                .ToList();
+        
+        Assert.NotNull(actual);
+        
+        Assert.Equal(2, actual.Count);
+        
+        Assert.NotNull(actual[0].A);
+        Assert.NotNull(actual[1].A);
+        
+        Assert.Equal(entityA.Id, actual[0].A.Id);
+        Assert.Equal(entityA.Id, actual[1].A.Id);
+    }
+    
+    [Fact]
     public void WhenUpdateScalarPropertyOfEntity_ShouldPersistedToDb()
     {
         // Arrange
