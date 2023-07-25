@@ -235,83 +235,117 @@ public static class AsyncEffectExtensions
     #region Guard
 
     public static Aff<A> GuardWithHttpStatus<A>(
-        this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, string message = "")
-        => ma.Guard(predicate, Error.New((int)httpStatusCode, message));
+        this Aff<A> ma,
+        Func<A, bool> predicate,
+        HttpStatusCode httpStatusCode,
+        string message = "")
+        => ma.Guard(
+            predicate,
+            HttpResultError.New(httpStatusCode, message));
 
     public static Aff<A> GuardWithHttpStatus<A>(
-        this Aff<A> ma, Func<A, bool> predicate, HttpStatusCode httpStatusCode, Func<A, string> messageFunc)
-        => ma.Guard(predicate, a => Error.New((int)httpStatusCode, messageFunc(a)));
+        this Aff<A> ma,
+        Func<A, bool> predicate,
+        HttpStatusCode httpStatusCode,
+        Func<A, string> messageFunc)
+        => ma.Guard(
+            predicate,
+            a => HttpResultError.New(httpStatusCode, messageFunc(a)));
 
-    public static Aff<A> GuardWithOK<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithOK<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.OK, message);
 
-    public static Aff<A> GuardWithOK<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithOK<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.OK, messageFunc);
 
-    public static Aff<A> GuardWithCreated<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithCreated<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Created, message);
 
-    public static Aff<A> GuardWithCreated<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithCreated<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
     => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Created, messageFunc);
 
-    public static Aff<A> GuardWithAccepted<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithAccepted<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Accepted, message);
 
-    public static Aff<A> GuardWithAccepted<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithAccepted<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Accepted, messageFunc);
 
-    public static Aff<A> GuardWithNoContent<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithNoContent<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NoContent, message);
 
-    public static Aff<A> GuardWithNoContent<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithNoContent<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NoContent, messageFunc);
 
-    public static Aff<A> GuardWithBadRequest<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithBadRequest<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.BadRequest, message);
 
-    public static Aff<A> GuardWithBadRequest<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithBadRequest<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.BadRequest, messageFunc);
 
-    public static Aff<A> GuardWithUnauthorized<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithUnauthorized<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Unauthorized, message);
 
-    public static Aff<A> GuardWithUnauthorized<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithUnauthorized<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Unauthorized, messageFunc);
 
-    public static Aff<A> GuardWithForbidden<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithForbidden<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Forbidden, message);
 
-    public static Aff<A> GuardWithForbidden<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithForbidden<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Forbidden, messageFunc);
 
-    public static Aff<A> GuardWithNotFound<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithNotFound<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NotFound, message);
 
-    public static Aff<A> GuardWithNotFound<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithNotFound<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.NotFound, messageFunc);
 
-    public static Aff<A> GuardWithConflict<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithConflict<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Conflict, message);
 
-    public static Aff<A> GuardWithConflict<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithConflict<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Conflict, messageFunc);
 
-    public static Aff<A> GuardWithUnprocessableEntity<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithUnprocessableEntity<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, message);
 
-    public static Aff<A> GuardWithUnprocessableEntity<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithUnprocessableEntity<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, messageFunc);
 
-    public static Aff<A> GuardWithLocked<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithLocked<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, message);
 
-    public static Aff<A> GuardWithLocked<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithLocked<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, messageFunc);
 
-    public static Aff<A> GuardWithInternalServerError<A>(this Aff<A> ma, Func<A, bool> predicate, string message = "")
+    public static Aff<A> GuardWithInternalServerError<A>(
+        this Aff<A> ma, Func<A, bool> predicate, string message = "")
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.InternalServerError, message);
 
-    public static Aff<A> GuardWithInternalServerError<A>(this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
+    public static Aff<A> GuardWithInternalServerError<A>(
+        this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
         => ma.GuardWithHttpStatus(predicate, HttpStatusCode.InternalServerError, messageFunc);
 
     #endregion

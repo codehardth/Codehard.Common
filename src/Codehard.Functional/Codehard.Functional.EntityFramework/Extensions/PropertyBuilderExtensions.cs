@@ -4,6 +4,7 @@ using Codehard.Functional.EntityFramework;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore;
 
 public static class OptionPropertyBuilderExtensions
@@ -53,14 +54,7 @@ public static class OptionPropertyBuilderExtensions
         var entityType = property.DeclaringType!;
         var cacheKey = (entityType, propertyName);
 
-        if (ConfigurationCache.BackingField.ContainsKey(cacheKey))
-        {
-            ConfigurationCache.BackingField[cacheKey] = backingField;
-        }
-        else
-        {
-            ConfigurationCache.BackingField.Add(cacheKey, backingField);
-        }
+        ConfigurationCache.BackingField[cacheKey] = backingField;
 
         builder.Ignore(propertyName);
 

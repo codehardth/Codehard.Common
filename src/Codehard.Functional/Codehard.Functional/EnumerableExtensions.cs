@@ -1,5 +1,8 @@
 namespace Codehard.Functional;
 
+/// <summary>
+/// Extension methods for working with IEnumerable collections and <see cref="Option{T}"/>.
+/// </summary>
 public static class EnumerableExtensions
 {
     /// <summary>
@@ -150,6 +153,16 @@ public static class EnumerableExtensions
                 : None;
     }
     
+    /// <summary>
+    /// Filters the collection based on a condition when a specified condition is true,
+    /// and an optional alternative condition when the specified condition is false.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <param name="source">The source IEnumerable collection.</param>
+    /// <param name="condition">The condition to check.</param>
+    /// <param name="ifTrue">The condition to apply when the main condition is true.</param>
+    /// <param name="ifFalse">An optional condition to apply when the main condition is false. If not provided, the original collection is returned.</param>
+    /// <returns>The filtered collection based on the specified conditions.</returns>
     public static IEnumerable<T> WhereIfTrue<T>(
         this IEnumerable<T> source,
         bool condition,
@@ -159,6 +172,15 @@ public static class EnumerableExtensions
             ? source.Where(ifTrue) 
             : ifFalse != null ? source.Where(ifFalse) : source;
     
+    /// <summary>
+    /// Filters the collection based on an optional flag and a function that generates a predicate based on the flag.
+    /// </summary>
+    /// <typeparam name="T1">The type of elements in the collection.</typeparam>
+    /// <typeparam name="T2">The type of the optional flag.</typeparam>
+    /// <param name="source">The source IEnumerable collection.</param>
+    /// <param name="flagOpt">An Option containing the optional flag.</param>
+    /// <param name="predicateConstructor">A function that generates a predicate based on the flag.</param>
+    /// <returns>The filtered collection based on the flag and the generated predicate.</returns>
     public static IEnumerable<T1> WhereOptional<T1, T2>(
         this IEnumerable<T1> source,
         Option<T2> flagOpt,
@@ -167,6 +189,13 @@ public static class EnumerableExtensions
             Some: val => source.Where(predicateConstructor(val)),
             None: source);
     
+    /// <summary>
+    /// Filters the collection based on an optional predicate.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <param name="source">The source IEnumerable collection.</param>
+    /// <param name="predicateOpt">An Option containing the optional predicate.</param>
+    /// <returns>The filtered collection based on the optional predicate.</returns>
     public static IEnumerable<T> WhereOptional<T>(
         this IEnumerable<T> source,
         Option<Func<T, bool>> predicateOpt)
@@ -174,6 +203,13 @@ public static class EnumerableExtensions
             Some: source.Where,
             None: source);
 
+    /// <summary>
+    /// Skips a specified number of elements from the beginning of the collection based on an optional count.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <param name="source">The source IEnumerable collection.</param>
+    /// <param name="countOpt">An Option containing the optional count of elements to skip.</param>
+    /// <returns>The collection with the specified number of elements skipped if the count is provided; otherwise, the original collection is returned.</returns>
     public static IEnumerable<T> SkipOptional<T>(
         this IEnumerable<T> source,
         Option<int> countOpt)

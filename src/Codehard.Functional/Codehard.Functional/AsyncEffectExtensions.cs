@@ -1,4 +1,5 @@
 ﻿using LanguageExt.Common;
+#pragma warning disable CS1591
 
 namespace Codehard.Functional;
 
