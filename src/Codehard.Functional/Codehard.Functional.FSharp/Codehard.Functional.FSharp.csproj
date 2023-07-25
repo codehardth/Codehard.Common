@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="7.0.200" />
-    <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
+    <PackageReference Include="FSharp.Core" Version="7.0.300" />
+    <PackageReference Include="LanguageExt.Core" Version="4.4.3" />
   </ItemGroup>
 
 </Project>
