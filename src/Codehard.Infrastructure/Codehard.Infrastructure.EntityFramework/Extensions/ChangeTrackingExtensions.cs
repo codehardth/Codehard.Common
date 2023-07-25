@@ -254,7 +254,7 @@ public static class ChangeTrackingExtensions
                 null, new[] { collection })!;
         }
         
-        bool SequenceEqual(IEnumerable collection, IEnumerable otherCollection)
+        bool SequenceEqual(IEnumerable collection, IEnumerable? otherCollection)
         {
             // Get the SequenceEqual<T>() method from the Enumerable class using reflection
             var sequenceEqualMethod = typeof(Enumerable)
@@ -270,7 +270,7 @@ public static class ChangeTrackingExtensions
                 new[] { (object)collection, otherCollection })!;
         }
 
-        IEqualityComparer CreatePrimaryKeyComparer()
+        IEqualityComparer? CreatePrimaryKeyComparer()
         {
             // Get the type of the CompositeEqualityComparer<T> class
             var compositeEqualityComparerType = typeof(CompositeEqualityComparer<>);
@@ -285,20 +285,23 @@ public static class ChangeTrackingExtensions
 
             var primaryKeyProperties =
                 collectionEntry.Metadata.TargetEntityType.FindPrimaryKey()
-                    .Properties;
+                    ?.Properties;
 
-            var propertyGetters = primaryKeyProperties
-                .Select(p => (Func<object, object?>)(entity => p.PropertyInfo!.GetValue(entity)))
-                .ToArray();
+            var propertyGetters =
+                primaryKeyProperties
+                    ?.Select(
+                        p => 
+                        (Func<object, object?>)(entity => p.PropertyInfo!.GetValue(entity)))
+                    .ToArray();
             
             // Call the constructor to create an instance of the CompositeEqualityComparer<T> class
             var compositeEqualityComparerInstance =
-                constructor.Invoke(new object[] { propertyGetters });
+                constructor?.Invoke(new object?[] { propertyGetters });
 
-            return (IEqualityComparer)compositeEqualityComparerInstance;
+            return (IEqualityComparer?)compositeEqualityComparerInstance;
         }
         
-        IEnumerable Except(object? collection, object? otherCollection, object comparer)
+        IEnumerable Except(object? collection, object? otherCollection, object? comparer)
         {
             // Get the Except<T>() method from the Enumerable class using reflection
             var exceptMethod = typeof(Enumerable)
