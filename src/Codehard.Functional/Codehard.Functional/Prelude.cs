@@ -2,6 +2,9 @@
 
 namespace Codehard.Functional;
 
+/// <summary>
+/// Provides a collection of utility methods to work with Aff&lt;Option&gt; monad and parallel execution of effects.
+/// </summary>
 public static class Prelude
 {
     /// <summary>
@@ -31,7 +34,8 @@ public static class Prelude
     /// <returns></returns>
     public static Aff<Unit> IterParallel<A>(params Aff<A>[] affs)
     {
-        return Aff(async () =>
+        return
+            Aff(async () =>
                 await Task.WhenAll(affs.Map(aff => aff.Run().AsTask())))
             .Bind(fins =>
                 fins.Any(f => f.IsFail)

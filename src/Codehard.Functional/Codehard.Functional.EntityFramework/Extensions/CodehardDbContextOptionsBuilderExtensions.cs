@@ -1,5 +1,6 @@
 ﻿using Codehard.Functional.EntityFramework.Interceptors;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore;
 
 public static class CodehardDbContextOptionsBuilderExtensions

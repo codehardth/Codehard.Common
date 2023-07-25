@@ -1,5 +1,6 @@
 using LanguageExt;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore;
 
 public static class StringOptionDbFunctionsExtensions
