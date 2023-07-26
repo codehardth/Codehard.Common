@@ -2,7 +2,7 @@
 
 namespace Codehard.Functional.Tests;
 
-public class QueryableExtensionsTests
+public class QueryableExtTests
 {
     [Fact]
     public void WhenRunWhereIfTrueFromListWithTrueCondition_ShouldReturnNonEmptyList()

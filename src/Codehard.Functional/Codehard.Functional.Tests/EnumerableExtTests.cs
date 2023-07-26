@@ -1,6 +1,6 @@
 ﻿namespace Codehard.Functional.Tests;
 
-public class EnumerableExtensionTests
+public class EnumerableExtTests
 {
     [Fact]
     public void WhenCallFirstOrNoneOrFailEffWithTruePredicate_ShouldReturnSome()

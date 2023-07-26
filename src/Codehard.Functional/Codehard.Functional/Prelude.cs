@@ -20,11 +20,31 @@ public static class Prelude
     /// <summary>
     /// Lift an asynchronous effect into the Aff&lt;Option&gt; monad
     /// </summary>
-    public static Aff<Option<A>> AffOption<A>(Func<ValueTask<Nullable<A>>> f)
+    public static Aff<Option<A>> AffOption<A>(Func<ValueTask<A?>> f)
         where A : struct
     {
         return LanguageExt.Aff<Option<A>>
             .Effect(async () => Optional(await f()));
+    }
+    
+    /// <summary>
+    /// Lift an synchronous effect into the Eff&lt;Option&gt; monad
+    /// </summary>
+    public static Eff<Option<A>> EffOption<A>(Func<A?> f)
+        where A : class
+    {
+        return LanguageExt.Eff<Option<A>>
+            .Effect(() => Optional(f()));
+    }
+
+    /// <summary>
+    /// Lift an synchronous effect into the Eff&lt;Option&gt; monad
+    /// </summary>
+    public static Eff<Option<A>> EffOption<A>(Func<A?> f)
+        where A : struct
+    {
+        return LanguageExt.Eff<Option<A>>
+            .Effect(() => Optional(f()));
     }
 
     /// <summary>
