@@ -7,7 +7,7 @@ namespace Codehard.Common.Extensions;
 /// </summary>
 public static class HttpContentExtensions
 {
-    private static readonly JsonSerializerOptions DefaultOptions = new()
+    public static readonly JsonSerializerOptions DefaultOptions = new()
     {
         PropertyNameCaseInsensitive = true,
     };
