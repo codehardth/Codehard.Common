@@ -3,11 +3,11 @@ using static Codehard.Functional.Prelude;
 
 namespace Codehard.Functional.Tests;
 
-public class TaskExtensionsTests
+public class TaskExtTests
 {
     private readonly ITestOutputHelper _testOutputHelper;
 
-    public TaskExtensionsTests(ITestOutputHelper testOutputHelper)
+    public TaskExtTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
     }

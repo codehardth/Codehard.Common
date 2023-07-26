@@ -1,6 +1,6 @@
 namespace Codehard.Functional.Tests;
 
-public class AffEitherExtensionTests
+public class AffEitherExtTests
 {
     [Fact]
     public void WhenCallMapNoneToLeftOnEffOfNone_ShouldGetEffOfLeft()
@@ -320,8 +320,7 @@ public class AffEitherExtensionTests
         var action = new Action<int>(i => number = i);
         
         // Act
-        var result =
-            (await aff.DoIfRight(action)
+        _ = (await aff.DoIfRight(action)
                 .Run())
             .ThrowIfFail();
 

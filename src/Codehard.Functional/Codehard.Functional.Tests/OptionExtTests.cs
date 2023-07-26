@@ -1,6 +1,6 @@
 ﻿namespace Codehard.Functional.Tests;
 
-public class OptionalExtensionTests
+public class OptionalExtTests
 {
     [Fact]
     public void WhenRunWhereOptionalFromListWithSomeTruePredicate_ShouldReturnNonEmptyList()

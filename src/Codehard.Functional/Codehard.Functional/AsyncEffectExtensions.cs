@@ -42,11 +42,7 @@ public static class AsyncEffectExtensions
     public static Aff<A> Guard<A>(
         this Aff<A> ma, Func<A, bool> predicate, 
         Error error)
-        => ma.Bind(
-            a =>
-                predicate(a)
-                    ? SuccessAff(a)
-                    : FailAff<A>(error));
+        => ma.Guard(predicate, _ => error);
 
     public static Aff<A> Guard<A>(
         this Aff<A> ma, Func<A, bool> predicate,
@@ -60,11 +56,7 @@ public static class AsyncEffectExtensions
     public static Aff<(A, B)> Guard<A, B>(
         this Aff<(A, B)> mab, Func<A, B, bool> predicate,
         Error error)
-        => mab.Bind(
-            ab =>
-                predicate(ab.Item1, ab.Item2)
-                    ? SuccessAff(ab)
-                    : FailAff<(A, B)>(error));
+        => mab.Guard(predicate, (_, _) => error);
 
     public static Aff<(A, B)> Guard<A, B>(
         this Aff<(A, B)> mab, Func<A, B, bool> predicate,
@@ -79,11 +71,7 @@ public static class AsyncEffectExtensions
     public static Aff<(A, B, C)> Guard<A, B, C>(
         this Aff<(A, B, C)> mab, Func<A, B, C, bool> predicate,
         Error error)
-        => mab.Bind(
-            abc =>
-                predicate(abc.Item1, abc.Item2, abc.Item3)
-                    ? SuccessAff(abc)
-                    : FailAff<(A, B, C)>(error));
+        => mab.Guard(predicate, (_, _, _) => error);
 
     public static Aff<(A, B, C)> Guard<A, B, C>(
         this Aff<(A, B, C)> mab, Func<A, B, C, bool> predicate,
