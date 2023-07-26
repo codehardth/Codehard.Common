@@ -16,4 +16,8 @@
         <PackageReference Include="LanguageExt.Core" Version="4.4.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Codehard.Common\Codehard.Common\Codehard.Common.csproj" />
+    </ItemGroup>
+
 </Project>
