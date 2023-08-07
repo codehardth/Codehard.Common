@@ -38,10 +38,10 @@ public static class GuardExtensions
         => GuardWithHttpStatus(flag, HttpStatusCode.Conflict, message);
 
     public static Guard<Error> GuardWithUnprocessableEntity(bool flag, string message = "")
-        => GuardWithHttpStatus(flag, HttpStatusCode.UnprocessableEntity, message);
+        => GuardWithHttpStatus(flag, (HttpStatusCode)422, message);
 
     public static Guard<Error> GuardWithLocked(bool flag, string message = "")
-        => GuardWithHttpStatus(flag, HttpStatusCode.Locked, message);
+        => GuardWithHttpStatus(flag, (HttpStatusCode)423, message);
 
     public static Guard<Error> GuardWithInternalServerError(bool flag, string message = "")
         => GuardWithHttpStatus(flag, HttpStatusCode.InternalServerError, message);

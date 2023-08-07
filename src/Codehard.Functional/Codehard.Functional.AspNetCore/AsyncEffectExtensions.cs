@@ -183,7 +183,7 @@ public static class AsyncEffectExtensions
         Option<object> data = default,
         bool @override = true)
         => ma.MapFailToHttpResultError(
-            HttpStatusCode.UnprocessableEntity, errorCode, message, data, @override);
+            (HttpStatusCode)422, errorCode, message, data, @override);
 
     public static Aff<A> MapFailToUnprocessableEntity<A>(
         this Aff<A> ma,
@@ -192,7 +192,7 @@ public static class AsyncEffectExtensions
         Option<object> data = default,
         bool @override = true)
         => ma.MapFailToHttpResultError(
-            HttpStatusCode.UnprocessableEntity, messageFunc, errorCode, data, @override);
+            (HttpStatusCode)422, messageFunc, errorCode, data, @override);
 
     public static Aff<A> MapFailToLocked<A>(
         this Aff<A> ma, 
@@ -201,7 +201,7 @@ public static class AsyncEffectExtensions
         Option<object> data = default,
         bool @override = true)
         => ma.MapFailToHttpResultError(
-            HttpStatusCode.Locked, errorCode, message, data, @override);
+            (HttpStatusCode)423, errorCode, message, data, @override);
 
     public static Aff<A> MapFailToLocked<A>(
         this Aff<A> ma,
@@ -210,7 +210,7 @@ public static class AsyncEffectExtensions
         Option<object> data = default,
         bool @override = true)
         => ma.MapFailToHttpResultError(
-            HttpStatusCode.Locked, messageFunc, errorCode, data, @override);
+            (HttpStatusCode)423, messageFunc, errorCode, data, @override);
 
     public static Aff<A> MapFailToInternalServerError<A>(
         this Aff<A> ma, 
@@ -326,19 +326,19 @@ public static class AsyncEffectExtensions
 
     public static Aff<A> GuardWithUnprocessableEntity<A>(
         this Aff<A> ma, Func<A, bool> predicate, string message = "")
-        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, message);
+        => ma.GuardWithHttpStatus(predicate, (HttpStatusCode)422, message);
 
     public static Aff<A> GuardWithUnprocessableEntity<A>(
         this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
-        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.UnprocessableEntity, messageFunc);
+        => ma.GuardWithHttpStatus(predicate, (HttpStatusCode)422, messageFunc);
 
     public static Aff<A> GuardWithLocked<A>(
         this Aff<A> ma, Func<A, bool> predicate, string message = "")
-        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, message);
+        => ma.GuardWithHttpStatus(predicate, (HttpStatusCode)423, message);
 
     public static Aff<A> GuardWithLocked<A>(
         this Aff<A> ma, Func<A, bool> predicate, Func<A, string> messageFunc)
-        => ma.GuardWithHttpStatus(predicate, HttpStatusCode.Locked, messageFunc);
+        => ma.GuardWithHttpStatus(predicate, (HttpStatusCode)423, messageFunc);
 
     public static Aff<A> GuardWithInternalServerError<A>(
         this Aff<A> ma, Func<A, bool> predicate, string message = "")
