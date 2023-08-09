@@ -9,8 +9,7 @@ internal static class HttpResultErrorSource
     public static string Generate()
     {
         const string code =
-            """
-            using System.Net;
+            @"using System.Net;
             using System.Runtime.Serialization;
             using LanguageExt;
             using LanguageExt.Common;
@@ -109,11 +108,11 @@ internal static class HttpResultErrorSource
                 /// <summary>
                 /// Create an 'HttpResultError' error.
                 /// </summary>
-                /// <param name="statusCode"></param>
-                /// <param name="message"></param>
-                /// <param name="errorCode"></param>
-                /// <param name="data"></param>
-                /// <param name="error"></param>
+                /// <param name=""statusCode""></param>
+                /// <param name=""message""></param>
+                /// <param name=""errorCode""></param>
+                /// <param name=""data""></param>
+                /// <param name=""error""></param>
                 /// <returns></returns>
                 public static HttpResultError New(
                     HttpStatusCode statusCode,
@@ -130,8 +129,7 @@ internal static class HttpResultErrorSource
                             data,
                             error);
                 }
-            }
-            """;
+            }";
 
         return code.Replace("@namespace", Constants.Namespace);
     }
