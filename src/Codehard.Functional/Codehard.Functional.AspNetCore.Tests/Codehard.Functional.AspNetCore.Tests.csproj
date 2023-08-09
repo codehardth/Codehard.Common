@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Codehard.Functional.AspNetCore\Codehard.Functional.AspNetCore.csproj" />
+      <ProjectReference Include="..\Codehard.Functional.AspNetCore\Codehard.Functional.AspNetCore.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
     </ItemGroup>
 
 </Project>
