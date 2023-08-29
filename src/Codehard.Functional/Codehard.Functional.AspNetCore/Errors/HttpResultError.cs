@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Codehard.Functional.AspNetCore;
+namespace Codehard.Functional.AspNetCore.Errors;
 
 /// <summary>
 /// An HTTP error object.  

@@ -1,6 +1,7 @@
 using System.Dynamic;
+using Codehard.Functional.AspNetCore.Errors;
 
-namespace Codehard.Functional.AspNetCore;
+namespace Codehard.Functional.AspNetCore.ActionResults;
 
 /// <summary>
 /// An <see cref="IActionResult"/> that wraps an <see cref="HttpResultError"/> object and
@@ -65,6 +66,8 @@ public class ErrorWrapperActionResult : IActionResult
 
                     return Task.CompletedTask;
                 });
+        
+        return;
 
         ObjectResult AddErrorInfo(ObjectResult objectResult)
         {

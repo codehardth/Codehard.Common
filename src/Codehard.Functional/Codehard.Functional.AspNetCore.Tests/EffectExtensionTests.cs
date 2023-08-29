@@ -1,4 +1,5 @@
 using System.Net;
+using Codehard.Functional.AspNetCore.Errors;
 using LanguageExt.Common;
 using static LanguageExt.Prelude;
 
