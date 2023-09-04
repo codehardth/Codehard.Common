@@ -30,9 +30,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Codehard.DomainModel.Generator\Codehard.DomainModel.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
-        <ProjectReference Include="..\Codehard.Infrastructure\Codehard.Infrastructure.EntityFramework\Codehard.Infrastructure.EntityFramework.csproj" />
+      <ProjectReference Include="..\..\Codehard.Infrastructure\Codehard.Infrastructure.EntityFramework\Codehard.Infrastructure.EntityFramework.csproj" />
+      <ProjectReference Include="..\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
+      <ProjectReference Include="..\Codehard.DomainModel.Generator\Codehard.DomainModel.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
+    </ItemGroup>
 
 </Project>
