@@ -29,6 +29,11 @@ internal sealed record DomainEntityDefinition(
         Compilation compilation,
         TypeDeclarationSyntax declaration)
     {
+        if (!declaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword)))
+        {
+            return default;
+        }
+
         var semanticModel = compilation.GetSemanticModel(declaration.SyntaxTree);
         var symbol = ModelExtensions.GetDeclaredSymbol(semanticModel, declaration);
 
