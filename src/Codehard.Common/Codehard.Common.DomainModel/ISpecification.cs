@@ -1,0 +1,15 @@
+namespace Codehard.Common.DomainModel;
+
+/// <summary>
+/// An interface for a specification.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface ISpecification<T>
+{
+    /// <summary>
+    /// Verify if the <see cref="obj"/> is satisfied by this specification.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    bool IsSatisfiedBy(T obj);
+}

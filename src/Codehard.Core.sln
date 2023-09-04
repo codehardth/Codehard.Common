@@ -41,6 +41,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.AspNetC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Infrastructure.EntityFramework.Tests", "Codehard.Infrastructure\Codehard.Infrastructure.EntityFramework.Tests\Codehard.Infrastructure.EntityFramework.Tests.csproj", "{0281E666-6C4E-4F4C-BDC7-1A71D781D34D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator", "Codehard.DomainModel.Generator\Codehard.DomainModel.Generator.csproj", "{0864E7FA-1BE2-4703-9F96-91386753B301}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator.Tests", "Codehard.DomainModel.Generator.Tests\Codehard.DomainModel.Generator.Tests.csproj", "{6277AC9F-217C-4F89-8589-51FCB4E9BADF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +123,14 @@ Global
 		{0281E666-6C4E-4F4C-BDC7-1A71D781D34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0281E666-6C4E-4F4C-BDC7-1A71D781D34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0281E666-6C4E-4F4C-BDC7-1A71D781D34D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0864E7FA-1BE2-4703-9F96-91386753B301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0864E7FA-1BE2-4703-9F96-91386753B301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0864E7FA-1BE2-4703-9F96-91386753B301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0864E7FA-1BE2-4703-9F96-91386753B301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,5 +157,7 @@ Global
 		{EB27AB06-9F09-4E25-9A4C-7DDACC00C2DC} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{DA0C04B0-C40E-4047-A5B5-D4F274093DFB} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{0281E666-6C4E-4F4C-BDC7-1A71D781D34D} = {D36E6268-E980-40CF-B1EA-605B400B9EAD}
+		{0864E7FA-1BE2-4703-9F96-91386753B301} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
+		{6277AC9F-217C-4F89-8589-51FCB4E9BADF} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
 	EndGlobalSection
 EndGlobal
