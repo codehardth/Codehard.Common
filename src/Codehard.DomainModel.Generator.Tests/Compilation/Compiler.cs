@@ -89,6 +89,7 @@ internal sealed class Compiler
                 AddDllReference(typeof(Infrastructure.EntityFramework.EntityFrameworkRepositoryBase<>)),
                 AddDllReference(typeof(Microsoft.EntityFrameworkCore.DbContext)),
                 AddDllReference(typeof(SpecificationAttribute)),
+                AddDllReference(typeof(Vogen.ValueObjectAttribute)),
                 AddDllReferenceByFilePath(systemRuntimePath),
             },
             new CSharpCompilationOptions(OutputKind.ConsoleApplication)

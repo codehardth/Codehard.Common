@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text;
 using Codehard.DomainModel.Generator.Extensions;
 
@@ -22,8 +21,10 @@ internal static class SpecificationSource
             sb.AppendLine();
         }
 
+        var entityDeclarationType = entityDefinition.IsRecord ? "record" : "class";
+
         sb.AppendLine(
-            $"partial class {entityDefinition.EntityName}");
+            $"partial {entityDeclarationType} {entityDefinition.EntityName}");
         sb.AppendLine("{");
 
         foreach (var specification in entityDefinition.SpecificationDefinitions)

@@ -20,7 +20,6 @@ public abstract class EntityTypeConfigurationBase<TEntity>
     public void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.MapEnumPropertiesToString();
-        builder.MapEntityKeyPropertiesToType();
         builder.MapMoneyPropertiesToOwnedEntity();
 
         this.EntityConfigure(builder);

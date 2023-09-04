@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <PackageId>Codehard.DomainModel.Generator</PackageId>
-        <Version>1.0.0-preview-1</Version>
+        <Version>3.0.0-preview-1</Version>
         <Description>A domain-driven boilerplate generator.</Description>
         <PackageReleaseNotes>Initial release with the ability to generate specification.</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
