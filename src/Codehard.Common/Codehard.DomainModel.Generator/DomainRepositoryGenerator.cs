@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Codehard.DomainModel.Generator;
@@ -9,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 [Generator]
-public class DomainRepositoryGenerator : IIncrementalGenerator
+internal class DomainRepositoryGenerator : IIncrementalGenerator
 {
     /// <summary>
     /// Called to initialize the generator and register generation steps via callbacks
@@ -43,25 +44,19 @@ public class DomainRepositoryGenerator : IIncrementalGenerator
             return;
         }
 
-        foreach (var tds in typeDeclarations)
+        typeDeclarations
+            .Where(t => t is not null)
+            .Select(t => t!)
+            .AsParallel()
+            .Select(ParseType)
+            .Where(d => d is not null)
+            .ForAll(GenerateSource!);
+
+        DomainEntityDefinition? ParseType(TypeDeclarationSyntax tds)
+            => DomainEntityDefinition.Parse(compilation, tds);
+
+        void GenerateSource(DomainEntityDefinition definition)
         {
-            if (tds is null)
-            {
-                continue;
-            }
-
-            if (context.CancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            var definition = DomainEntityDefinition.Parse(compilation, tds);
-
-            if (definition is null)
-            {
-                continue;
-            }
-
             var sourceFileName = $"{definition.EntityName}.g.cs";
             var sourceText = SourceText.From(definition.GenerateSpecifications(), Encoding.UTF8);
 

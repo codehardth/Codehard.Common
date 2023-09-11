@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using Codehard.DomainModel.Generator.Extensions;
 using Codehard.DomainModel.Generator.Sources;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Codehard.DomainModel.Generator;
 
@@ -18,6 +20,7 @@ internal sealed record SpecificationDefinition(
 
 internal sealed record DomainEntityDefinition(
     TypeDeclarationSyntax DomainEntityDeclaration,
+    IReadOnlyCollection<string> Usings,
     string? Namespace,
     Accessibility Accessibility,
     string EntityName,
@@ -66,6 +69,10 @@ internal sealed record DomainEntityDefinition(
             return default;
         }
 
+        var usings =
+            declaration.GetAllUsings()
+                .Select(u => u.Name.ToString())
+                .ToImmutableArray();
         var @namespace = symbol.ContainingNamespace.GetSafeDisplayName();
         var accessibility = symbol.DeclaredAccessibility;
         var entityName = symbol.Name;
@@ -81,6 +88,7 @@ internal sealed record DomainEntityDefinition(
 
         return new DomainEntityDefinition(
             declaration,
+            usings,
             @namespace,
             accessibility,
             entityName,
