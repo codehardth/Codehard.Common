@@ -57,4 +57,16 @@ internal static class SyntaxExtensions
             return namedTypeSymbol;
         }
     }
+
+
+    public static IEnumerable<UsingDirectiveSyntax> GetAllUsings(this TypeDeclarationSyntax interfaceSyntax)
+    {
+        var root = interfaceSyntax.SyntaxTree.GetRoot();
+
+        var usingDirectives =
+            root.DescendantNodes()
+                .OfType<UsingDirectiveSyntax>();
+
+        return usingDirectives;
+    }
 }

@@ -66,18 +66,6 @@ internal sealed class Compiler
 
     private static Microsoft.CodeAnalysis.Compilation CreateCompilation(params string[] sources)
     {
-        var systemRuntimePath =
-            AppDomain.CurrentDomain.GetAssemblies()
-                .Where(asm => !string.IsNullOrWhiteSpace(asm.FullName))
-                .FirstOrDefault(asm => asm.FullName!.StartsWith("System.Runtime"))?
-                .Location;
-
-        if (systemRuntimePath is null)
-        {
-            throw new InvalidOperationException(
-                "Unable to load `System.Runtime` which is required for the compiler to run.");
-        }
-
         return CSharpCompilation.Create(
             "compilation",
             sources.Select(static source => CSharpSyntaxTree.ParseText(source)),
@@ -89,8 +77,8 @@ internal sealed class Compiler
                 AddDllReference(typeof(Infrastructure.EntityFramework.EntityFrameworkRepositoryBase<>)),
                 AddDllReference(typeof(Microsoft.EntityFrameworkCore.DbContext)),
                 AddDllReference(typeof(SpecificationAttribute)),
-                AddDllReference(typeof(Vogen.ValueObjectAttribute)),
-                AddDllReferenceByFilePath(systemRuntimePath),
+                AddDllReferenceAssemblyName("System.Runtime"),
+                AddDllReferenceAssemblyName("netstandard"),
             },
             new CSharpCompilationOptions(OutputKind.ConsoleApplication)
         );
@@ -99,11 +87,23 @@ internal sealed class Compiler
         {
             var asm = type.GetTypeInfo().Assembly;
 
-            return AddDllReferenceByFilePath(asm.Location);
+            return MetadataReference.CreateFromFile(asm.Location);
         }
 
-        static MetadataReference AddDllReferenceByFilePath(string path)
+        static MetadataReference AddDllReferenceAssemblyName(string assemblyName)
         {
+            var path =
+                AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(asm => !string.IsNullOrWhiteSpace(asm.FullName))
+                    .FirstOrDefault(asm => asm.FullName!.StartsWith(assemblyName))?
+                    .Location;
+
+            if (path is null)
+            {
+                throw new InvalidOperationException(
+                    $"Unable to load `{assemblyName}` which is required for the compiler to run.");
+            }
+
             return MetadataReference.CreateFromFile(path);
         }
     }

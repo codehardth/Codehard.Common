@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace Codehard.DomainModel.Generator;
 
 [Generator]
-public class AttributeGenerator : IIncrementalGenerator
+internal class AttributeGenerator : IIncrementalGenerator
 {
     /// <summary>
     /// Called to initialize the generator and register generation steps via callbacks
