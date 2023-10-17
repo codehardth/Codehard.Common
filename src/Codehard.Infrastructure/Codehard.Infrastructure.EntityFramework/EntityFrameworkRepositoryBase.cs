@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Codehard.Common.DomainModel;
+using Codehard.Common.DomainModel.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Infrastructure.EntityFramework;
@@ -41,6 +43,23 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
     public virtual ValueTask<T?> GetByIdAsync(object[] id, CancellationToken cancellationToken = default)
     {
         return this.Set.FindAsync(id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<T> QueryAsync(
+        ISpecification<T> specification,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var query = this.Set.Apply(specification);
+
+        var source =
+            query.AsAsyncEnumerable()
+                .WithCancellation(cancellationToken);
+
+        await foreach (var e in source)
+        {
+            yield return e;
+        }
     }
 
     /// <inheritdoc />

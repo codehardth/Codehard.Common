@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Codehard.Functional\Codehard.Functional.Mediatr\Codehard.Functional.Mediatr.csproj" />
+      <ProjectReference Include="..\..\Codehard.Functional\Codehard.Functional.MediatR\Codehard.Functional.MediatR.csproj" />
       <ProjectReference Include="..\..\Codehard.Functional\Codehard.Functional\Codehard.Functional.csproj" />
     </ItemGroup>
 

@@ -4,7 +4,7 @@ namespace Codehard.Common.DomainModel;
 /// An interface for a specification.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public interface ISpecification<T>
+public interface ISpecification<in T>
 {
     /// <summary>
     /// Verify if the <see cref="obj"/> is satisfied by this specification.

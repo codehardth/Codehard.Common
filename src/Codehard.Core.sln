@@ -49,9 +49,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten.Tests", "Codehard.Functional\Codehard.Functional.Marten.Tests\Codehard.Functional.Marten.Tests.csproj", "{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR", "Codehard.Functional\Codehard.Functional.Mediatr\Codehard.Functional.MediatR.csproj", "{8952083F-5A2A-4A37-9039-8588B08CA6EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR", "Codehard.Functional\Codehard.Functional.MediatR\Codehard.Functional.MediatR.csproj", "{8952083F-5A2A-4A37-9039-8588B08CA6EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR.Tests", "Codehard.Functional\Codehard.Functional.Mediatr.Tests\Codehard.Functional.MediatR.Tests.csproj", "{569F15A1-ABDE-4037-825C-90164D9074E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR.Tests", "Codehard.Functional\Codehard.Functional.MediatR.Tests\Codehard.Functional.MediatR.Tests.csproj", "{569F15A1-ABDE-4037-825C-90164D9074E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.AspNetCore.Tests", "Codehard.Common\Codehard.Common.AspNetCore.Tests\Codehard.Common.AspNetCore.Tests.csproj", "{C936B94D-D1D9-4A55-8CA1-748988282811}"
 EndProject
