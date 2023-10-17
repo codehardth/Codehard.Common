@@ -5,6 +5,7 @@ using Codehard.Common.DomainModel;
 using Codehard.Common.DomainModel.Attributes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Scriban;
 
 namespace Codehard.DomainModel.Generator.Tests.Compilation;
 
@@ -77,6 +78,7 @@ internal sealed class Compiler
                 AddDllReference(typeof(Infrastructure.EntityFramework.EntityFrameworkRepositoryBase<>)),
                 AddDllReference(typeof(Microsoft.EntityFrameworkCore.DbContext)),
                 AddDllReference(typeof(SpecificationAttribute)),
+                AddDllReference(typeof(Template)),
                 AddDllReferenceAssemblyName("System.Runtime"),
                 AddDllReferenceAssemblyName("netstandard"),
             },

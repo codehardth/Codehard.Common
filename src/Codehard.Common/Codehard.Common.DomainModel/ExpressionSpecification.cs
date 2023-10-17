@@ -6,7 +6,7 @@ namespace Codehard.Common.DomainModel;
 /// An implementation for expression based specification.
 /// </summary>
 /// <typeparam name="T"></typeparam>1
-public abstract class ExpressionSpecification<T> : IExpressionSpecification<T>
+public class ExpressionSpecification<T> : IExpressionSpecification<T>
 {
     /// <inheritdoc />
     public Expression<Func<T, bool>> Expression { get; }
@@ -17,7 +17,7 @@ public abstract class ExpressionSpecification<T> : IExpressionSpecification<T>
     /// <summary>
     /// </summary>
     /// <param name="expression"></param>
-    protected ExpressionSpecification(Expression<Func<T, bool>> expression)
+    protected internal ExpressionSpecification(Expression<Func<T, bool>> expression)
     {
         this.Expression = expression;
     }

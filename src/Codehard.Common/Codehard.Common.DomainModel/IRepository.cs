@@ -24,6 +24,14 @@ public interface IRepository<T> : IQueryable<T>
     ValueTask<T?> GetByIdAsync(object[] id, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Queries a data using given <see cref="specification"/>.
+    /// </summary>
+    /// <param name="specification"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    IAsyncEnumerable<T> QueryAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Add an entity.
     /// </summary>
     /// <param name="entity"></param>

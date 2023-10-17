@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 [Generator]
-internal class DomainRepositoryGenerator : IIncrementalGenerator
+internal class SpecificationGenerator : IIncrementalGenerator
 {
     /// <summary>
     /// Called to initialize the generator and register generation steps via callbacks

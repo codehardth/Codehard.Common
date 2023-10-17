@@ -52,7 +52,7 @@ public class SpecificationGeneratorTests
 
 
         // Act
-        var result = Compiler.With(new DomainRepositoryGenerator()).Compile(source);
+        var result = Compiler.With(new SpecificationGenerator()).Compile(source);
 
         // Assert
         Assert.Empty(result.CompilationErrors);
@@ -105,7 +105,7 @@ public class SpecificationGeneratorTests
 
 
         // Act
-        var result = Compiler.With(new DomainRepositoryGenerator()).Compile(source);
+        var result = Compiler.With(new SpecificationGenerator()).Compile(source);
 
         // Assert
         Assert.Empty(result.CompilationErrors);
@@ -160,7 +160,7 @@ public class SpecificationGeneratorTests
 
 
         // Act
-        var result = Compiler.With(new DomainRepositoryGenerator()).Compile(source);
+        var result = Compiler.With(new SpecificationGenerator()).Compile(source);
 
         // Assert
         Assert.Empty(result.CompilationErrors);
