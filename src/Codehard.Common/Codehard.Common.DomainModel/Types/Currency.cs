@@ -1,19 +1,22 @@
 namespace Codehard.Common.DomainModel.Types;
 
+/// <summary>
+/// Represents a set of currencies.
+/// </summary>
 public enum Currency
 {
     /// <summary>
-    /// Unspecified Currency.
+    /// An unspecified currency.
     /// </summary>
     Unspecified,
 
     /// <summary>
-    /// Thai Baht
+    /// Thai Baht.
     /// </summary>
     Thb,
 
     /// <summary>
-    /// US Dollar
+    /// US Dollar.
     /// </summary>
     Usd,
 }
