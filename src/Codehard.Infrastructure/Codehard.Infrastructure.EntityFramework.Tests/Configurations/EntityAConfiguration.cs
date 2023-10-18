@@ -18,7 +18,14 @@ public class EntityAConfiguration : EntityTypeConfigurationBase<EntityA, TestDbC
         this.builder.HasChangeTrackingStrategy(ChangeTrackingStrategy.Snapshot);
 
         builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .HasConversion(
+                key => key.Value,
+                value => new EntityAKey
+                {
+                    Value = value,
+                });
         builder.Property(e => e.Value)
-               .IsRequired();
+            .IsRequired();
     }
 }
