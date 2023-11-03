@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
         <Version>2.5.0</Version>
         <Description>A library contains common code related to functional programming with logger based on LanguageExt.</Description>

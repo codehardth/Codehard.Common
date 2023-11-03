@@ -11,7 +11,7 @@ public class AsyncEffectExtensionTests
     {
         // Arrange
         var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something went wrong")));
-
+        
         // Act
         var res = await aff.MapFailToInternalServerError("Err001")
             .Run();

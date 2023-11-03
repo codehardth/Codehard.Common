@@ -15,15 +15,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Install dependencies
-      working-directory: ${{env.working-directory}}
-      run: dotnet restore
     - name: Build
       working-directory: ${{env.working-directory}}
-      run: dotnet build Codehard.Functional.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+      run: dotnet build Codehard.Functional.sln --configuration Release /p:ContinuousIntegrationBuild=true
     - name: Unit Test
       working-directory: ${{env.working-directory}}
-      run: dotnet test Codehard.Functional.sln --no-restore --verbosity normal
+      run: dotnet test Codehard.Functional.sln --verbosity normal
 
   build-and-test-common:
     runs-on: ubuntu-latest

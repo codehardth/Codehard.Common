@@ -21,8 +21,7 @@ public static class EnumerableExtensions
         return source
             .Map(Optional)
             .FirstOrDefault(
-                iOpt =>  iOpt.Filter(predicate).IsSome,
-                Option<T>.None);
+                iOpt =>  iOpt.Filter(predicate).IsSome);
     }
     
     /// <summary>
@@ -34,7 +33,7 @@ public static class EnumerableExtensions
     {
         return Eff(() => source
             .Map(Optional)
-            .SingleOrDefault(Option<T>.None));
+            .SingleOrDefault());
     }
     
     /// <summary>
@@ -79,8 +78,7 @@ public static class EnumerableExtensions
         return Eff(() => source
             .Map(Optional)
             .SingleOrDefault(
-                iOpt =>  iOpt.Filter(predicate).IsSome,
-                Option<T>.None));
+                iOpt =>  iOpt.Filter(predicate).IsSome));
     }
     
     /// <summary>
