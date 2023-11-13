@@ -11,33 +11,34 @@ namespace Codehard.Infrastructure.EntityFramework.Tests;
 public class DomainEntityTests
 {
     [Fact]
-    public async Task WhenSaveChanges_UsingUnitOfWork_ShouldPublishAndClearEvents()
+    public async Task WhenSaveChanges_UsingDomainEventDbContext_ShouldPublishAndClearEvents()
     {
         // Arrange
         var assembly = Assembly.GetExecutingAssembly();
         var options = new DbContextOptionsBuilder<TestDbContext>()
             .UseSqlite(CreateInMemoryDatabase())
             .Options;
+
+        var loggerMock = new Mock<ILogger<TestDbContext>>();
+        var logger = loggerMock.Object;
         await using var context = new TestDbContext(
             options,
-            builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly));
+            builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly),
+            logger);
         await context.Database.EnsureCreatedAsync();
-
-        var loggerMock = new Mock<ILogger<TestUnitOfWork>>();
-        var unitOfWork = new TestUnitOfWork(loggerMock.Object, context);
 
         // Act
         var entity = EntityA.Create();
         entity.UpdateValue("New Value");
 
-        await unitOfWork.Entities.AddAsync(entity);
-        await unitOfWork.SaveChangesAsync();
+        await context.As.AddAsync(entity);
+        await context.SaveChangesAsync();
 
         // Assert
         loggerMock.Verify(
             logger =>
                 logger.Log(
-                    It.Is<LogLevel>(logLevel => true),
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
                     It.Is<EventId>(eventId => true),
                     It.Is<It.IsAnyType>((@object, @type) =>
                         @object.ToString()!.Contains(nameof(EntityCreatedEvent))),
@@ -47,7 +48,62 @@ public class DomainEntityTests
         loggerMock.Verify(
             logger =>
                 logger.Log(
-                    It.Is<LogLevel>(logLevel => true),
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
+                    It.Is<EventId>(eventId => true),
+                    It.Is<It.IsAnyType>((@object, @type) =>
+                        @object.ToString()!.Contains(nameof(ValueChangedEvent))),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+        Assert.Empty(entity.Events);
+    }
+
+    [Fact]
+    public async Task WhenSaveChanges_UsingGlobalPublisherFunction_ShouldPublishAndClearEvents()
+    {
+        // Arrange
+        var assembly = Assembly.GetExecutingAssembly();
+        var options = new DbContextOptionsBuilder<TestDbContext>()
+            .UseSqlite(CreateInMemoryDatabase())
+            .Options;
+
+        var loggerMock = new Mock<ILogger<TestDbContext>>();
+        var logger = loggerMock.Object;
+        await using var context = new TestDbContext(
+            options,
+            builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly),
+            dm =>
+            {
+                // We use LogWarning here to distinct
+                // between the global and local (within the DbContext) publisher
+                logger.LogWarning(dm.ToString());
+
+                return Task.CompletedTask;
+            });
+        await context.Database.EnsureCreatedAsync();
+
+        // Act
+        var entity = EntityA.Create();
+        entity.UpdateValue("New Value");
+
+        await context.As.AddAsync(entity);
+        await context.SaveChangesAsync();
+
+        // Assert
+        loggerMock.Verify(
+            logger =>
+                logger.Log(
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Warning),
+                    It.Is<EventId>(eventId => true),
+                    It.Is<It.IsAnyType>((@object, @type) =>
+                        @object.ToString()!.Contains(nameof(EntityCreatedEvent))),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+        loggerMock.Verify(
+            logger =>
+                logger.Log(
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Warning),
                     It.Is<EventId>(eventId => true),
                     It.Is<It.IsAnyType>((@object, @type) =>
                         @object.ToString()!.Contains(nameof(ValueChangedEvent))),

@@ -2,49 +2,60 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Reflection;
 using Codehard.Common.DomainModel;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Codehard.Infrastructure.EntityFramework;
+namespace Codehard.Infrastructure.EntityFramework.Interceptors;
 
-public abstract class UnitOfWork
+/// <summary>
+/// Represents a delegate for asynchronously publishing domain events.
+/// </summary>
+/// <param name="domainEvent">The domain event to be published.</param>
+/// <returns>An asynchronous task representing the publishing operation.</returns>
+public delegate Task PublishDomainEventDelegate(IDomainEvent domainEvent);
+
+internal class DomainEventPublisherInterceptor : SaveChangesInterceptor
 {
     /// <summary>
     /// A cache to store reflection data related to the "events" field in entity types.
     /// </summary>
     private static readonly ConcurrentDictionary<Type, FieldInfo> FieldInfoCache = new();
 
-    /// <summary>
-    /// The database context used for interacting with the underlying database and tracking changes.
-    /// </summary>
-    protected readonly DbContext DbContext;
+    private readonly PublishDomainEventDelegate? publisher;
 
     /// <summary>
-    /// Initializes a new instance of the UnitOfWork class with the provided database context.
     /// </summary>
-    /// <param name="dbContext">The database context to be used for managing database transactions and changes.</param>
-    protected UnitOfWork(DbContext dbContext)
+    /// <param name="publisher">Sets a publisher function that has higher priority over publisher event from <see cref="IDomainEventDbContext"/></param>
+    public DomainEventPublisherInterceptor(PublishDomainEventDelegate? publisher = default)
     {
-        this.DbContext = dbContext;
+        this.publisher = publisher;
     }
 
-    /// <summary>
-    /// Asynchronous method to publish a domain event.
-    /// Derived classes should implement this method to handle the actual publishing of domain events.
-    /// </summary>
-    /// <param name="domainEvent">The domain event to be published.</param>
-    /// <returns>An asynchronous task representing the operation.</returns>
-    protected abstract Task PublishDomainEventAsync(IDomainEvent domainEvent);
-
-    /// <summary>
-    /// Asynchronously saves changes to the database, publishes domain events, and clears existing events.
-    /// </summary>
-    /// <param name="cancellationToken">A token to cancel the operation (optional).</param>
-    /// <returns>An asynchronous task representing the save operation.</returns>
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
     {
+        var context = eventData.Context;
+
+        if (context is null)
+        {
+            return new InterceptionResult<int>();
+        }
+
+        var publisherFunc =
+            this.publisher ??
+            (context is IDomainEventDbContext domainEventDbContext
+                ? domainEventDbContext.PublishDomainEventAsync
+                : null);
+
+        if (publisherFunc is null)
+        {
+            return new InterceptionResult<int>();
+        }
+
         // Retrieve domain entities from the change tracker.
         var domainEntities =
-            this.DbContext.ChangeTracker
+            context.ChangeTracker
                 .Entries()
                 .Where(e => e.Entity.GetType().IsAssignableTo(typeof(IEntity)))
                 .ToArray();
@@ -54,7 +65,7 @@ public abstract class UnitOfWork
 
         foreach (var @event in events)
         {
-            await this.PublishDomainEventAsync(@event);
+            await publisherFunc(@event);
         }
 
         // Clear all existing events
@@ -69,7 +80,7 @@ public abstract class UnitOfWork
             }
         }
 
-        await this.DbContext.SaveChangesAsync(cancellationToken);
+        return new InterceptionResult<int>();
 
         static FieldInfo? TryGetEventsFieldInfo(Type type)
         {

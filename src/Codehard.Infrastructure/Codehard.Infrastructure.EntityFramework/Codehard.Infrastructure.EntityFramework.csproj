@@ -26,4 +26,8 @@
       <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Codehard.Infrastructure.EntityFramework.Tests"/>
+    </ItemGroup>
+
 </Project>
