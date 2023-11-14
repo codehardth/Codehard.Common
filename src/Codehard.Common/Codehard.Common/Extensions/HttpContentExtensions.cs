@@ -7,7 +7,7 @@ namespace Codehard.Common.Extensions;
 /// </summary>
 public static class HttpContentExtensions
 {
-    public static readonly JsonSerializerOptions DefaultOptions = new()
+    public static readonly JsonSerializerOptions CaseInsensitiveOptions = new()
     {
         PropertyNameCaseInsensitive = true,
     };
@@ -27,7 +27,7 @@ public static class HttpContentExtensions
         this HttpContent httpContent,
         CancellationToken cancellationToken = default)
     {
-        return ReadAsObjectAsync<T>(httpContent, DefaultOptions, cancellationToken);
+        return ReadAsObjectAsync<T>(httpContent, CaseInsensitiveOptions, cancellationToken);
     }
 
     /// <summary>

@@ -22,10 +22,12 @@ public class QueryableExtensionTests
         var session = store.IdentitySession();
         var id = Guid.NewGuid();
         
-        session.Store(new EntityA()
+        const string entityNameValue = "Test";
+        
+        session.Store(new EntityA
         {
             Id = id,
-            Name = "Test"
+            Name = entityNameValue
         });
 
         _ = await session
@@ -51,6 +53,6 @@ public class QueryableExtensionTests
         var entity = opt.IfNoneUnsafe(() => null);
         
         Assert.Equal(id, entity!.Id);
-        Assert.Equal("Test", entity.Name);
+        Assert.Equal(entityNameValue, entity.Name);
     }
 }

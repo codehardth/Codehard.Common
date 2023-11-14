@@ -2,8 +2,15 @@ using System.Globalization;
 
 namespace Codehard.Common.Extensions;
 
+/// <summary>
+/// Provides extension methods for Thai culture.
+/// </summary>
 public static class ThaiCultureExtensions
 {
+    
+    /// <summary>
+    /// Thai culture info.
+    /// </summary>
     public static readonly CultureInfo ThaiCultureInfo = CultureInfo.GetCultureInfo("th-TH");
     
     /// <summary>
@@ -59,19 +66,10 @@ public static class ThaiCultureExtensions
             return charCode is < startRange or > endRange ? c : (char)(charCode + 3616);
         }
     }
-    
-    public static string ToThaiDateString(
-        this DateTime dateTime,
-        string format = "dd/MM/yyyy",
-        bool thaiNumber = false)
-    {
-        var dateText = dateTime.ToString(
-            format,
-            ThaiCultureInfo);
 
-        return thaiNumber ? dateText.ToThaiNumber() : dateText;
-    }
-
+    /// <summary>
+    /// This method converts a string to Thai date string.
+    /// </summary>
     public static string ToThaiDateString(
         this DateTimeOffset dateTimeOffset,
         string format = "dd/MM/yyyy")
