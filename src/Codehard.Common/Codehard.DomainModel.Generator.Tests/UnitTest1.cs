@@ -22,6 +22,8 @@ public class UnitTest1
 
             public partial class MyEntityRoot : IAggregateRoot<MyEntityRootKey>, IDisposable
             {
+                public System.Collections.Generic.IReadOnlyCollection<IDomainEvent> Events { get; }
+                
                 public MyEntityRootKey Id { get; }
             
                 public DateTimeOffset CreatedAt { get; }
@@ -74,6 +76,8 @@ public class UnitTest1
 
             public partial class MyEntityRoot : IAggregateRoot<MyEntityRootKey>, IDisposable
             {
+                public System.Collections.Generic.IReadOnlyCollection<IDomainEvent> Events { get; }
+            
                 public MyEntityRootKey Id { get; }
             
                 public DateTimeOffset CreatedAt { get; }
@@ -129,15 +133,15 @@ public class UnitTest1
 
             public partial class MyEntityRoot : IAggregateRoot<MyEntityRootKey>, IDisposable
             {
+                public System.Collections.Generic.IReadOnlyCollection<IDomainEvent> Events { get; }
+            
                 public MyEntityRootKey Id { get; }
             
                 public DateTimeOffset CreatedAt { get; }
             
-                [Specification]
-                public IsCreatedBefore2022Delegate IsCreatedBefore2022 = (e) => e.CreatedAt.Year < 2022;
+                [Specification] public IsCreatedBefore2022Delegate IsCreatedBefore2022 = (e) => e.CreatedAt.Year < 2022;
             
-                [Specification]
-                public IdComparerDelegate IsIdEqual = (e, id) => e.Id.Value == id;
+                [Specification] public IdComparerDelegate IsIdEqual = (e, id) => e.Id.Value == id;
             
                 public void Dispose()
                 {
