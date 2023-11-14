@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Moq;
 
-namespace Codehard.Common.AspNetCore.Test;
+namespace Codehard.Common.AspNetCore.Tests;
 
 public class ReadFileExtensionTest
 {

@@ -54,6 +54,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR.Tests", "Codehard.Functional\Codehard.Functional.Mediatr.Tests\Codehard.Functional.MediatR.Tests.csproj", "{569F15A1-ABDE-4037-825C-90164D9074E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.AspNetCore.Test", "Codehard.Common.AspNetCore.Test\Codehard.Common.AspNetCore.Test.csproj", "{C936B94D-D1D9-4A55-8CA1-748988282811}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.AspNetCore.Tests", "Codehard.Common.AspNetCore.Tests\Codehard.Common.AspNetCore.Tests.csproj", "{C936B94D-D1D9-4A55-8CA1-748988282811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
