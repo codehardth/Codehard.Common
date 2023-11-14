@@ -13,9 +13,12 @@ public static class DocumentSessionExtensions
     /// <summary>
     /// Save changes to the database
     /// </summary>
-    public static Aff<Unit> SaveChangesAff(this IDocumentSession documentSession)
+    public static Aff<Unit> SaveChangesAff(
+        this IDocumentSession documentSession, CancellationToken cancellationToken = default)
     {
-        return Aff(async () => await documentSession.SaveChangesAsync().ToUnit());
+        return Aff(
+            async () =>
+            await documentSession.SaveChangesAsync(cancellationToken).ToUnit());
     }
     
     /// <summary>
