@@ -1,29 +1,13 @@
 using System.Linq.Expressions;
 using LanguageExt;
-using Microsoft.EntityFrameworkCore;
 
 using static LanguageExt.Prelude;
 
-namespace Codehard.Functional.EntityFramework;
+// ReSharper disable once CheckNamespace
+namespace Marten;
 
 public static class QueryableExtensions
 {
-    /// <summary>
-    /// If sequence has no element, returns None instead of true.
-    /// </summary>
-    public static async Task<Option<bool>> AllIfAnyAsync<TSource>(
-        this IQueryable<TSource> source,
-        Expression<Func<TSource, bool>> predicate)
-    {
-        var isAny = await source.AnyAsync();
-
-        return
-            await (
-                isAny
-                    ? source.AllAsync(predicate).Map(Some)
-                    : Option<bool>.None.AsTask());
-    }
-    
     /// <summary>
     /// Asynchronously returns the only element of a sequence, or a None value if the sequence is empty;
     /// this method returns an Option&lt;TSource&gt;.
