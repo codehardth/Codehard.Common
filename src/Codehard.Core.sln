@@ -41,13 +41,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.AspNetC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Infrastructure.EntityFramework.Tests", "Codehard.Infrastructure\Codehard.Infrastructure.EntityFramework.Tests\Codehard.Infrastructure.EntityFramework.Tests.csproj", "{0281E666-6C4E-4F4C-BDC7-1A71D781D34D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator", "Codehard.Common/Codehard.DomainModel.Generator\Codehard.DomainModel.Generator.csproj", "{0864E7FA-1BE2-4703-9F96-91386753B301}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator", "Codehard.Common\Codehard.DomainModel.Generator\Codehard.DomainModel.Generator.csproj", "{0864E7FA-1BE2-4703-9F96-91386753B301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator.Tests", "Codehard.Common/Codehard.DomainModel.Generator.Tests\Codehard.DomainModel.Generator.Tests.csproj", "{6277AC9F-217C-4F89-8589-51FCB4E9BADF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator.Tests", "Codehard.Common\Codehard.DomainModel.Generator.Tests\Codehard.DomainModel.Generator.Tests.csproj", "{6277AC9F-217C-4F89-8589-51FCB4E9BADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten", "Codehard.Functional.Marten\Codehard.Functional.Marten.csproj", "{8D62918D-C27F-45AF-B26A-437B594C0D5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten", "Codehard.Functional\Codehard.Functional.Marten\Codehard.Functional.Marten.csproj", "{8D62918D-C27F-45AF-B26A-437B594C0D5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten.Tests", "Codehard.Functional.Marten.Tests\Codehard.Functional.Marten.Tests.csproj", "{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten.Tests", "Codehard.Functional\Codehard.Functional.Marten.Tests\Codehard.Functional.Marten.Tests.csproj", "{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

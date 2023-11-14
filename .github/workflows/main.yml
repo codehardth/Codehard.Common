@@ -40,6 +40,11 @@ jobs:
       with:
         PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.EntityFramework/Codehard.Functional.EntityFramework.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    - name: Publish Codehard.Functional.Marten To Nuget
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+        PROJECT_FILE_PATH: src/Codehard.Functional/Codehard.Functional.Marten/Codehard.Functional.Marten.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
   publish-common:
     runs-on: ubuntu-latest
