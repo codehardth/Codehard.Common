@@ -4,17 +4,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0-preview-2</Version>
-        <Description>A functional extensions for Marten.</Description>
+        <Version>3.0.0-preview-1</Version>
+        <Description>A functional extensions for MediatR.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Add Aff extensions</PackageReleaseNotes>
+        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="LanguageExt.Core" Version="4.4.7" />
-      <PackageReference Include="Marten" Version="6.3.0" />
+      <PackageReference Include="MediatR" Version="12.1.1" />
     </ItemGroup>
 
 </Project>

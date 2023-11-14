@@ -9,6 +9,19 @@ namespace Marten;
 public static class QueryableExtensions
 {
     /// <summary>
+    /// Asynchronously converts an IQueryable&lt;T&gt; into a read-only list within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the IQueryable.</typeparam>
+    /// <param name="source">The IQueryable to be converted to a read-only list.</param>
+    /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>An Aff&lt;IReadOnlyList&lt;T&gt;&gt; representing the asynchronous operation. 
+    /// The Aff monad wraps the result, which is the read-only list of elements.</returns>
+    public static Aff<IReadOnlyList<T>> ToListAff<T>(this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.ToListAsync(ct));
+    }
+    
+    /// <summary>
     /// Asynchronously returns the only element of a sequence, or a None value if the sequence is empty;
     /// this method returns an Option&lt;TSource&gt;.
     /// </summary>

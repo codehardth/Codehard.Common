@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten.Tests", "Codehard.Functional\Codehard.Functional.Marten.Tests\Codehard.Functional.Marten.Tests.csproj", "{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR", "Codehard.Functional\Codehard.Functional.Mediatr\Codehard.Functional.MediatR.csproj", "{8952083F-5A2A-4A37-9039-8588B08CA6EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR.Tests", "Codehard.Functional\Codehard.Functional.Mediatr.Tests\Codehard.Functional.MediatR.Tests.csproj", "{569F15A1-ABDE-4037-825C-90164D9074E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +147,14 @@ Global
 		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8952083F-5A2A-4A37-9039-8588B08CA6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8952083F-5A2A-4A37-9039-8588B08CA6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8952083F-5A2A-4A37-9039-8588B08CA6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8952083F-5A2A-4A37-9039-8588B08CA6EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{569F15A1-ABDE-4037-825C-90164D9074E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{569F15A1-ABDE-4037-825C-90164D9074E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{569F15A1-ABDE-4037-825C-90164D9074E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{569F15A1-ABDE-4037-825C-90164D9074E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,5 +185,7 @@ Global
 		{6277AC9F-217C-4F89-8589-51FCB4E9BADF} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
 		{8D62918D-C27F-45AF-B26A-437B594C0D5C} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
+		{8952083F-5A2A-4A37-9039-8588B08CA6EE} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
+		{569F15A1-ABDE-4037-825C-90164D9074E2} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 	EndGlobalSection
 EndGlobal
