@@ -45,6 +45,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Genera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.DomainModel.Generator.Tests", "Codehard.Common/Codehard.DomainModel.Generator.Tests\Codehard.DomainModel.Generator.Tests.csproj", "{6277AC9F-217C-4F89-8589-51FCB4E9BADF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten", "Codehard.Functional.Marten\Codehard.Functional.Marten.csproj", "{8D62918D-C27F-45AF-B26A-437B594C0D5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.Marten.Tests", "Codehard.Functional.Marten.Tests\Codehard.Functional.Marten.Tests.csproj", "{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +135,14 @@ Global
 		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6277AC9F-217C-4F89-8589-51FCB4E9BADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D62918D-C27F-45AF-B26A-437B594C0D5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D62918D-C27F-45AF-B26A-437B594C0D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D62918D-C27F-45AF-B26A-437B594C0D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D62918D-C27F-45AF-B26A-437B594C0D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,5 +171,7 @@ Global
 		{0281E666-6C4E-4F4C-BDC7-1A71D781D34D} = {D36E6268-E980-40CF-B1EA-605B400B9EAD}
 		{0864E7FA-1BE2-4703-9F96-91386753B301} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
 		{6277AC9F-217C-4F89-8589-51FCB4E9BADF} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
+		{8D62918D-C27F-45AF-B26A-437B594C0D5C} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
+		{BCB6D4C3-DD27-43AD-B0E9-6C8DE6821AD5} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 	EndGlobalSection
 EndGlobal
