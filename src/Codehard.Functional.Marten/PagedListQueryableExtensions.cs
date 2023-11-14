@@ -12,7 +12,7 @@ public static class PagedListQueryableExtensions
         this IQueryable<T> queryable,
         int pageNumber,
         int pageSize,
-        CancellationToken token = default(CancellationToken))
+        CancellationToken token = default)
     {
         return Aff(async () => await queryable.ToPagedListAsync(pageNumber, pageSize, token));
     }
