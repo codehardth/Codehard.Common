@@ -30,4 +30,17 @@ public static class IMediatorExtensions
                                   .Map(x => x.ToAff()))
                 .Flatten();
     }
+    
+    public static Aff<LanguageExt.Unit> PublishAff<TNotification>(
+        this IMediator mediator,
+        TNotification notification)
+        where TNotification : INotification
+    {
+        return
+            Aff(async () =>
+            {
+                await mediator.Publish(notification);
+                return unit;
+            });
+    }
 }
