@@ -12,7 +12,7 @@ public interface IDomainEvent
 /// </summary>
 /// <typeparam name="TKey">The type of the entity's key associated with the domain event.</typeparam>
 public interface IDomainEvent<TKey> : IDomainEvent
-    where TKey : IEntityKey
+    where TKey : struct
 {
     /// <summary>
     /// Gets the unique identifier of the entity associated with the domain event.

@@ -2,7 +2,7 @@ using Codehard.DomainModel.Generator.Tests.Compilation;
 
 namespace Codehard.DomainModel.Generator.Tests;
 
-public class UnitTest1
+public class SpecificationGeneratorTests
 {
     [Fact]
     public void WhenGenerate_Func_WhichReturnsBoolean_ShouldGenerateCorrectly()
@@ -15,7 +15,7 @@ public class UnitTest1
             using Codehard.Common.DomainModel;
             using Codehard.Common.DomainModel.Attributes;
 
-            public class MyEntityRootKey : IEntityKey
+            public struct MyEntityRootKey
             {
                 public Guid Value { get; }
             }
@@ -69,7 +69,7 @@ public class UnitTest1
             using Codehard.Common.DomainModel;
             using Codehard.Common.DomainModel.Attributes;
 
-            public class MyEntityRootKey : IEntityKey
+            public struct MyEntityRootKey
             {
                 public Guid Value { get; }
             }
@@ -126,7 +126,7 @@ public class UnitTest1
 
             public delegate bool IdComparerDelegate(MyEntityRoot entity, Guid id);
 
-            public class MyEntityRootKey : IEntityKey
+            public struct MyEntityRootKey
             {
                 public Guid Value { get; }
             }
