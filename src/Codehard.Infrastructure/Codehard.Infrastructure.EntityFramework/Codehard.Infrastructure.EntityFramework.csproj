@@ -4,12 +4,13 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0-preview-2</Version>
+        <Version>3.0.0-preview-3</Version>
         <Description>A library contains common code related to Entity Framework Core.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Common</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common</RepositoryUrl>
         <PackageReleaseNotes>Added a foundation for domain event.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,11 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
+        <InternalsVisibleTo Include="Codehard.Infrastructure.EntityFramework.Tests"/>
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="Codehard.Infrastructure.EntityFramework.Tests"/>
+      <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
     </ItemGroup>
 
 </Project>

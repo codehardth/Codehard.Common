@@ -4,13 +4,21 @@ namespace Codehard.Infrastructure.EntityFramework.Tests.Entities;
 
 public class EntityCreatedEvent : IDomainEvent<EntityAKey>
 {
+    public EntityCreatedEvent(EntityAKey id, DateTimeOffset timestamp)
+    {
+        Id = id;
+        Timestamp = timestamp;
+    }
+
     public EntityAKey Id { get; }
+
+    public DateTimeOffset Timestamp { get; }
 }
 
-public record ValueChangedEvent(EntityAKey Id, string NewValue)
+public record ValueChangedEvent(EntityAKey Id, string NewValue, DateTimeOffset Timestamp)
     : IDomainEvent<EntityAKey>;
 
-public class EntityAKey : IEntityKey
+public struct EntityAKey
 {
     public Guid Value { get; set; }
 }
@@ -25,7 +33,7 @@ public class EntityA : Entity<EntityAKey>
     {
         this.Value = newValue;
 
-        this.AddDomainEvent(new ValueChangedEvent(Id, newValue));
+        this.AddDomainEvent(new ValueChangedEvent(Id, newValue, DateTimeOffset.UtcNow));
     }
 
     public static EntityA Create()
@@ -38,7 +46,7 @@ public class EntityA : Entity<EntityAKey>
             },
         };
 
-        entity.AddDomainEvent(new EntityCreatedEvent());
+        entity.AddDomainEvent(new EntityCreatedEvent(entity.Id, DateTimeOffset.UtcNow));
 
         return entity;
     }
