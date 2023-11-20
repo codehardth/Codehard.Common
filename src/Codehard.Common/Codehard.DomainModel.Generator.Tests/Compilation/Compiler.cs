@@ -72,7 +72,7 @@ internal sealed class Compiler
             new[]
             {
                 AddDllReference(typeof(Binder)),
-                AddDllReference(typeof(IEntityKey)),
+                AddDllReference(typeof(IEntity)),
                 AddDllReference(typeof(Expression<>)),
                 AddDllReference(typeof(Infrastructure.EntityFramework.EntityFrameworkRepositoryBase<>)),
                 AddDllReference(typeof(Microsoft.EntityFrameworkCore.DbContext)),

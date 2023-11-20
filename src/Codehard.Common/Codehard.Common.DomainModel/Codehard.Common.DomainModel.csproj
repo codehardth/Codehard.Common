@@ -4,12 +4,13 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0-preview-2</Version>
+        <Version>3.0.0-preview-3</Version>
         <Description>A library contains common code related to domain modeling.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Common</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common</RepositoryUrl>
         <PackageReleaseNotes>Added a foundation for domain event.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     
 </Project>

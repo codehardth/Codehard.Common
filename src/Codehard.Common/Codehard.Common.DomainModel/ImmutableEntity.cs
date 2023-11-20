@@ -6,7 +6,7 @@ namespace Codehard.Common.DomainModel;
 /// <typeparam name="TKey">The type of the entity's key.</typeparam>
 public abstract record ImmutableEntity<TKey>(TKey Id)
     : IEntity<TKey>
-    where TKey : IEntityKey
+    where TKey : struct
 {
     private readonly List<IDomainEvent<TKey>> events = new();
 

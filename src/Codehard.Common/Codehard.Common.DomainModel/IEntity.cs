@@ -1,18 +1,11 @@
 ﻿namespace Codehard.Common.DomainModel;
 
 /// <summary>
-/// Marker interface for entity keys.
-/// </summary>
-public interface IEntityKey
-{
-}
-
-/// <summary>
 /// Generic interface for entities with a key of type TKey.
 /// </summary>
 /// <typeparam name="TKey">The type of the entity's key.</typeparam>
 public interface IEntity<TKey> : IEntity
-    where TKey : IEntityKey
+    where TKey : struct
 {
     /// <summary>
     /// Gets the unique identifier for the entity.

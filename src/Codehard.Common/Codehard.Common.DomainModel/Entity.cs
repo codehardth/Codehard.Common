@@ -9,7 +9,7 @@ namespace Codehard.Common.DomainModel;
 /// <typeparam name="TKey">The type of the entity's key.</typeparam>
 public abstract class Entity<TKey>
     : IEntity<TKey>
-    where TKey : IEntityKey
+    where TKey : struct
 {
     private readonly Action<object, string> lazyLoader;
     private readonly List<IDomainEvent<TKey>> events = new();

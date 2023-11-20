@@ -5,6 +5,6 @@ namespace Codehard.Common.DomainModel;
 /// </summary>
 /// <typeparam name="TKey">The type of the entity's key.</typeparam>
 public interface IAggregateRoot<TKey> : IEntity<TKey>
-    where TKey : IEntityKey
+    where TKey : struct
 {
 }
