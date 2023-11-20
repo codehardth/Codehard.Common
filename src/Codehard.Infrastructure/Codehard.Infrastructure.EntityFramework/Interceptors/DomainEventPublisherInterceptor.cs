@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Reflection;
 using Codehard.Common.DomainModel;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Codehard.Infrastructure.EntityFramework.Interceptors;
@@ -30,6 +31,36 @@ internal class DomainEventPublisherInterceptor : SaveChangesInterceptor
         this.publisher = publisher;
     }
 
+    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+    {
+        var context = eventData.Context;
+
+        if (context is null)
+        {
+            return result;
+        }
+
+        var publisherFunc = GetPublisherFunction(context);
+
+        if (publisherFunc is null)
+        {
+            return result;
+        }
+
+        var entities = RetrieveDomainEntities(context);
+        var events = RetrieveDomainEvents(entities);
+
+        foreach (var @event in events)
+        {
+            publisherFunc(@event).Wait();
+        }
+
+        ClearExistingEvents(entities);
+
+        return result;
+    }
+
+
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -39,93 +70,135 @@ internal class DomainEventPublisherInterceptor : SaveChangesInterceptor
 
         if (context is null)
         {
-            return new InterceptionResult<int>();
+            return result;
         }
 
-        var publisherFunc =
-            this.publisher ??
-            (context is IDomainEventDbContext domainEventDbContext
-                ? domainEventDbContext.PublishDomainEventAsync
-                : null);
+        var publisherFunc = GetPublisherFunction(context);
 
         if (publisherFunc is null)
         {
-            return new InterceptionResult<int>();
+            return result;
         }
 
-        // Retrieve domain entities from the change tracker.
-        var domainEntities =
-            context.ChangeTracker
-                .Entries()
-                .Where(e => e.Entity.GetType().IsAssignableTo(typeof(IEntity)))
-                .ToArray();
-
-        // Extract and publish domain events.
-        var events = domainEntities.SelectMany(e => ((IEntity)e.Entity).Events);
+        var entities = RetrieveDomainEntities(context);
+        var events = RetrieveDomainEvents(entities);
 
         foreach (var @event in events)
         {
             await publisherFunc(@event);
         }
 
+        ClearExistingEvents(entities);
+
+        return result;
+    }
+
+    private PublishDomainEventDelegate? GetPublisherFunction(DbContext context)
+    {
+        var publisherFunc =
+            this.publisher ??
+            (context is IDomainEventDbContext domainEventDbContext
+                ? domainEventDbContext.PublishDomainEventAsync
+                : null);
+
+        return publisherFunc;
+    }
+
+    private static IEntity[] RetrieveDomainEntities(DbContext context)
+    {
+        // Retrieve domain entities from the change tracker.
+        var domainEntities =
+            context.ChangeTracker
+                .Entries()
+                .Select(e => e.Entity)
+                .OfType<IEntity>()
+                .ToArray();
+
+        return domainEntities;
+    }
+
+    private static IEnumerable<IDomainEvent> RetrieveDomainEvents(IEnumerable<IEntity> entities)
+    {
+        return entities.SelectMany(e => e.Events).OrderBy(e => e.Timestamp);
+    }
+
+    private static void ClearExistingEvents(IEnumerable<IEntity> entities)
+    {
         // Clear all existing events
-        foreach (var entityEntry in domainEntities)
+        foreach (var entity in entities)
         {
-            var type = entityEntry.Entity.GetType();
-            var eventsFieldInfo = TryGetEventsFieldInfo(type);
+            var type = entity.GetType();
+            var eventsFieldInfo = GetEventsFieldInfo(type);
 
-            if (eventsFieldInfo?.GetValue(entityEntry.Entity) is IList list)
+            if (eventsFieldInfo.GetValue(entity) is ICollection collection)
             {
-                list.Clear();
+                switch (collection)
+                {
+                    case Array arr:
+                    {
+                        Array.Clear(arr);
+
+                        break;
+                    }
+                    case IList list:
+                    {
+                        list.Clear();
+
+                        break;
+                    }
+                    case IDictionary dictionary:
+                    {
+                        dictionary.Clear();
+
+                        break;
+                    }
+                    default:
+                        var instance = InstanceActivatorFactory.Instance.CreateInstance(eventsFieldInfo.FieldType);
+                        eventsFieldInfo.SetValue(entity, instance);
+
+                        break;
+                }
             }
         }
+    }
 
-        return new InterceptionResult<int>();
-
-        static FieldInfo? TryGetEventsFieldInfo(Type type)
+    private static FieldInfo GetEventsFieldInfo(Type type)
+    {
+        if (FieldInfoCache.TryGetValue(type, out var fi))
         {
-            if (FieldInfoCache.TryGetValue(type, out var fi))
-            {
-                return fi;
-            }
-
-            var baseType = TraverseBaseEntityType(type);
-
-            if (baseType is null)
-            {
-                return default;
-            }
-
-            var fieldInfo =
-                baseType.GetField("events", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?? throw new FieldAccessException();
-
-            FieldInfoCache.AddOrUpdate(
-                type,
-                fieldInfo,
-                (_, _) => fieldInfo);
-
-            return fieldInfo;
+            return fi;
         }
 
-        static Type? TraverseBaseEntityType(Type? type)
+        var fields = TraverseBackingFields(type);
+
+        var fieldInfo =
+            fields.FirstOrDefault(f =>
+                f.Name is "events" or "_events" && f.FieldType.IsAssignableTo(typeof(ICollection)))
+            ?? throw new FieldAccessException(
+                "Unable to find a backing field 'events' or '_events' (if it is implemented, make sure it is assignable to ICollection and is a non-public field of an instance).");
+
+        FieldInfoCache.AddOrUpdate(
+            type,
+            fieldInfo,
+            (_, _) => fieldInfo);
+
+        return fieldInfo;
+    }
+
+    private static IEnumerable<FieldInfo> TraverseBackingFields(Type type)
+    {
+        var currentType = type;
+
+        while (currentType is not null)
         {
-            while (true)
+            var fields = currentType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+
+            foreach (var field in fields)
             {
-                var baseType = type?.BaseType;
-
-                if (baseType is null)
-                {
-                    return null;
-                }
-
-                if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(Entity<>))
-                {
-                    return baseType;
-                }
-
-                type = baseType;
+                yield return field;
             }
+
+            currentType = currentType.BaseType;
         }
     }
 }
