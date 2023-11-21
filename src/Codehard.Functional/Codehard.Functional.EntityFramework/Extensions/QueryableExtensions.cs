@@ -8,6 +8,12 @@ namespace Microsoft.EntityFrameworkCore;
 
 public static class QueryableExtensions
 {
+    public static Aff<List<T>> ToListAff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.ToListAsync(ct));
+    }
+    
     /// <summary>
     /// If sequence has no element, returns None instead of true.
     /// </summary>
