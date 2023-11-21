@@ -4,11 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.5.0</Version>
+        <Version>3.0.0-preview-1</Version>
         <Description>A functional extensions for Entity Framework.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Adds Option type support.</PackageReleaseNotes>
+        <PackageReleaseNotes>Add DbContext extensions.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
