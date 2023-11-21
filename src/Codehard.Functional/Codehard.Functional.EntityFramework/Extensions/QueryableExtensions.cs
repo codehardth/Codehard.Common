@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using LanguageExt;
-using Microsoft.EntityFrameworkCore;
 
 using static LanguageExt.Prelude;
 
-namespace Codehard.Functional.EntityFramework;
+// ReSharper disable once CheckNamespace
+namespace Microsoft.EntityFrameworkCore;
 
 public static class QueryableExtensions
 {
