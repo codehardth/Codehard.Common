@@ -4,11 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0-preview-3</Version>
+        <Version>3.0.0-preview-4</Version>
         <Description>A functional extensions for MediatR.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Move extensions to more general interface</PackageReleaseNotes>
+        <PackageReleaseNotes>Add cancellation token to MediatR extensions</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
