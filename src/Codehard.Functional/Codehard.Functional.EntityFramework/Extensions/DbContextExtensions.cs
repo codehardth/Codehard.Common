@@ -28,6 +28,18 @@ public static class DbContextExtensions
             Eff(() => dbContext.Add(entity));
     }
     
+    public static Eff<Unit> AddRangeEff<TEntity>(
+        this DbContext dbContext, params TEntity[] entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.AddRange(entities);
+
+            return unit;
+        });
+    }
+    
     public static Eff<EntityEntry<TEntity>> UpdateEff<TEntity>(
         this DbContext dbContext, TEntity entity)
         where TEntity : class
@@ -36,11 +48,35 @@ public static class DbContextExtensions
             Eff(() => dbContext.Update(entity));
     }
     
+    public static Eff<Unit> UpdateRangeEff<TEntity>(
+        this DbContext dbContext, params TEntity[] entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.UpdateRange(entities);
+
+            return unit;
+        });
+    }
+    
     public static Eff<EntityEntry<TEntity>> RemoveEff<TEntity>(
         this DbContext dbContext, TEntity entity)
         where TEntity : class
     {
         return
             Eff(() => dbContext.Remove(entity));
+    }
+    
+    public static Eff<Unit> RemoveRangeEff<TEntity>(
+        this DbContext dbContext, params TEntity[] entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.RemoveRange(entities);
+
+            return unit;
+        });
     }
 }
