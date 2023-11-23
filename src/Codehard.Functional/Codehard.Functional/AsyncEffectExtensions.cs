@@ -1,7 +1,13 @@
-﻿using LanguageExt.Common;
+﻿// ReSharper disable InconsistentNaming
 #pragma warning disable CS1591
 
-namespace Codehard.Functional;
+using System;
+using Codehard.Functional;
+using LanguageExt.Common;
+using static LanguageExt.Prelude;
+
+// ReSharper disable once CheckNamespace
+namespace LanguageExt;
 
 public static class AsyncEffectExtensions
 {
@@ -85,6 +91,18 @@ public static class AsyncEffectExtensions
 
     public static Aff<A> GuardNotNone<A>(this Aff<Option<A>> ma, Error? error = default)
         => ma.Bind(a => a.ToAff().MapFail(err => error == default ? err : error));
+
+    public static Aff<A> GuardNotNoneWithExpectedResultObject<A>(this Aff<Option<A>> ma, object resultObject)
+        => ma.Bind(a => a.ToAff().MapFail(err => new ExpectedResultError(resultObject, err)));
+    
+    public static Aff<TResult> MapExpectedResultError<TResult>(
+        this Aff<TResult> aff)
+    {
+        return
+            aff.MatchAff(
+                Succ: SuccessAff,
+                Fail: err => err.MapExpectedResultError<TResult>());
+    }
 
     #endregion
 

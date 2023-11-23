@@ -1,6 +1,7 @@
 using System.Diagnostics.Contracts;
 
-namespace Codehard.Functional;
+// ReSharper disable once CheckNamespace
+namespace System;
 
 /// <summary>
 /// Provides extension methods for a string.

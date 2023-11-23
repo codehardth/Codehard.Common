@@ -1,6 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
-namespace Codehard.Functional;
+// ReSharper disable once CheckNamespace
+namespace LanguageExt;
 
 /// <summary>
 /// Extension methods for working with Option monad to create predicates and expression predicates.

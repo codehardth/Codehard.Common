@@ -1,6 +1,9 @@
 ﻿using System.Linq.Expressions;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
-namespace Codehard.Functional;
+// ReSharper disable once CheckNamespace
+namespace System.Linq;
 
 /// <summary>
 /// Extension methods for querying IQueryable collections with optional conditions.

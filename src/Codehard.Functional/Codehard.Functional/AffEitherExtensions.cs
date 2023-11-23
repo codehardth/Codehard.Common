@@ -1,5 +1,11 @@
 #pragma warning disable CS1591
-namespace Codehard.Functional;
+
+using System;
+using System.Threading.Tasks;
+using static LanguageExt.Prelude;
+
+// ReSharper disable once CheckNamespace
+namespace LanguageExt;
 
 public static class AffEitherExtensions
 {
