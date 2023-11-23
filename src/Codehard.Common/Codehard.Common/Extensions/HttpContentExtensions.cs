@@ -1,6 +1,7 @@
 using System.Text.Json;
 
-namespace Codehard.Common.Extensions;
+// ReSharper disable once CheckNamespace
+namespace System.Net.Http;
 
 /// <summary>
 /// Provides extension methods for HTTP content.

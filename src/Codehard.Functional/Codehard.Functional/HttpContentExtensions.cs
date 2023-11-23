@@ -1,11 +1,18 @@
-using System.Text.Json;
+#pragma warning disable CS1591
 
-namespace Codehard.Functional;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using LanguageExt;
+using static LanguageExt.Prelude;
+
+// ReSharper disable once CheckNamespace
+namespace System.Net.Http;
 
 /// <summary>
 /// Http content extensions.
 /// </summary>
-public static class HttpContentExtensions
+public static class FunctionalHttpContentExtensions
 {
     /// <summary>
     /// Read the HTTP content in JSON format as a POCO in an asynchronous manner.
@@ -21,10 +28,10 @@ public static class HttpContentExtensions
     {
         return ReadAsOptionalObjectAsync<T>(
             httpContent,
-            Common.Extensions.HttpContentExtensions.CaseInsensitiveOptions,
+            HttpContentExtensions.CaseInsensitiveOptions,
             cancellationToken);
     }
-
+    
     /// <summary>
     /// Read the HTTP content in JSON format as a POCO in an asynchronous manner.
     /// </summary>
@@ -38,8 +45,18 @@ public static class HttpContentExtensions
         CancellationToken cancellationToken = default)
     {
         return
-            Common.Extensions.HttpContentExtensions
-                  .ReadAsObjectAsync<T>(httpContent, options, cancellationToken)
-                  .Map(Optional);
+            httpContent
+                .ReadAsObjectAsync<T>(options, cancellationToken)
+                .Map(Optional);
+    }
+    
+    public static Aff<Option<T>> ReadAsOptionalObjectAff<T>(
+        this HttpContent httpContent,
+        CancellationToken cancellationToken = default)
+    {
+        return Aff(async () =>
+            await httpContent.ReadAsOptionalObjectAsync<T>(
+                HttpContentExtensions.CaseInsensitiveOptions,
+                cancellationToken));
     }
 }

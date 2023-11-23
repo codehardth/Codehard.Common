@@ -1,4 +1,11 @@
-﻿namespace Codehard.Functional;
+﻿// ReSharper disable InconsistentNaming
+
+using System.Collections.Generic;
+using LanguageExt;
+using static LanguageExt.Prelude;
+
+// ReSharper disable once CheckNamespace
+namespace System.Threading.Tasks;
 
 /// <summary>
 /// Extension methods for working with Task and ValueTask in Aff monad.

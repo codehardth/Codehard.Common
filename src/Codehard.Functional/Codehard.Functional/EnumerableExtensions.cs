@@ -1,7 +1,12 @@
-namespace Codehard.Functional;
+using System.Collections.Generic;
+using LanguageExt;
+using static LanguageExt.Prelude;
+
+// ReSharper disable once CheckNamespace
+namespace System.Linq;
 
 /// <summary>
-/// Extension methods for working with IEnumerable collections and <see cref="Option{T}"/>.
+/// Extension methods for working with IEnumerable collections.
 /// </summary>
 public static class EnumerableExtensions
 {

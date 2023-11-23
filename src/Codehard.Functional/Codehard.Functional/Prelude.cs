@@ -1,4 +1,12 @@
-﻿using LanguageExt.Common;
+﻿// ReSharper disable InconsistentNaming
+#pragma warning disable CS1591
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using LanguageExt;
+using LanguageExt.Common;
+using static LanguageExt.Prelude;
 
 namespace Codehard.Functional;
 
