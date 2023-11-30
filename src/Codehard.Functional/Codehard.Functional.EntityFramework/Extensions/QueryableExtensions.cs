@@ -6,8 +6,21 @@ using static LanguageExt.Prelude;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Provides a set of static methods for querying data structures 
+/// that implement <see cref="IQueryable{T}"/> using LanguageExt and asynchronous operations.
+/// </summary>
 public static class QueryableExtensions
 {
+    /// <summary>
+    /// Asynchronously converts a sequence to a list within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to create a list from.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a <see cref="List{T}"/> that contains elements from the input sequence.
+    /// </returns>
     public static Aff<List<T>> ToListAff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
@@ -152,5 +165,73 @@ public static class QueryableExtensions
                 predicate,
                 ct)
             .Map(Optional);
+    }
+    
+    /// <summary>
+    /// Asynchronously counts the number of elements in a sequence within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an integer that represents the number of elements in the input sequence.
+    /// </returns>
+    public static Aff<int> CountAff<T>(
+        this IQueryable<T> source,
+        CancellationToken ct = default)
+    {
+        return Aff(async () => await source.CountAsync(ct));
+    }
+    
+    /// <summary>
+    /// Asynchronously counts the number of elements in a sequence that satisfy a specified condition within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an integer that represents the number of elements in the input sequence that satisfy the condition.
+    /// </returns>
+    public static Aff<int> CountAff<T>(
+        this IQueryable<T> source,
+        Expression<Func<T, bool>> predicate,
+        CancellationToken ct = default)
+    {
+        return Aff(async () => await source.CountAsync(predicate, ct));
+    }
+    
+    /// <summary>
+    /// Asynchronously counts the number of elements in a sequence within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a long integer that represents the number of elements in the input sequence.
+    /// </returns>
+    public static Aff<long> LongCountAff<T>(
+        this IQueryable<T> source,
+        CancellationToken ct = default)
+    {
+        return Aff(async () => await source.LongCountAsync(ct));
+    }
+    
+    /// <summary>
+    /// Asynchronously counts the number of elements in a sequence that satisfy a specified condition within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a long integer that represents the number of elements in the input sequence that satisfy the condition.
+    /// </returns>
+    public static Aff<long> LongCountAff<T>(
+        this IQueryable<T> source,
+        Expression<Func<T, bool>> predicate,
+        CancellationToken ct = default)
+    {
+        return Aff(async () => await source.LongCountAsync(predicate, ct));
     }
 }
