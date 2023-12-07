@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit" Version="8.0.16" />
+        <PackageReference Include="MassTransit" Version="8.1.2" />
     </ItemGroup>
 
     <ItemGroup>
