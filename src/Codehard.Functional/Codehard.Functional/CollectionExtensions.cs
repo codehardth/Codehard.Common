@@ -1,7 +1,5 @@
-using LanguageExt;
-
 // ReSharper disable CheckNamespace
-namespace System.Collections.Generic;
+namespace LanguageExt;
 
 /// <summary>
 /// Extension methods for dictionaries to work with <see cref="Option{A}"/>.

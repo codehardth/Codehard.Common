@@ -1,7 +1,6 @@
 #pragma warning disable CS1591
 
 using Codehard.Functional;
-using static LanguageExt.Prelude;
 
 // ReSharper disable once CheckNamespace
 namespace LanguageExt.Common;
