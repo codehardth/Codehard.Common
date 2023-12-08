@@ -1,10 +1,8 @@
 // ReSharper disable InconsistentNaming
 #pragma warning disable CS1591
 
-using System;
 using Codehard.Functional;
 using LanguageExt.Common;
-using static LanguageExt.Prelude;
 
 // ReSharper disable once CheckNamespace
 namespace LanguageExt;

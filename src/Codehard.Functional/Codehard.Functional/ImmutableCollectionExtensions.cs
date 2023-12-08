@@ -1,10 +1,11 @@
-#pragma warning disable CS1591
-
-using LanguageExt;
+using System.Collections.Immutable;
 
 // ReSharper disable CheckNamespace
-namespace System.Collections.Immutable;
+namespace LanguageExt;
 
+/// <summary>
+/// This class contains extension methods for immutable collections.
+/// </summary>
 public static class ImmutableCollectionExtensions
 {
     /// <summary>

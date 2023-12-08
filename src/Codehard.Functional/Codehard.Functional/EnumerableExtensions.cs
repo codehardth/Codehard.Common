@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using LanguageExt;
-using static LanguageExt.Prelude;
-
 // ReSharper disable once CheckNamespace
-namespace System.Linq;
+namespace LanguageExt;
 
 /// <summary>
 /// Extension methods for working with IEnumerable collections.
@@ -24,7 +20,7 @@ public static class EnumerableExtensions
     public static Option<T> FirstOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
         return source
-            .Map(Optional)
+            .Map(Prelude.Optional)
             .FirstOrDefault(
                 iOpt =>  iOpt.Filter(predicate).IsSome,
                 Option<T>.None);
@@ -38,7 +34,7 @@ public static class EnumerableExtensions
     public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source)
     {
         return Eff(() => source
-            .Map(Optional)
+            .Map(Prelude.Optional)
             .SingleOrDefault(Option<T>.None));
     }
     
@@ -82,7 +78,7 @@ public static class EnumerableExtensions
     public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
         return Eff(() => source
-            .Map(Optional)
+            .Map(Prelude.Optional)
             .SingleOrDefault(
                 iOpt =>  iOpt.Filter(predicate).IsSome,
                 Option<T>.None));
@@ -157,25 +153,6 @@ public static class EnumerableExtensions
                 ? Some(source.All(predicate))
                 : None;
     }
-    
-    /// <summary>
-    /// Filters the collection based on a condition when a specified condition is true,
-    /// and an optional alternative condition when the specified condition is false.
-    /// </summary>
-    /// <typeparam name="T">The type of elements in the collection.</typeparam>
-    /// <param name="source">The source IEnumerable collection.</param>
-    /// <param name="condition">The condition to check.</param>
-    /// <param name="ifTrue">The condition to apply when the main condition is true.</param>
-    /// <param name="ifFalse">An optional condition to apply when the main condition is false. If not provided, the original collection is returned.</param>
-    /// <returns>The filtered collection based on the specified conditions.</returns>
-    public static IEnumerable<T> WhereIfTrue<T>(
-        this IEnumerable<T> source,
-        bool condition,
-        Func<T, bool> ifTrue,
-        Func<T, bool>? ifFalse = default)
-        => condition 
-            ? source.Where(ifTrue) 
-            : ifFalse != null ? source.Where(ifFalse) : source;
     
     /// <summary>
     /// Filters the collection based on an optional flag and a function that generates a predicate based on the flag.

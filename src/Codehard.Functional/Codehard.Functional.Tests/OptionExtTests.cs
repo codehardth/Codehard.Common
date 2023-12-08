@@ -67,4 +67,77 @@ public class OptionalExtTests
         Assert.Single(res);
         Assert.Equal(1, res.First());
     }
+    
+    [Fact]
+    public async Task IfSomeAff_ExecutesFunction_WhenOptionContainsValue()
+    {
+        // Arrange
+        var optional = Option<int>.Some(5);
+        var valueToChange = 0;
+
+        // Act
+        var aff =
+            optional.IfSomeAff(
+                num =>
+                    Eff(() =>
+                    {
+                        valueToChange = num;
+                        return Unit.Default;
+                    }).ToAff());
+        
+        _ = await aff.Run();
+
+        // Assert
+        Assert.Equal(5, valueToChange);
+    }
+
+    [Fact]
+    public void IfSomeAff_ReturnsUnitAff_WhenOptionIsEmpty()
+    {
+        // Arrange
+        var optional = Option<int>.None;
+
+        // Act
+        var result = optional.IfSomeAff(_ => throw new Exception("This should not be called"));
+
+        // Assert
+        Assert.Equal(unitAff, result);
+    }
+    
+    [Fact]
+    public void IfSomeEff_ExecutesFunction_WhenOptionContainsValue()
+    {
+        // Arrange
+        var optional = Option<int>.Some(5);
+        var valueToChange = 0;
+
+        // Act
+        var eff =
+            optional.IfSomeEff(
+                num =>
+                    Eff(() =>
+                    {
+                        valueToChange = num;
+                        return Unit.Default;
+                    }));
+        
+        _ = eff.Run();
+
+        // Assert
+        Assert.Equal(5, valueToChange);
+    }
+
+    [Fact]
+    public void IfSomeEff_ReturnsUnitEff_WhenOptionIsEmpty()
+    {
+        // Arrange
+        var optional = Option<int>.None;
+        var expected = unitEff;
+
+        // Act
+        var result = optional.IfSomeEff(_ => throw new Exception("This should not be called"));
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
 }

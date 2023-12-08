@@ -8,6 +8,13 @@ namespace System.Net.Http;
 /// </summary>
 public static class HttpContentExtensions
 {
+    /// <summary>
+    /// Defines a JsonSerializerOptions object with case-insensitive property name handling.
+    /// </summary>
+    /// <remarks>
+    /// This object is used when deserializing JSON to ignore the casing of property names.
+    /// This is useful when the casing of the JSON payload doesn't match the casing of the target POCO's properties.
+    /// </remarks>
     public static readonly JsonSerializerOptions CaseInsensitiveOptions = new()
     {
         PropertyNameCaseInsensitive = true,

@@ -1,9 +1,5 @@
 #pragma warning disable CS1591
 
-using System;
-using System.Threading.Tasks;
-using static LanguageExt.Prelude;
-
 // ReSharper disable once CheckNamespace
 namespace LanguageExt;
 

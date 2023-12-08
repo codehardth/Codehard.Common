@@ -4,11 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0-preview-4</Version>
+        <Version>3.0.0-preview-5</Version>
         <Description>A functional extensions for Entity Framework.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</RepositoryUrl>
-        <PackageReleaseNotes>Add CountAff to Queryable extensions.</PackageReleaseNotes>
+        <PackageReleaseNotes>Add Codehard.Common dependency</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
@@ -16,6 +16,10 @@
         <PackageReference Include="LanguageExt.Core" Version="4.4.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
     </ItemGroup>
 
 </Project>

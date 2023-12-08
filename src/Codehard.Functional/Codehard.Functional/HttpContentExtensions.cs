@@ -1,13 +1,9 @@
 #pragma warning disable CS1591
 
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using LanguageExt;
-using static LanguageExt.Prelude;
 
 // ReSharper disable once CheckNamespace
-namespace System.Net.Http;
+namespace LanguageExt;
 
 /// <summary>
 /// Http content extensions.
@@ -47,9 +43,16 @@ public static class FunctionalHttpContentExtensions
         return
             httpContent
                 .ReadAsObjectAsync<T>(options, cancellationToken)
-                .Map(Optional);
+                .Map(Prelude.Optional);
     }
     
+    /// <summary>
+    /// Reads the HTTP content as an optional object in an asynchronous manner and wraps the result in an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize from the HTTP content.</typeparam>
+    /// <param name="httpContent">The HTTP content to read from.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>An Aff monad containing an Option of the deserialized object.</returns>
     public static Aff<Option<T>> ReadAsOptionalObjectAff<T>(
         this HttpContent httpContent,
         CancellationToken cancellationToken = default)
