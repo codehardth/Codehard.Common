@@ -28,6 +28,36 @@ public static class QueryableExtensions
     }
     
     /// <summary>
+    /// Asynchronously converts a sequence to an array within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to create an array from.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an array that contains elements from the input sequence.
+    /// </returns>
+    public static Aff<T[]> ToArrayAff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.ToArrayAsync(ct));
+    }
+
+    /// <summary>
+    /// Asynchronously determines whether a sequence contains any elements within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to check for emptiness.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a boolean value that is true if the source sequence contains any elements; otherwise, false.
+    /// </returns>
+    public static Aff<bool> AnyAff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.AnyAsync(ct));
+    }
+    
+    /// <summary>
     /// If sequence has no element, returns None instead of true.
     /// </summary>
     public static async Task<Option<bool>> AllIfAnyAsync<TSource>(
