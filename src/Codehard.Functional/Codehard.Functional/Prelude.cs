@@ -83,4 +83,22 @@ public static class Prelude
                 return unit;
             });
     }
+    
+    /// <summary>
+    /// Wraps a synchronous action into an Eff&lt;Unit&gt; monad.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
+    /// <returns>
+    /// An Eff&lt;Unit&gt; monad that represents the synchronous operation. The Eff monad wraps a unit that is returned after the action is executed.
+    /// </returns>
+    public static Aff<Unit> EffUnit(Action action)
+    {
+        return LanguageExt.Eff<Unit>
+            .Effect(() =>
+            {
+                action();
+
+                return unit;
+            });
+    }
 }
