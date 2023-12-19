@@ -1,4 +1,5 @@
 ﻿using Codehard.Common.DomainModel;
+using Codehard.Common.DomainModel.Types;
 
 namespace Codehard.Infrastructure.EntityFramework.Tests.Entities;
 
@@ -28,7 +29,11 @@ public class EntityA : Entity<EntityAKey>
     public override EntityAKey Id { get; protected init; }
 
     public string Value { get; set; } = string.Empty;
-
+    
+    public Money? NullableMoney { get; set; }
+    
+    public Money? Money { get; set; } = new(0, Currency.Thb);
+    
     public void UpdateValue(string newValue)
     {
         this.Value = newValue;
