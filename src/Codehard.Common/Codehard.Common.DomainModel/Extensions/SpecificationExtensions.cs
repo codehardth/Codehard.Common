@@ -2,6 +2,9 @@ using System.Linq.Expressions;
 
 namespace Codehard.Common.DomainModel.Extensions;
 
+/// <summary>
+/// Provides extension methods for working with specifications.
+/// </summary>
 public static class SpecificationExtensions
 {
     /// <summary>
@@ -108,8 +111,5 @@ public static class SpecificationExtensions
         return new ExpressionSpecification<T>(
             Expression.Lambda<Func<T, bool>>(
                 Expression.Not(expr.Body), expr.Parameters[0]));
-        /// <summary>
-        /// Provides extension methods for working with specifications.
-        /// </summary>
     }
 }

@@ -14,7 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="LanguageExt.Core" Version="4.4.7" />
-      <PackageReference Include="Marten" Version="6.3.0" />
+      <PackageReference Include="Marten" Version="6.4.0" />
     </ItemGroup>
 
 </Project>

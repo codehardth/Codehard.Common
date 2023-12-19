@@ -178,38 +178,6 @@ public class EnumerableExtTests
     }
     
     [Fact]
-    public void WhenRunWhereIfTrueFromListWithTrueCondition_ShouldReturnNonEmptyList()
-    {
-        // Arrange
-        var list = new [] { 1 };
-
-        // Act
-        var res = list.WhereIfTrue(
-            true,
-            n => n == 1);
-
-        // Assert
-        Assert.Single(res);
-        Assert.Equal(1, res.First());
-    }
-    
-    [Fact]
-    public void WhenRunWhereIfTrueFromListWithFalseCondition_ShouldReturnEmptyList()
-    {
-        // Arrange
-        var list = new [] { 1 };
-
-        // Act
-        var res = list.WhereIfTrue(
-            false,
-            n => n == 1,
-            n => n == 0);
-
-        // Assert
-        Assert.Empty(res);
-    }
-    
-    [Fact]
     public void WhenRunWhereOptionalFromListWithSomePredicate_ShouldReturnNonEmptyList()
     {
         // Arrange

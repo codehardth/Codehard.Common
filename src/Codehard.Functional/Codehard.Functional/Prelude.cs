@@ -1,12 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 #pragma warning disable CS1591
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using LanguageExt;
 using LanguageExt.Common;
-using static LanguageExt.Prelude;
 
 namespace Codehard.Functional;
 
@@ -84,6 +79,24 @@ public static class Prelude
             .Effect(async () =>
             {
                 await f();
+
+                return unit;
+            });
+    }
+    
+    /// <summary>
+    /// Wraps a synchronous action into an Eff&lt;Unit&gt; monad.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
+    /// <returns>
+    /// An Eff&lt;Unit&gt; monad that represents the synchronous operation. The Eff monad wraps a unit that is returned after the action is executed.
+    /// </returns>
+    public static Aff<Unit> EffUnit(Action action)
+    {
+        return LanguageExt.Eff<Unit>
+            .Effect(() =>
+            {
+                action();
 
                 return unit;
             });

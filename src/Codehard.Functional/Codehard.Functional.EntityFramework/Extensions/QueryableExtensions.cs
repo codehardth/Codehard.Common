@@ -28,6 +28,36 @@ public static class QueryableExtensions
     }
     
     /// <summary>
+    /// Asynchronously converts a sequence to an array within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to create an array from.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an array that contains elements from the input sequence.
+    /// </returns>
+    public static Aff<T[]> ToArrayAff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.ToArrayAsync(ct));
+    }
+
+    /// <summary>
+    /// Asynchronously determines whether a sequence contains any elements within an Aff monad.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
+    /// <param name="source">An <see cref="IQueryable{T}"/> to check for emptiness.</param>
+    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a boolean value that is true if the source sequence contains any elements; otherwise, false.
+    /// </returns>
+    public static Aff<bool> AnyAff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
+    {
+        return Aff(async () => await source.AnyAsync(ct));
+    }
+    
+    /// <summary>
     /// If sequence has no element, returns None instead of true.
     /// </summary>
     public static async Task<Option<bool>> AllIfAnyAsync<TSource>(
@@ -106,6 +136,29 @@ public static class QueryableExtensions
     }
     
     /// <summary>
+    /// Asynchronously returns the only element of a sequence satisfying a specified condition as an Option&lt;TSource&gt; within an Aff monad,
+    /// or a None value if no such element exists.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
+    /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
+    /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
+    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation.
+    /// The Aff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence satisfying the specified condition,
+    /// or a None value if no such element exists.
+    /// </returns>
+    public static Aff<Option<TSource>> SingleOrNoneAff<TSource>(
+        this IQueryable<TSource> source,
+        Expression<Func<TSource, bool>> predicate,
+        CancellationToken ct = default)
+    {
+        return
+            Aff(async () =>
+                await source.SingleOrNoneAsync(predicate, ct));
+    }
+    
+    /// <summary>
     /// Asynchronously returns the first element of a sequence as an Option&lt;T&gt; within a Task,
     /// or a None value if the sequence is empty.
     /// </summary>
@@ -165,6 +218,29 @@ public static class QueryableExtensions
                 predicate,
                 ct)
             .Map(Optional);
+    }
+    
+    /// <summary>
+    /// Asynchronously returns the first element of a sequence satisfying a specified condition as an Option&lt;T&gt; within an Aff monad,
+    /// or a None value if no such element exists.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="source">The IQueryable&lt;T&gt; to get the first element from.</param>
+    /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
+    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff&lt;Option&lt;T&gt;&gt; that represents the asynchronous operation.
+    /// The Aff monad wraps the result, which contains the first element of the sequence satisfying the specified condition as an Option&lt;T&gt;,
+    /// or a None value if no such element exists.
+    /// </returns>
+    public static Aff<Option<T>> FirstOrNoneAff<T>(
+        this IQueryable<T> source,
+        Expression<Func<T, bool>> predicate,
+        CancellationToken ct = default)
+    {
+        return 
+            Aff(async () =>
+                await source.FirstOrNoneAsync(predicate, ct));
     }
     
     /// <summary>

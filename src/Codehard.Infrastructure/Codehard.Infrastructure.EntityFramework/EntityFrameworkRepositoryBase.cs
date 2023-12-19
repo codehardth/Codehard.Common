@@ -54,7 +54,7 @@ public abstract class EntityFrameworkRepositoryBase<T> : IRepository<T>
 
         var source =
             query.AsAsyncEnumerable()
-                .WithCancellation(cancellationToken);
+                 .WithCancellation(cancellationToken);
 
         await foreach (var e in source)
         {

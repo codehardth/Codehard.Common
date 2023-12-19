@@ -80,4 +80,54 @@ public static class EnumerableExtensions
     /// <returns></returns>
     public static List<T> AsList<T>(this IEnumerable<T> source) =>
         source as List<T> ?? source.ToList();
+    
+    /// <summary>
+    /// Filters the collection based on a condition when a specified condition is true,
+    /// and an optional alternative condition when the specified condition is false.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <param name="source">The source IEnumerable collection.</param>
+    /// <param name="condition">The condition to check.</param>
+    /// <param name="ifTrue">The condition to apply when the main condition is true.</param>
+    /// <param name="ifFalse">An optional condition to apply when the main condition is false. If not provided, the original collection is returned.</param>
+    /// <returns>The filtered collection based on the specified conditions.</returns>
+    public static IEnumerable<T> WhereIf<T>(
+        this IEnumerable<T> source,
+        bool condition,
+        Func<T, bool> ifTrue,
+        Func<T, bool>? ifFalse = default)
+        => condition 
+            ? source.Where(ifTrue) 
+            : ifFalse != null ? source.Where(ifFalse) : source;
+
+    /// <summary>
+    /// Filters the source collection, selecting only those elements that are not null.
+    /// </summary>
+    /// <typeparam name="TSource">The type of elements in the source collection.</typeparam>
+    /// <typeparam name="TResult">The type of the result elements, which must be a reference type.</typeparam>
+    /// <param name="source">The source collection to filter.</param>
+    /// <param name="selector">A function to transform each element of the source collection into a TResult.</param>
+    /// <returns>A collection of TResult elements that are not null.</returns>
+    public static IEnumerable<TResult> SelectOnlyNotNull<TSource, TResult>(
+        IEnumerable<TSource> source,
+        Func<TSource, TResult?> selector)
+        where TResult : class
+        => source.Select(selector)
+                 .Where(res => res != null)!;
+    
+    /// <summary>
+    /// Filters the source collection, selecting only those elements that are not null.
+    /// </summary>
+    /// <typeparam name="TSource">The type of elements in the source collection.</typeparam>
+    /// <typeparam name="TResult">The type of the result elements, which must be a value type.</typeparam>
+    /// <param name="source">The source collection to filter.</param>
+    /// <param name="selector">A function to transform each element of the source collection into a TResult.</param>
+    /// <returns>A collection of TResult elements that are not null.</returns>
+    public static IEnumerable<TResult> SelectOnlyNotNull<TSource, TResult>(
+        IEnumerable<TSource> source,
+        Func<TSource, TResult?> selector)
+        where TResult : struct
+        => source.Select(selector)
+                 .Where(res => res != null)
+                 .Select(res => res!.Value);
 }

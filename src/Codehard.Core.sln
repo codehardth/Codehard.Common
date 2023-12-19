@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Functional.MediatR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.AspNetCore.Tests", "Codehard.Common\Codehard.Common.AspNetCore.Tests\Codehard.Common.AspNetCore.Tests.csproj", "{C936B94D-D1D9-4A55-8CA1-748988282811}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codehard.Common.Tests", "Codehard.Common\Codehard.Common.Tests\Codehard.Common.Tests.csproj", "{06431584-7320-4AEE-AC93-A22B422F543A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{C936B94D-D1D9-4A55-8CA1-748988282811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C936B94D-D1D9-4A55-8CA1-748988282811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C936B94D-D1D9-4A55-8CA1-748988282811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06431584-7320-4AEE-AC93-A22B422F543A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06431584-7320-4AEE-AC93-A22B422F543A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06431584-7320-4AEE-AC93-A22B422F543A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06431584-7320-4AEE-AC93-A22B422F543A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,5 +200,6 @@ Global
 		{8952083F-5A2A-4A37-9039-8588B08CA6EE} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{569F15A1-ABDE-4037-825C-90164D9074E2} = {0C257E94-AD98-4AFB-93B7-B6F64EB7D2BA}
 		{C936B94D-D1D9-4A55-8CA1-748988282811} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
+		{06431584-7320-4AEE-AC93-A22B422F543A} = {2F98EF48-527C-44C5-8FC3-65F25C808AC9}
 	EndGlobalSection
 EndGlobal
