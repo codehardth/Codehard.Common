@@ -27,5 +27,14 @@ public class EntityAConfiguration : EntityTypeConfigurationBase<EntityA, TestDbC
                 });
         builder.Property(e => e.Value)
             .IsRequired();
+        builder.OwnsOne(
+            e => e.Money,
+            money =>
+            {
+                money.Property(m => m.Amount)
+                    .IsRequired();
+                money.Property(m => m.Currency)
+                    .IsRequired();
+            });
     }
 }

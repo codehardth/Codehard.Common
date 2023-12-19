@@ -242,6 +242,8 @@ public static class ChangeTrackingExtensions
         SetItemAsDeleted(itemsToRemove);
         SetItemAsModified(itemsToModify);
         
+        return;
+
         IEnumerable CastToIEnumerable(object? collection)
         {
             // Get the Cast<T>() method from the Enumerable class using reflection
