@@ -14,6 +14,16 @@ internal static class SourceReader
         return namespaceDeclaration?.Name.ToString();
     }
     
+    internal static string? GetFileScopedNamespace(CompilationUnitSyntax compilationUnit)
+    {
+        var namespaceDeclaration =
+            compilationUnit.DescendantNodes()
+                .OfType<FileScopedNamespaceDeclarationSyntax>()
+                .FirstOrDefault();
+            
+        return namespaceDeclaration?.Name.ToString();
+    }
+    
     internal static string GetMethodDeclarationParameters(MethodDeclarationSyntax method)
     {
         return
