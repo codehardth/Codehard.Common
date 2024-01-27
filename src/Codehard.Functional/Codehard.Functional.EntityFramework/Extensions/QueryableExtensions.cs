@@ -1,4 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using LanguageExt;
 
 using static LanguageExt.Prelude;
@@ -8,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Provides a set of static methods for querying data structures 
-/// that implement <see cref="IQueryable{T}"/> using LanguageExt and asynchronous operations.
+/// that implement <see cref="IQueryable"/> using LanguageExt and asynchronous operations.
 /// </summary>
 public static class QueryableExtensions
 {

@@ -140,4 +140,68 @@ public class OptionalExtTests
         // Assert
         Assert.Equal(expected, result);
     }
+    
+    [Fact]
+    public void MatchAsEff_WhenOptionHasValue_ShouldReturnCorrectResult()
+    {
+        // Arrange
+        var option = Some("Test");
+        var ifSome = (string s) => s.ToUpper();
+        var ifNone = () => "None";
+
+        // Act
+        var result = option.MatchAsEff(ifSome, ifNone).Run();
+
+        // Assert
+        Assert.Equal("TEST", result);
+    }
+
+    [Fact]
+    public void MatchAsEff_WhenOptionHasNoValue_ShouldReturnCorrectResult()
+    {
+        // Arrange
+        var option = Option<string>.None;
+        var ifSome = (string s) => s.ToUpper();
+        var ifNone = () => "None";
+
+        // Act
+        var result = option.MatchAsEff(ifSome, ifNone).Run();
+
+        // Assert
+        Assert.Equal("None", result);
+    }
+    
+    [Fact]
+    public async Task MatchAsAff_WhenOptionHasValue_ShouldReturnCorrectResult()
+    {
+        // Arrange
+        var option = Some("Test");
+        var ifSomeAsync = (string s) => Task.FromResult(s.ToUpper());
+        var ifNoneAsync = () => Task.FromResult("None");
+
+        // Act
+        var result =
+            await option.MatchAsAff(ifSomeAsync, ifNoneAsync)
+                        .Run();
+
+        // Assert
+        Assert.Equal("TEST", result);
+    }
+
+    [Fact]
+    public async Task MatchAsAff_WhenOptionHasNoValue_ShouldReturnCorrectResult()
+    {
+        // Arrange
+        var option = Option<string>.None;
+        var ifSomeAsync = (string s) => Task.FromResult(s.ToUpper());
+        var ifNoneAsync = () => Task.FromResult("None");
+
+        // Act
+        var result =
+            await option.MatchAsAff(ifSomeAsync, ifNoneAsync)
+                        .Run();
+
+        // Assert
+        Assert.Equal("None", result);
+    }
 }

@@ -99,7 +99,33 @@ public static class DbContextExtensions
             return unit;
         });
     }
+
+    /// <summary>
+    /// Adds a range of entities to the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entities">The entities to be added.</param>
+    /// <typeparam name="TEntity">The type of the entities to be added.</typeparam>
+    /// <returns>An Eff&lt;Unit&gt; representing the effectful operation. The result is a Unit indicating the operation has been performed.</returns>
+    public static Eff<Unit> AddRangeEff<TEntity>(
+        this DbContext dbContext, IEnumerable<TEntity> entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.AddRange(entities);
+
+            return unit;
+        });
+    }
     
+    /// <summary>
+    /// Updates an entity in the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entity">The entity to be updated.</param>
+    /// <typeparam name="TEntity">The type of the entity to be updated.</typeparam>
+    /// <returns>An Eff&lt;EntityEntry&lt;TEntity&gt;&gt; representing the effectful operation. The result is an EntityEntry indicating the operation has been performed.</returns>
     public static Eff<EntityEntry<TEntity>> UpdateEff<TEntity>(
         this DbContext dbContext, TEntity entity)
         where TEntity : class
@@ -108,6 +134,13 @@ public static class DbContextExtensions
             Eff(() => dbContext.Update(entity));
     }
     
+    /// <summary>
+    /// Updates a range of entities in the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entities">The entities to be updated.</param>
+    /// <typeparam name="TEntity">The type of the entities to be updated.</typeparam>
+    /// <returns>An Eff&lt;Unit&gt; representing the effectful operation. The result is a Unit indicating the operation has been performed.</returns>
     public static Eff<Unit> UpdateRangeEff<TEntity>(
         this DbContext dbContext, params TEntity[] entities)
         where TEntity : class
@@ -120,6 +153,32 @@ public static class DbContextExtensions
         });
     }
     
+    /// <summary>
+    /// Updates a range of entities in the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entities">The entities to be updated.</param>
+    /// <typeparam name="TEntity">The type of the entities to be updated.</typeparam>
+    /// <returns>An Eff&lt;Unit&gt; representing the effectful operation. The result is a Unit indicating the operation has been performed.</returns>
+    public static Eff<Unit> UpdateRangeEff<TEntity>(
+        this DbContext dbContext, IEnumerable<TEntity> entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.UpdateRange(entities);
+
+            return unit;
+        });
+    }
+    
+    /// <summary>
+    /// Removes an entity from the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entity">The entity to be removed.</param>
+    /// <typeparam name="TEntity">The type of the entity to be removed.</typeparam>
+    /// <returns>An Eff&lt;EntityEntry&lt;TEntity&gt;&gt; representing the effectful operation. The result is an EntityEntry indicating the operation has been performed.</returns>
     public static Eff<EntityEntry<TEntity>> RemoveEff<TEntity>(
         this DbContext dbContext, TEntity entity)
         where TEntity : class
@@ -128,8 +187,34 @@ public static class DbContextExtensions
             Eff(() => dbContext.Remove(entity));
     }
     
+    /// <summary>
+    /// Removes a range of entities from the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entities">The entities to be removed.</param>
+    /// <typeparam name="TEntity">The type of the entities to be removed.</typeparam>
+    /// <returns>An Eff&lt;Unit&gt; representing the effectful operation. The result is a Unit indicating the operation has been performed.</returns>
     public static Eff<Unit> RemoveRangeEff<TEntity>(
         this DbContext dbContext, params TEntity[] entities)
+        where TEntity : class
+    {
+        return Eff(() =>
+        {
+            dbContext.RemoveRange(entities);
+
+            return unit;
+        });
+    }
+    
+    /// <summary>
+    /// Removes a range of entities from the DbContext in an effectful manner.
+    /// </summary>
+    /// <param name="dbContext">The DbContext instance.</param>
+    /// <param name="entities">The entities to be removed.</param>
+    /// <typeparam name="TEntity">The type of the entities to be removed.</typeparam>
+    /// <returns>An Eff&lt;Unit&gt; representing the effectful operation. The result is a Unit indicating the operation has been performed.</returns>
+    public static Eff<Unit> RemoveRangeEff<TEntity>(
+        this DbContext dbContext, IEnumerable<TEntity> entities)
         where TEntity : class
     {
         return Eff(() =>

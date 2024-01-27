@@ -219,4 +219,33 @@ public static class OptionExtensions
         => optional.Match(
             Some: val => Eff(() => ifSome(val)),
             None: unitEff);
+    
+    /// <summary>
+    /// Matches the given Option&lt;T&gt; and executes the corresponding function.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the Option.</typeparam>
+    /// <param name="optional">The Option&lt;T&gt; to match.</param>
+    /// <param name="ifSome">The function to execute if the Option contains a value. The function takes the value as a parameter and returns a value of type T.</param>
+    /// <param name="ifNone">The function to execute if the Option does not contain a value. The function returns a value of type T.</param>
+    public static Eff<T> MatchAsEff<T>(
+        this Option<T> optional, Func<T, T> ifSome, Func<T> ifNone)
+        => optional.Match(
+            Some: val => Eff(() => ifSome(val)),
+            None: Eff(ifNone));
+    
+    /// <summary>
+    /// Matches the given Option&lt;T&gt; and executes the corresponding asynchronous function.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the Option.</typeparam>
+    /// <param name="optional">The Option&lt;T&gt; to match.</param>
+    /// <param name="ifSomeAsync">The asynchronous function to execute if the Option contains a value. The function takes the value as a parameter and returns a Task of type T.</param>
+    /// <param name="ifNoneAsync">The asynchronous function to execute if the Option does not contain a value. The function returns a Task of type T.</param>
+    /// <returns>An Aff&lt;T&gt; monad representing the result of the executed function.</returns>
+    public static Aff<T> MatchAsAff<T>(
+        this Option<T> optional,
+        Func<T, Task<T>> ifSomeAsync,
+        Func<Task<T>> ifNoneAsync)
+        => optional.Match(
+            Some: val => Aff(async () => await ifSomeAsync(val)),
+            None: Aff(async () => await ifNoneAsync()));
 }
