@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using LanguageExt;
 using Microsoft.CodeAnalysis;
@@ -99,6 +100,8 @@ internal sealed class Compiler<TCodeGenerator>
                     MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(typeof(Aff<>).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(typeof(DbContext).GetTypeInfo().Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(Expression<>).GetTypeInfo().Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(IQueryable<>).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(taskExtensions),
                     MetadataReference.CreateFromFile(netstandard),
                     MetadataReference.CreateFromFile(systemRuntimePath),

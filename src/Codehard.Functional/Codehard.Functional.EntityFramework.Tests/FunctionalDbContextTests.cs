@@ -39,7 +39,7 @@ public class FunctionalDbContextTests
         };
         
         var effDbContext = new EffTestDbContext(context);
-
+        
         _ = await effDbContext.AddAsync(entity)
             .Bind(_ => effDbContext.SaveChangesAsync())
             .RunUnit();
@@ -48,7 +48,7 @@ public class FunctionalDbContextTests
         var result =
             await effDbContext.FindAsync<EntityA>(new object[] { entityId })
                 .Run();
-
+        
         var entityOpt = result.ThrowIfFail();
         
         var entity2 = entityOpt.IfNone(() => throw new Exception("Entity not found"));

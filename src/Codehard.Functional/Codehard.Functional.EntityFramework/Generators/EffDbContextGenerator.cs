@@ -128,6 +128,31 @@ public readonly struct Eff{dbContext.Identifier}
 
     // Effect implementation for DbContext
     {(baseTypeMethodSymbols is null ? default : string.Join("\n\n    ", GenMethodsFromSymbols(baseTypeMethodSymbols)))}
+
+    // Override object methods
+    public override string ToString()
+    {{
+        return dbContext.ToString();
+    }}
+
+    public override bool Equals(object? obj)
+    {{
+        if (obj is Eff{dbContext.Identifier} other)
+        {{
+            return Equals(dbContext, other.dbContext);
+        }}
+
+        if (obj is {dbContext.Identifier} otherDbContext)
+        {{
+            return Equals(dbContext, otherDbContext);
+        }}
+        return false;
+    }}
+
+    public override int GetHashCode()
+    {{
+        return dbContext.GetHashCode();
+    }}
 }}";
 
             context.AddSource($"Eff{dbContext.Identifier}.g", code);
@@ -147,10 +172,13 @@ public readonly struct Eff{dbContext.Identifier}
                 var returnTypeSymbol = semanticModel.GetTypeInfo(method.ReturnType).Type;
                 var taskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task");
                 var taskOfTSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1");
+                var valueTaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.ValueTask");
                 var valueTaskOfTSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.ValueTask`1");
                 
                 if (returnTypeSymbol!.OriginalDefinition.Equals(
-                        taskSymbol, SymbolEqualityComparer.IncludeNullability))
+                        taskSymbol, SymbolEqualityComparer.IncludeNullability) ||
+                    returnTypeSymbol.OriginalDefinition.Equals(
+                        valueTaskSymbol, SymbolEqualityComparer.IncludeNullability))
                 {
                     yield return $"public {CreateTaskUnitMethod(method)}";
                 }
@@ -164,9 +192,60 @@ public readonly struct Eff{dbContext.Identifier}
                 {
                     yield return $"public {CreateTaskOfTMethod(method)}";
                 }
+                else if (returnTypeSymbol.SpecialType == SpecialType.System_Void)
+                {
+                    yield return $"public {CreateEffUnitMethod(method)}";
+                }
+                else if (IsObjectMethod(method))
+                {
+                    
+                }
+                else
+                {
+                    yield return $"public {CreateNonTaskMethod(method)}";
+                }
             }
         }
         
+        bool IsObjectMethod(MethodDeclarationSyntax method)
+        {
+            var objectType = compilation.GetTypeByMetadataName("System.Object");
+            var methodSymbol = objectType?.GetMembers(method.Identifier.Text).OfType<IMethodSymbol>().FirstOrDefault();
+            return methodSymbol != null;
+        }
+        
+        string CreateEffUnitMethod(MethodDeclarationSyntax method)
+        {
+            var declarationParameters = SourceReader.GetMethodDeclarationParameters(method);
+            var parameters = SourceReader.GetMethodCallParameters(method);
+            var methodGenericParameters = SourceReader.GetMethodGenericParameters(method);
+
+            return
+                $"Eff<Unit> {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
+                $"    {{" + "\n" +
+                $"        var self = this;" + "\n" +
+                $"        return Eff<Unit>(() => {{ self.dbContext.{method.Identifier}({parameters}); return unit; }});" + "\n" +
+                $"    }}";
+        }
+
+        string CreateNonTaskMethod(MethodDeclarationSyntax method)
+        {
+            var declarationParameters = SourceReader.GetMethodDeclarationParameters(method);
+            var parameters = SourceReader.GetMethodCallParameters(method);
+            var methodGenericParameters = SourceReader.GetMethodGenericParameters(method);
+            
+            var semanticModel = compilation.GetSemanticModel(method.SyntaxTree);
+            var returnTypeSymbol = semanticModel.GetTypeInfo(method.ReturnType).Type;
+            var returnTypeName = returnTypeSymbol!.ToString();
+                
+            return
+                $"{returnTypeName} {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
+                $"    {{" + "\n" +
+                $"        var self = this;" + "\n" +
+                $"        return self.dbContext.{method.Identifier}({parameters});" + "\n" +
+                $"    }}";
+        }
+
         static string CreateTaskUnitMethod(MethodDeclarationSyntax method)
         {
             var declarationParameters = SourceReader.GetMethodDeclarationParameters(method);
@@ -221,7 +300,8 @@ public readonly struct Eff{dbContext.Identifier}
         {
             foreach (var method in methods)
             {
-                if (method.DeclaredAccessibility != Accessibility.Public)
+                if (method.DeclaredAccessibility != Accessibility.Public ||
+                    method.MethodKind != MethodKind.Ordinary)
                 {
                     continue;
                 }
@@ -229,44 +309,137 @@ public readonly struct Eff{dbContext.Identifier}
                 var returnTypeSymbol = method.ReturnType;
                 var taskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task");
                 var taskOfTSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1");
+                var valueTaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.ValueTask");
                 var valueTaskOfTSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.ValueTask`1");
 
                 if (returnTypeSymbol.OriginalDefinition.Equals(
-                        taskSymbol, SymbolEqualityComparer.IncludeNullability))
+                        taskSymbol, SymbolEqualityComparer.IncludeNullability) ||
+                    returnTypeSymbol.OriginalDefinition.Equals(
+                        valueTaskSymbol, SymbolEqualityComparer.IncludeNullability))
                 {
-                    yield return $"public {CreateTaskUnitMethodFromSymbol(method)}";
+                    yield return $"public {CreateAffUnitMethodFromSymbol(method)}";
                 }
                 else if (returnTypeSymbol.OriginalDefinition.Equals(
                              taskOfTSymbol, SymbolEqualityComparer.IncludeNullability))
                 {
-                    yield return $"public {CreateTaskOfTMethodFromSymbol(method)}";
+                    yield return $"public {CreateAffOfTMethodFromSymbol(method)}";
                 }
                 else if (returnTypeSymbol.OriginalDefinition.Equals(
                              valueTaskOfTSymbol, SymbolEqualityComparer.IncludeNullability))
                 {
-                    yield return $"public {CreateTaskOfTMethodFromSymbol(method)}";
+                    yield return $"public {CreateAffOfTMethodFromSymbol(method)}";
+                }
+                else if (returnTypeSymbol.SpecialType == SpecialType.System_Void)
+                {
+                    yield return $"public {CreateEffUnitMethodFromSymbol(method)}";
+                }
+                else if (IsObjectMethodFromSymbol(method))
+                {
+                    continue;
+                }
+                else if (!IsAnnotatedWithPureAttribute(method))
+                {
+                    yield return $"public {CreateEffOfTMethodFromSymbol(method)}";
+                }
+                else
+                {
+                    yield return $"public {CreateNonEffMethodFromSymbol(method)}";
                 }
             }
         }
         
-        string CreateTaskUnitMethodFromSymbol(IMethodSymbol methodSymbol)
+        bool IsAnnotatedWithPureAttribute(IMethodSymbol methodSymbol)
+        {
+            var pureAttribute = compilation.GetTypeByMetadataName("PureAttribute");
+            return methodSymbol.GetAttributes().Any(a => a.AttributeClass.Equals(pureAttribute));
+        }
+        
+        bool IsObjectMethodFromSymbol(IMethodSymbol methodSymbol)
+        {
+            var objectType = compilation.GetTypeByMetadataName("System.Object");
+            var isObjectMethod =
+                objectType?.GetMembers(methodSymbol.Name)
+                           .OfType<IMethodSymbol>()
+                           .Any();
+            
+            return isObjectMethod ?? false;
+        }
+        
+        string CreateEffUnitMethodFromSymbol(IMethodSymbol methodSymbol)
         {
             var declarationParameters = SymbolReader.GetMethodDeclarationParameters(methodSymbol);
             var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
+            var methodGenericParameters = SymbolReader.GetMethodGenericTypeParameters(methodSymbol);
 
             return
-                $"Aff<Unit> {methodSymbol.Name}{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}" +
-                $"({declarationParameters})" + "\n" +
+                $"Eff<Unit> {methodSymbol.Name}{methodGenericParameters}({declarationParameters})" + "\n" +
+                SymbolReader.GetMethodConstraints(methodSymbol) +
+                $"    {{" + "\n" +
+                $"        var self = this;" + "\n" +
+                $"        return Eff(() => {{ self.dbContext.{methodSymbol.Name}{methodGenericParameters}({parameters}); return unit; }});" + "\n" +
+                $"    }}";
+        }
+        
+        string? CreateEffOfTMethodFromSymbol(IMethodSymbol methodSymbol)
+        {
+            var declarationParameters = SymbolReader.GetMethodDeclarationParameters(methodSymbol);
+            var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
+            var returnTypeName = methodSymbol.ReturnType.ToString();
+            
+            // Check if taskTypeArgument is nullable
+            if (methodSymbol.ReturnType.NullableAnnotation == NullableAnnotation.Annotated)
+            {
+                // If it is nullable, wrap it with Option
+                returnTypeName = $"Option<{returnTypeName.TrimEnd('?')}>";
+            }
+            
+            var methodGenericTypeParameters = SymbolReader.GetMethodGenericTypeParameters(methodSymbol);
+            
+            return
+                $"Eff<{returnTypeName}> {methodSymbol.Name}" +
+                $"{methodGenericTypeParameters}({declarationParameters})" + "\n" +
+                SymbolReader.GetMethodConstraints(methodSymbol) +
+                $"    {{" + "\n" +
+                $"        var self = this;" + "\n" +
+                $"        return Eff<{returnTypeName}>(() => self.dbContext.{methodSymbol.Name}" +
+                $"{methodGenericTypeParameters}({parameters}));" + "\n" +
+                $"    }}";
+        }
+
+        string CreateNonEffMethodFromSymbol(IMethodSymbol methodSymbol)
+        {
+            var declarationParameters = SymbolReader.GetMethodDeclarationParameters(methodSymbol);
+            var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
+            var methodGenericParameters = SymbolReader.GetMethodGenericTypeParameters(methodSymbol);
+            var returnTypeName = methodSymbol.ReturnType.ToString();
+                
+            return
+                $"{returnTypeName} {methodSymbol.Name}{methodGenericParameters}({declarationParameters})" + "\n" +
+                SymbolReader.GetMethodConstraints(methodSymbol) +
+                $"    {{" + "\n" +
+                $"        var self = this;" + "\n" +
+                $"        return self.dbContext.{methodSymbol.Name}{methodGenericParameters}({parameters});" + "\n" +
+                $"    }}";
+        }
+        
+        string CreateAffUnitMethodFromSymbol(IMethodSymbol methodSymbol)
+        {
+            var declarationParameters = SymbolReader.GetMethodDeclarationParameters(methodSymbol);
+            var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
+            var methodGenericParameters = SymbolReader.GetMethodGenericTypeParameters(methodSymbol);
+
+            return
+                $"Aff<Unit> {methodSymbol.Name}{methodGenericParameters}({declarationParameters})" + "\n" +
                 SymbolReader.GetMethodConstraints(methodSymbol) +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
                 $"        return Aff(async () => {{ await self.dbContext.{methodSymbol.Name}" +
-                $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({parameters});" +
+                $"{methodGenericParameters}({parameters});" +
                 $" return unit; }});" + "\n" +
                 $"    }}";
         }
         
-        string? CreateTaskOfTMethodFromSymbol(IMethodSymbol methodSymbol)
+        string? CreateAffOfTMethodFromSymbol(IMethodSymbol methodSymbol)
         {
             var declarationParameters = SymbolReader.GetMethodDeclarationParameters(methodSymbol);
             var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
@@ -286,17 +459,19 @@ public readonly struct Eff{dbContext.Identifier}
             if (taskTypeArgument.NullableAnnotation == NullableAnnotation.Annotated)
             {
                 // If it is nullable, wrap it with Option
-                taskTypeArgumentName = $"Option<{taskTypeArgumentName}>";
+                taskTypeArgumentName = $"Option<{taskTypeArgument.Name.TrimEnd('?')}>";
             }
+            
+            var methodGenericTypeParameters = SymbolReader.GetMethodGenericTypeParameters(methodSymbol);
             
             return
                 $"Aff<{taskTypeArgumentName}> {methodSymbol.Name}" +
-                $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({declarationParameters})" + "\n" +
+                $"{methodGenericTypeParameters}({declarationParameters})" + "\n" +
                 SymbolReader.GetMethodConstraints(methodSymbol) +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
                 $"        return Aff<{taskTypeArgumentName}>(async () => await self.dbContext.{methodSymbol.Name}" +
-                $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({parameters}));" + "\n" +
+                $"{methodGenericTypeParameters}({parameters}));" + "\n" +
                 $"    }}";
         }
     }
