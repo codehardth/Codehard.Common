@@ -1,5 +1,6 @@
 using System.Net;
 using Codehard.Functional.AspNetCore;
+using Codehard.Functional.AspNetCore.Errors;
 using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
