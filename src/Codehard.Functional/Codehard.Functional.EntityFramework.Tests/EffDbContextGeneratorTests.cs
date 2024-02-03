@@ -6,7 +6,7 @@ namespace Codehard.Functional.EntityFramework.Tests;
 public class EffDbContextGeneratorTests
 {
     [Fact]
-    public void DiscriminatedUnionGenerator_WithRecord_ShouldGenerateCorrectly()
+    public void WhenHasDbContextDefined_ShouldGenerateCorrectly()
     {
         // Arrange
         const string source =
@@ -41,6 +41,11 @@ namespace Codehard.Functional.EntityFramework.Tests
             throw new NotImplementedException();
         }}
 
+        public Task<object?> FindSomethingAsync()
+        {{
+            throw new NotImplementedException();
+        }}
+
         public Task DoSomethingAsync1(CancellationToken cancellationToken = default)
         {{
             throw new NotImplementedException();
@@ -62,6 +67,42 @@ namespace Codehard.Functional.EntityFramework.Tests
         }}
     }}
 }}
+";
+        // Act
+        var result = Compiler<EffDbContextGenerator>.Compile(source);
+
+        // Assert
+        Assert.Empty(result.CompilationErrors);
+        Assert.Empty(result.GenerationDiagnostics);
+    }
+    
+    [Fact]
+    public void WhenHasDbContextDefined2_ShouldGenerateCorrectly()
+    {
+        // Arrange
+        const string source =
+            $@"
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace Codehard.Functional.EntityFramework.Tests;
+
+public static class Program
+{{
+    public static void Main(string[] args)
+    {{
+    }}
+}}
+
+public record Record(int Id, string Name);
+
+public class MyDbContext : DbContext
+{{
+    public DbSet<Record> Records {{ get; }} = null!;
+}}
+
 ";
         // Act
         var result = Compiler<EffDbContextGenerator>.Compile(source);
