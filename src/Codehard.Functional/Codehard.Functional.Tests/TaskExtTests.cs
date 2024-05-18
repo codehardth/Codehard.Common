@@ -28,8 +28,8 @@ public class TaskExtTests
         var result = await aff.Run();
 
         // Assert
-        Assert.Single(result.Succs());
-        Assert.Equal(unit, result.Succs().First());
+        Assert.Single(result.ToArray());
+        Assert.Equal(unit, result.ToArray().First());
     }
     
     [Fact]
