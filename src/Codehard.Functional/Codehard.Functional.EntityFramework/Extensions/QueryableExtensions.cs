@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using LanguageExt;
 
 using static LanguageExt.Prelude;
@@ -161,6 +156,28 @@ public static class QueryableExtensions
         return
             Aff(async () =>
                 await source.SingleOrNoneAsync(predicate, ct));
+    }
+    
+    /// <summary>
+    /// Asynchronously returns the only element of a sequence satisfying a specified condition within an Aff monad.
+    /// This method will returns fail if no such element exists or if more than one element satisfies the condition.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
+    /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
+    /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
+    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// An Aff&lt;TSource&gt; that represents the asynchronous operation.
+    /// The Aff monad wraps the result, which is the only element of the sequence satisfying the specified condition.
+    /// </returns>
+    public static Aff<TSource> SingleOrFailAff<TSource>(
+        this IQueryable<TSource> source,
+        Expression<Func<TSource, bool>> predicate,
+        CancellationToken ct = default)
+    {
+        return
+            Aff(async () =>
+                await source.SingleAsync(predicate, ct));
     }
     
     /// <summary>

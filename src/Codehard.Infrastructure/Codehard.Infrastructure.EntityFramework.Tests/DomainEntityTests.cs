@@ -21,10 +21,12 @@ public class DomainEntityTests
 
         var loggerMock = new Mock<ILogger<TestDbContext>>();
         var logger = loggerMock.Object;
+        
         await using var context = new TestDbContext(
             options,
             builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly),
             logger);
+        
         await context.Database.EnsureCreatedAsync();
 
         // Act
