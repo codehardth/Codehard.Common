@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
+// ReSharper disable once CheckNamespace
 namespace Codehard.Common.DomainModel.Extensions;
 
+/// <summary>
+/// Provides extension methods for applying specifications to a DbSet.
+/// </summary>
 public static class SpecificationExtensions
 {
     /// <summary>

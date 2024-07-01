@@ -26,7 +26,7 @@ public struct EntityAKey
 
 public class EntityA : Entity<EntityAKey>
 {
-    public override EntityAKey Id { get; protected init; }
+    public override EntityAKey Id { get; init; }
 
     public string Value { get; set; } = string.Empty;
     

@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codehard.Infrastructure.EntityFramework.Extensions;
 
+/// <summary>
+/// Provides extension methods for the ModelBuilder class.
+/// These methods allow for applying entity type configurations from a specified assembly to the model.
+/// </summary>
 public static class ModelBuilderExtensions
 {
     /// <summary>

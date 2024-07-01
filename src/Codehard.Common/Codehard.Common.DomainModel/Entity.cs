@@ -26,7 +26,7 @@ public abstract class Entity<TKey>
     /// <summary>
     /// Gets the unique identifier for the entity.
     /// </summary>
-    public abstract TKey Id { get; protected init; }
+    public abstract TKey Id { get; init; }
 
     /// <summary>
     /// Gets a read-only collection of notifications associated with the entity.
