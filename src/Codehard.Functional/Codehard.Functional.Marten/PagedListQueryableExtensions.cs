@@ -5,6 +5,9 @@ using static LanguageExt.Prelude;
 // ReSharper disable once CheckNamespace
 namespace Marten.Pagination;
 
+/// <summary>
+/// 
+/// </summary>
 public static class PagedListQueryableExtensions
 {
     /// <summary>
@@ -17,12 +20,12 @@ public static class PagedListQueryableExtensions
     /// <param name="token">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>An Aff&lt;IPagedList&lt;T&gt;&gt; representing the asynchronous operation. 
     /// The Aff monad wraps the result, which is the paginated list of elements.</returns>
-    public static Aff<IPagedList<T>> ToPagedListAff<T>(
+    public static Eff<IPagedList<T>> ToPagedListEff<T>(
         this IQueryable<T> queryable,
         int pageNumber,
         int pageSize,
         CancellationToken token = default)
     {
-        return Aff(async () => await queryable.ToPagedListAsync(pageNumber, pageSize, token));
+        return liftEff(() => queryable.ToPagedListAsync(pageNumber, pageSize, token));
     }
 }

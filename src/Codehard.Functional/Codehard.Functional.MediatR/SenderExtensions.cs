@@ -7,29 +7,29 @@ namespace MediatR;
 
 public static class SenderExtensions
 {
-    public static Aff<TCommandResult> SendCommandAff<TCommand, TCommandResult>(
+    public static Eff<TCommandResult> SendCommandEff<TCommand, TCommandResult>(
         this ISender sender,
         TCommand command,
         CancellationToken cancellationToken = default)
         where TCommand : ICommand<TCommandResult>
     {
         return
-            Aff(async () =>
+            liftEff(async () =>
                     await sender.Send(command, cancellationToken)
-                                .Map(x => x.ToAff()))
+                                .Map(x => x.ToEff()))
                 .Flatten();
     }
     
-    public static Aff<TQueryResult> SendQueryAff<TQuery, TQueryResult>(
+    public static Eff<TQueryResult> SendQueryEff<TQuery, TQueryResult>(
         this ISender sender,
         TQuery query,
         CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQueryResult>
     {
         return
-            Aff(async () =>
+            liftEff(async () =>
                     await sender.Send(query, cancellationToken)
-                                .Map(x => x.ToAff()))
+                                .Map(x => x.ToEff()))
                 .Flatten();
     }
 }

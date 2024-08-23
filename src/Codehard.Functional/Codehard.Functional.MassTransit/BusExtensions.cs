@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace MassTransit;
 
 /// <summary>
@@ -6,11 +7,11 @@ namespace MassTransit;
 public static class BusExtensions
 {
     /// <summary>
-    /// Publish message as a Async Effect
+    /// Publish message as an Async Effect
     /// </summary>
-    public static Aff<Unit> PublishAsAff<T>(this IBus bus, T message)
+    public static Eff<Unit> PublishAsAff<T>(this IBus bus, T message)
         where T : class
     {
-        return Aff(async () => await bus.Publish(message).ToUnit());
+        return liftEff(() => bus.Publish(message).ToUnit());
     }
 }

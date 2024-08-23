@@ -1,5 +1,6 @@
 using System.Text;
 using Lamar;
+using LanguageExt;
 using MediatR;
 using Shouldly;
 
@@ -24,7 +25,7 @@ public class PublishTests
         var mediator = container.GetInstance<IMediator>();
 
         await mediator.PublishAff(new Ping { Message = "Ping" })
-                      .Run();
+                      .RunAsync();
 
         // Assert
         var result = builder.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);

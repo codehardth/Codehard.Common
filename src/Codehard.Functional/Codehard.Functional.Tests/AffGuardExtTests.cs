@@ -9,10 +9,10 @@ public class AffGuardExtTests
     {
         // Act
         var aff =
-            AffOption(() => ValueTask.FromResult((int?)1))
+            EffOption(() => ValueTask.FromResult((int?)1))
                 .GuardNotNone("There is something wrong");
             
-        var fin = await aff.Run();
+        var fin = await aff.RunAsync();
 
         // Assert
         var a = fin.ThrowIfFail();
@@ -25,10 +25,10 @@ public class AffGuardExtTests
     {
         // Act
         var aff =
-            AffOption(() => ValueTask.FromResult((int?)null))
+            EffOption(() => ValueTask.FromResult((int?)null))
                 .GuardNotNone("There is no value");
 
-        var fin = await aff.Run();
+        var fin = await aff.RunAsync();
 
         // Assert
         Assert.False(fin.IsSucc);

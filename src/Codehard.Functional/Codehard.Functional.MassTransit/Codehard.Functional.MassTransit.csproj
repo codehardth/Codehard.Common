@@ -1,19 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.5.0</Version>
+        <Version>3.0.0-preview-8</Version>
         <Description>A library contains common code related to functional programming with MassTransit based on LanguageExt.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Functional</RepositoryUrl>
         <PackageReleaseNotes>Add non-generic version of MassTransitFaultMessageException.</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit" Version="8.2.2" />
+        <PackageReference Include="MassTransit" Version="8.2.4" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     </ItemGroup>
 

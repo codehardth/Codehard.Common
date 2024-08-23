@@ -3,7 +3,7 @@
 using System.Text.Json;
 
 // ReSharper disable once CheckNamespace
-namespace LanguageExt;
+namespace System.Net.Http;
 
 /// <summary>
 /// Http content extensions.
@@ -53,11 +53,11 @@ public static class FunctionalHttpContentExtensions
     /// <param name="httpContent">The HTTP content to read from.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>An Aff monad containing an Option of the deserialized object.</returns>
-    public static Aff<Option<T>> ReadAsOptionalObjectAff<T>(
+    public static Eff<Option<T>> ReadAsOptionalObjectAff<T>(
         this HttpContent httpContent,
         CancellationToken cancellationToken = default)
     {
-        return Aff(async () =>
+        return liftEff(async () =>
             await httpContent.ReadAsOptionalObjectAsync<T>(
                 HttpContentExtensions.CaseInsensitiveOptions,
                 cancellationToken));

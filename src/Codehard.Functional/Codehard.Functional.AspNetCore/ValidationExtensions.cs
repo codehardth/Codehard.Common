@@ -3,147 +3,75 @@ namespace Codehard.Functional.AspNetCore;
 
 public static class ValidationExtensions
 {
-    public static Aff<A> ToAffWithFailToOK<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToOK(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToOK<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToOK(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToOK<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToOK(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToOK<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToOK(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToCreated<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToCreated(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToCreated<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToCreated(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToCreated<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToCreated(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToCreated<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToCreated(errorMessageFunc);
 
-    public static Aff<A> ToAffWithFailToAccepted<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToAccepted(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToAccepted<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToAccepted(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToAccepted<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToAccepted(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToAccepted<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToAccepted(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToNoContent<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToNoContent(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToNoContent<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToNoContent(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToNoContent<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToNoContent(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToNoContent<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToNoContent(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToBadRequest<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToBadRequest(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToBadRequest<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToBadRequest(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToBadRequest<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToBadRequest(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToBadRequest<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToBadRequest(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToUnauthorized<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToUnauthorized(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToUnauthorized<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToUnauthorized(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToUnauthorized<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToUnauthorized(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToUnauthorized<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToUnauthorized(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToForbidden<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToForbidden(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToForbidden<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToForbidden(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToForbidden<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToForbidden(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToForbidden<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToForbidden(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToNotFound<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToNotFound(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToNotFound<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToNotFound(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToNotFound<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToNotFound(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToNotFound<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToNotFound(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToConflict<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToConflict(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToConflict<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToConflict(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToConflict<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToConflict(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToConflict<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToConflict(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToUnprocessableEntity(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToUnprocessableEntity(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToUnprocessableEntity(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToUnprocessableEntity(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToLocked<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToLocked(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToLocked<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToLocked(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToLocked<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToLocked(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToLocked<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToLocked(errorMessageFunc, errorCode);
 
-    public static Aff<A> ToAffWithFailToInternalServerError<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToInternalServerError(_ => errorMessage);
+    public static Eff<A> ToAffWithFailToInternalServerError<A>(this Validation<Error, A> ma, string errorCode, string errorMessage = "")
+        => liftEff(() => ma.ToEither()).MapFailToInternalServerError(_ => errorMessage, errorCode);
 
-    public static Aff<A> ToAffWithFailToInternalServerError<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToAff(se => se.Flatten(errorCode)).MapFailToInternalServerError(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToOK<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToOK(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToOK<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToOK(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToCreated<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToCreated(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToCreated<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToCreated(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToAccepted<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToAccepted(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToAccepted<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToAccepted(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToNoContent<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToNoContent(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToNoContent<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToNoContent(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToBadRequest<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToBadRequest(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToBadRequest<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToBadRequest(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToUnauthorized<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToUnauthorized(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToUnauthorized<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToUnauthorized(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToForbidden<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToForbidden(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToForbidden<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToForbidden(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToNotFound<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToNotFound(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToNotFound<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToNotFound(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToConflict<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToConflict(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToConflict<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToConflict(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToUnprocessableEntity(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToUnprocessableEntity<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToUnprocessableEntity(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToLocked<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToLocked(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToLocked<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToLocked(errorMessageFunc);
-
-    public static Eff<A> ToEffWithFailToInternalServerError<A>(this Validation<Error, A> ma, int errorCode, string errorMessage = "")
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToInternalServerError(_ => errorMessage);
-
-    public static Eff<A> ToEffWithFailToInternalServerError<A>(this Validation<Error, A> ma, int errorCode, Func<Error, string> errorMessageFunc)
-        => ma.ToEff(se => se.Flatten(errorCode)).MapFailToInternalServerError(errorMessageFunc);
+    public static Eff<A> ToAffWithFailToInternalServerError<A>(this Validation<Error, A> ma, string errorCode, Func<Error, string> errorMessageFunc)
+        => liftEff(() => ma.ToEither()).MapFailToInternalServerError(errorMessageFunc, errorCode);
 }

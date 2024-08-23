@@ -1,8 +1,6 @@
 // ReSharper disable InconsistentNaming
 #pragma warning disable CS1591
 
-using LanguageExt.Common;
-
 namespace Codehard.Functional;
 
 public record ExpectedResultError : Expected

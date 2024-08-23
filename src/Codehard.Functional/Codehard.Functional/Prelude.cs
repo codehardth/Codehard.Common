@@ -1,8 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 #pragma warning disable CS1591
 
-using LanguageExt.Common;
-
 namespace Codehard.Functional;
 
 /// <summary>
@@ -13,21 +11,19 @@ public static class Prelude
     /// <summary>
     /// Lift an asynchronous effect into the Aff&lt;Option&gt; monad
     /// </summary>
-    public static Aff<Option<A>> AffOption<A>(Func<ValueTask<A?>> f)
+    public static Eff<Option<A>> EffOption<A>(Func<ValueTask<A?>> f)
         where A : class
     {
-        return LanguageExt.Aff<Option<A>>
-            .Effect(async () => Optional(await f()));
+        return liftEff(async () => Optional(await f()));
     }
 
     /// <summary>
     /// Lift an asynchronous effect into the Aff&lt;Option&gt; monad
     /// </summary>
-    public static Aff<Option<A>> AffOption<A>(Func<ValueTask<A?>> f)
+    public static Eff<Option<A>> EffOption<A>(Func<ValueTask<A?>> f)
         where A : struct
     {
-        return LanguageExt.Aff<Option<A>>
-            .Effect(async () => Optional(await f()));
+        return liftEff(async () => Optional(await f()));
     }
     
     /// <summary>
@@ -36,8 +32,7 @@ public static class Prelude
     public static Eff<Option<A>> EffOption<A>(Func<A?> f)
         where A : class
     {
-        return LanguageExt.Eff<Option<A>>
-            .Effect(() => Optional(f()));
+        return liftEff(() => Optional(f()));
     }
 
     /// <summary>
@@ -46,8 +41,7 @@ public static class Prelude
     public static Eff<Option<A>> EffOption<A>(Func<A?> f)
         where A : struct
     {
-        return LanguageExt.Eff<Option<A>>
-            .Effect(() => Optional(f()));
+        return liftEff(() => Optional(f()));
     }
 
     /// <summary>
@@ -55,31 +49,29 @@ public static class Prelude
     /// </summary>
     /// <param name="affs"></param>
     /// <returns></returns>
-    public static Aff<Unit> IterParallel<A>(params Aff<A>[] affs)
+    public static Eff<Unit> IterParallel<A>(params Eff<A>[] affs)
     {
         return
-            Aff(async () =>
-                await Task.WhenAll(affs.Map(aff => aff.Run().AsTask())))
-            .Bind(fins =>
-                fins.Any(f => f.IsFail)
-                    ? FailAff<Unit>(
-                        Error.Many(
-                            fins.Filter(f => f.IsFail)
-                                .Match(Succ: _ => Error.New(string.Empty), Fail: err => err)
-                                .ToArray()))
-                    : unitAff);
+            liftEff(async () => await Task.WhenAll(affs.Select(aff => aff.Run().AsTask())))
+                .Bind(fins =>
+                    fins.Any(f => f.IsFail)
+                        ? FailEff<Unit>(
+                            Error.Many(
+                                fins.Where(f => f.IsFail)
+                                    .Match(Succ: _ => Error.New(string.Empty), Fail: err => err)
+                                    .ToArray()))
+                        : unitEff);
     }
     
     /// <summary>
     /// Wrap Task of no returned result in Aff&lt;Unit&gt;
     /// </summary>
-    public static Aff<Unit> AffUnit(Func<ValueTask> f)
+    public static Eff<Unit> EffUnit(Func<ValueTask> f)
     {
-        return LanguageExt.Aff<Unit>
-            .Effect(async () =>
+        return liftEff(async () =>
             {
                 await f();
-
+    
                 return unit;
             });
     }
@@ -91,10 +83,9 @@ public static class Prelude
     /// <returns>
     /// An Eff&lt;Unit&gt; monad that represents the synchronous operation. The Eff monad wraps a unit that is returned after the action is executed.
     /// </returns>
-    public static Aff<Unit> EffUnit(Action action)
+    public static Eff<Unit> EffUnit(Action action)
     {
-        return LanguageExt.Eff<Unit>
-            .Effect(() =>
+        return liftEff(() =>
             {
                 action();
 
