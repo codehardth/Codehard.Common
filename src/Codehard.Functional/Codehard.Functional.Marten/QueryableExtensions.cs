@@ -16,9 +16,9 @@ public static class QueryableExtensions
     /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>An Aff&lt;IReadOnlyList&lt;T&gt;&gt; representing the asynchronous operation. 
     /// The Aff monad wraps the result, which is the read-only list of elements.</returns>
-    public static Aff<IReadOnlyList<T>> ToListAff<T>(this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<IReadOnlyList<T>> ToListEff<T>(this IQueryable<T> source, CancellationToken ct = default)
     {
-        return Aff(async () => await source.ToListAsync(ct));
+        return liftEff(() => source.ToListAsync(ct));
     }
     
     /// <summary>
@@ -33,12 +33,9 @@ public static class QueryableExtensions
     /// The task result contains the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
     public static Task<Option<TSource>> SingleOrNoneAsync<TSource>(
-        this IQueryable<TSource> source,
-        CancellationToken ct = default)
+        this IQueryable<TSource> source, CancellationToken ct = default)
     {
-        return
-            source.SingleOrDefaultAsync(ct)
-                  .Map(Optional);
+        return source.SingleOrDefaultAsync(ct).Map(Optional);
     }
 
     /// <summary>
@@ -52,12 +49,10 @@ public static class QueryableExtensions
     /// An Aff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation. 
     /// The Aff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
-    public static Aff<Option<TSource>> SingleOrNoneAff<TSource>(
-        this IQueryable<TSource> source,
-        CancellationToken ct = default)
+    public static Eff<Option<TSource>> SingleOrNoneAff<TSource>(
+        this IQueryable<TSource> source, CancellationToken ct = default)
     {
-        return
-            Aff(async () => await source.SingleOrNoneAsync(ct));
+        return liftEff(() => source.SingleOrNoneAsync(ct));
     }
     
     /// <summary>
@@ -113,11 +108,10 @@ public static class QueryableExtensions
     /// The Aff monad wraps the result, which contains the first element of the sequence as an Option&lt;T&gt;,
     /// or a None value if the sequence is empty.
     /// </returns>
-    public static Aff<Option<T>> FirstOrNoneAff<T>(
+    public static Eff<Option<T>> FirstOrNoneAff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
-        return 
-            Aff(async () => await source.FirstOrNoneAsync(ct));
+        return liftEff(() => source.FirstOrNoneAsync(ct));
     }
     
     /// <summary>

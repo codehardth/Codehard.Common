@@ -1,6 +1,7 @@
 ﻿using Codehard.Functional.MassTransit.CombinedAffTypes;
 using System.Diagnostics.Contracts;
 
+// ReSharper disable once CheckNamespace
 namespace MassTransit;
 
 /// <summary>
@@ -14,7 +15,7 @@ public static class AsyncEffectExtensions
     /// </summary>
     [Pure]
     public static AffWithConsumeContext<T> WithConsumeContext<T>(
-        this Aff<T> aff,
+        this Eff<T> aff,
         ConsumeContext consumerContext)
     {
         return new AffWithConsumeContext<T>(

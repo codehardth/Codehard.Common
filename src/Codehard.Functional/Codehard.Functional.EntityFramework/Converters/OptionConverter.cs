@@ -1,15 +1,16 @@
 using System.Linq.Expressions;
 using LanguageExt;
+using LanguageExt.UnsafeValueAccess;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using static LanguageExt.Prelude;
 
 namespace Codehard.Functional.EntityFramework.Converters;
 
-public sealed class OptionConverter<T> : ValueConverter<Option<T>, T>
+public sealed class OptionConverter<T> : ValueConverter<Option<T>, T?>
 {
     public OptionConverter()
         : base(
-            opt => opt.MatchUnsafe(s => s, () => default!),
+            opt => opt.ValueUnsafe(),
             v => Optional(v))
     {
     }

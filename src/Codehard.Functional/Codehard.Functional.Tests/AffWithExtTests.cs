@@ -6,12 +6,12 @@ public class AffWithExtTests
     public async Task WhenUseWith_ShouldMatchFinResultSuccessfully()
     {
         // Arrange
-        var aAff = SuccessAff(1);
-        var bAff = SuccessAff("1");
+        var aAff = SuccessEff(1);
+        var bAff = SuccessEff("1");
             
         // Act
         var abAff = aAff.With(bAff);
-        var abFin = await abAff.Run();
+        var abFin = await abAff.RunAsync();
 
         // Assert
         var ab = abFin.ThrowIfFail();
@@ -23,8 +23,8 @@ public class AffWithExtTests
     public async Task WhenUseGuardWithTruePredicate_ShouldMatchFinResultSuccessfully()
     {
         // Arrange
-        var aAff = SuccessAff(1);
-        var bAff = SuccessAff("1");
+        var aAff = SuccessEff(1);
+        var bAff = SuccessEff("1");
 
         // Act
         var abAff = 
@@ -34,7 +34,7 @@ public class AffWithExtTests
                     ab => ab.Item1 == 1 && ab.Item2 == "1",
                     Error.New(1, "Wrong value!"));
 
-        var abFin = await abAff.Run();
+        var abFin = await abAff.RunAsync();
 
         // Assert
         var ab = abFin.ThrowIfFail();
@@ -46,8 +46,8 @@ public class AffWithExtTests
     public async Task WhenUseGuardMultiArgsWithTruePredicate_ShouldMatchFinResultSuccessfully()
     {
         // Arrange
-        var aAff = SuccessAff(1);
-        var bAff = SuccessAff("1");
+        var aAff = SuccessEff(1);
+        var bAff = SuccessEff("1");
 
         // Act
         var abAff =
@@ -57,7 +57,7 @@ public class AffWithExtTests
                     (a, b) => a == 1 && b == "1",
                     Error.New(1, "Wrong value!"));
 
-        var abFin = await abAff.Run();
+        var abFin = await abAff.RunAsync();
 
         // Assert
         var ab = abFin.ThrowIfFail();
@@ -69,8 +69,8 @@ public class AffWithExtTests
     public async Task WhenUseGuardWithFalsePredicate_ShouldMatchFinResultFail()
     {
         // Arrange
-        var aAff = SuccessAff(1);
-        var bAff = SuccessAff("1");
+        var aAff = SuccessEff(1);
+        var bAff = SuccessEff("1");
 
         // Act
         var abAff =
@@ -80,7 +80,7 @@ public class AffWithExtTests
                     ab => ab.Item1 == 2 && ab.Item2 == "2",
                     Error.New(1, "Wrong value!"));
 
-        var abFin = await abAff.Run();
+        var abFin = await abAff.RunAsync();
 
         // Assert
         Assert.True(abFin.IsFail);
@@ -90,8 +90,8 @@ public class AffWithExtTests
     public async Task WhenUseGuardDeconstructTupleWithFalsePredicate_ShouldMatchFinResultFail()
     {
         // Arrange
-        var aAff = SuccessAff(1);
-        var bAff = SuccessAff("1");
+        var aAff = SuccessEff(1);
+        var bAff = SuccessEff("1");
 
         // Act
         var abAff =
@@ -101,7 +101,7 @@ public class AffWithExtTests
                     (a, b) => a == 2 && b == "2",
                     Error.New(1, "Wrong value!"));
 
-        var abFin = await abAff.Run();
+        var abFin = await abAff.RunAsync();
 
         // Assert
         Assert.True(abFin.IsFail);

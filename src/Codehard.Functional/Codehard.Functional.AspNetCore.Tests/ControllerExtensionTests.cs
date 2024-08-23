@@ -17,8 +17,8 @@ public class ControllerExtensionTests
         string expectedData)
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(
-            new Exception("Something went wrong")));
+        var eff =
+            liftEff(() => ValueTask.FromException<int>(new Exception("Something went wrong")));
 
         var actionContextMock = new Mock<ActionContext>();
         var httpContextMock = new Mock<HttpContext>();
@@ -37,13 +37,13 @@ public class ControllerExtensionTests
 
         // Act
         var actionResult =
-            await aff.MapFailToHttpResultError(expectedStatusCode, expectedData)
+            await eff.MapFailToHttpResultError(expectedStatusCode, expectedData)
                 .RunToResultAsync();
+        
         await actionResult.ExecuteResultAsync(actionContextMock.Object);
 
         // Assert
-        httpResponseMock.VerifySet(
-            hr => hr.StatusCode = (int)expectedStatusCode, Times.Once());
+        httpResponseMock.VerifySet(hr => hr.StatusCode = (int)expectedStatusCode, Times.Once());
         Assert.IsType<ErrorWrapperActionResult>(actionResult);
         Assert.Equal(expectedData, headerDictionary["x-error-code"]);
     }

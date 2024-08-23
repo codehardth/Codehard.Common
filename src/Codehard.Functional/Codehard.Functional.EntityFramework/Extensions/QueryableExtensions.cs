@@ -13,37 +13,37 @@ namespace Microsoft.EntityFrameworkCore;
 public static class QueryableExtensions
 {
     /// <summary>
-    /// Asynchronously converts a sequence to a list within an Aff monad.
+    /// Asynchronously converts a sequence to a list within an Eff monad.
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to create a list from.</param>
     /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
-    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a <see cref="List{T}"/> that contains elements from the input sequence.
+    /// An Eff monad that represents the asynchronous operation. The Aff monad wraps a <see cref="List{T}"/> that contains elements from the input sequence.
     /// </returns>
-    public static Aff<List<T>> ToListAff<T>(
+    public static Eff<List<T>> ToListAsyncEff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
-        return Aff(async () => await source.ToListAsync(ct));
+        return liftEff(() => source.ToListAsync(ct));
     }
     
     /// <summary>
-    /// Asynchronously converts a sequence to an array within an Aff monad.
+    /// Asynchronously converts a sequence to an array within an Eff monad.
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to create an array from.</param>
     /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
-    /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an array that contains elements from the input sequence.
+    /// An Eff monad that represents the asynchronous operation. The Eff monad wraps an array that contains elements from the input sequence.
     /// </returns>
-    public static Aff<T[]> ToArrayAff<T>(
+    public static Eff<T[]> ToArrayAff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
-        return Aff(async () => await source.ToArrayAsync(ct));
+        return liftEff(() => source.ToArrayAsync(ct));
     }
 
     /// <summary>
-    /// Asynchronously determines whether a sequence contains any elements within an Aff monad.
+    /// Asynchronously determines whether a sequence contains any elements within an Eff monad.
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to check for emptiness.</param>
@@ -51,10 +51,10 @@ public static class QueryableExtensions
     /// <returns>
     /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a boolean value that is true if the source sequence contains any elements; otherwise, false.
     /// </returns>
-    public static Aff<bool> AnyAff<T>(
+    public static Eff<bool> AnyEff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
-        return Aff(async () => await source.AnyAsync(ct));
+        return liftEff(() => source.AnyAsync(ct));
     }
     
     /// <summary>
@@ -104,12 +104,11 @@ public static class QueryableExtensions
     /// An Aff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation. 
     /// The Aff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
-    public static Aff<Option<TSource>> SingleOrNoneAff<TSource>(
+    public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(
         this IQueryable<TSource> source,
         CancellationToken ct = default)
     {
-        return
-            Aff(async () => await source.SingleOrNoneAsync(ct));
+        return liftEff(() => source.SingleOrNoneAsync(ct));
     }
     
     /// <summary>
@@ -148,13 +147,13 @@ public static class QueryableExtensions
     /// The Aff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence satisfying the specified condition,
     /// or a None value if no such element exists.
     /// </returns>
-    public static Aff<Option<TSource>> SingleOrNoneAff<TSource>(
+    public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(
         this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate,
         CancellationToken ct = default)
     {
         return
-            Aff(async () =>
+            liftEff(async () =>
                 await source.SingleOrNoneAsync(predicate, ct));
     }
     
@@ -170,13 +169,13 @@ public static class QueryableExtensions
     /// An Aff&lt;TSource&gt; that represents the asynchronous operation.
     /// The Aff monad wraps the result, which is the only element of the sequence satisfying the specified condition.
     /// </returns>
-    public static Aff<TSource> SingleOrFailAff<TSource>(
+    public static Eff<TSource> SingleOrFailAff<TSource>(
         this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate,
         CancellationToken ct = default)
     {
         return
-            Aff(async () =>
+            liftEff(async () =>
                 await source.SingleAsync(predicate, ct));
     }
     
@@ -210,11 +209,10 @@ public static class QueryableExtensions
     /// The Aff monad wraps the result, which contains the first element of the sequence as an Option&lt;T&gt;,
     /// or a None value if the sequence is empty.
     /// </returns>
-    public static Aff<Option<T>> FirstOrNoneAff<T>(
+    public static Eff<Option<T>> FirstOrNoneEff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
-        return 
-            Aff(async () => await source.FirstOrNoneAsync(ct));
+        return liftEff(() => source.FirstOrNoneAsync(ct));
     }
     
     /// <summary>
@@ -236,9 +234,7 @@ public static class QueryableExtensions
         CancellationToken ct = default)
     {
         return source
-            .FirstOrDefaultAsync(
-                predicate,
-                ct)
+            .FirstOrDefaultAsync(predicate, ct)
             .Map(Optional);
     }
     
@@ -255,14 +251,12 @@ public static class QueryableExtensions
     /// The Aff monad wraps the result, which contains the first element of the sequence satisfying the specified condition as an Option&lt;T&gt;,
     /// or a None value if no such element exists.
     /// </returns>
-    public static Aff<Option<T>> FirstOrNoneAff<T>(
+    public static Eff<Option<T>> FirstOrNoneEff<T>(
         this IQueryable<T> source,
         Expression<Func<T, bool>> predicate,
         CancellationToken ct = default)
     {
-        return 
-            Aff(async () =>
-                await source.FirstOrNoneAsync(predicate, ct));
+        return liftEff(() => source.FirstOrNoneAsync(predicate, ct));
     }
     
     /// <summary>
@@ -274,11 +268,10 @@ public static class QueryableExtensions
     /// <returns>
     /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an integer that represents the number of elements in the input sequence.
     /// </returns>
-    public static Aff<int> CountAff<T>(
-        this IQueryable<T> source,
-        CancellationToken ct = default)
+    public static Eff<int> CountEff<T>(
+        this IQueryable<T> source, CancellationToken ct = default)
     {
-        return Aff(async () => await source.CountAsync(ct));
+        return liftEff(() => source.CountAsync(ct));
     }
     
     /// <summary>
@@ -291,12 +284,12 @@ public static class QueryableExtensions
     /// <returns>
     /// An Aff monad that represents the asynchronous operation. The Aff monad wraps an integer that represents the number of elements in the input sequence that satisfy the condition.
     /// </returns>
-    public static Aff<int> CountAff<T>(
+    public static Eff<int> CountEff<T>(
         this IQueryable<T> source,
         Expression<Func<T, bool>> predicate,
         CancellationToken ct = default)
     {
-        return Aff(async () => await source.CountAsync(predicate, ct));
+        return liftEff(() => source.CountAsync(predicate, ct));
     }
     
     /// <summary>
@@ -308,11 +301,11 @@ public static class QueryableExtensions
     /// <returns>
     /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a long integer that represents the number of elements in the input sequence.
     /// </returns>
-    public static Aff<long> LongCountAff<T>(
+    public static Eff<long> LongCountEff<T>(
         this IQueryable<T> source,
         CancellationToken ct = default)
     {
-        return Aff(async () => await source.LongCountAsync(ct));
+        return liftEff(() => source.LongCountAsync(ct));
     }
     
     /// <summary>
@@ -325,11 +318,11 @@ public static class QueryableExtensions
     /// <returns>
     /// An Aff monad that represents the asynchronous operation. The Aff monad wraps a long integer that represents the number of elements in the input sequence that satisfy the condition.
     /// </returns>
-    public static Aff<long> LongCountAff<T>(
+    public static Eff<long> LongCountEff<T>(
         this IQueryable<T> source,
         Expression<Func<T, bool>> predicate,
         CancellationToken ct = default)
     {
-        return Aff(async () => await source.LongCountAsync(predicate, ct));
+        return liftEff(() => source.LongCountAsync(predicate, ct));
     }
 }

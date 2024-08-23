@@ -77,15 +77,15 @@ public class OptionalExtTests
 
         // Act
         var aff =
-            optional.IfSomeAff(
+            optional.IfSomeEff(
                 num =>
-                    Eff(() =>
+                    liftEff(() =>
                     {
                         valueToChange = num;
                         return Unit.Default;
-                    }).ToAff());
+                    }));
         
-        _ = await aff.Run();
+        _ = await aff.RunAsync();
 
         // Assert
         Assert.Equal(5, valueToChange);
@@ -98,10 +98,10 @@ public class OptionalExtTests
         var optional = Option<int>.None;
 
         // Act
-        var result = optional.IfSomeAff(_ => throw new Exception("This should not be called"));
+        var result = optional.IfSomeEff(_ => throw new Exception("This should not be called"));
 
         // Assert
-        Assert.Equal(unitAff, result);
+        Assert.Equal(unitEff, result);
     }
     
     [Fact]
@@ -181,8 +181,8 @@ public class OptionalExtTests
 
         // Act
         var result =
-            await option.MatchAsAff(ifSomeAsync, ifNoneAsync)
-                        .Run();
+            await option.MatchAsEff(ifSomeAsync, ifNoneAsync)
+                        .RunAsync();
 
         // Assert
         Assert.Equal("TEST", result);
@@ -198,8 +198,8 @@ public class OptionalExtTests
 
         // Act
         var result =
-            await option.MatchAsAff(ifSomeAsync, ifNoneAsync)
-                        .Run();
+            await option.MatchAsEff(ifSomeAsync, ifNoneAsync)
+                        .RunAsync();
 
         // Assert
         Assert.Equal("None", result);

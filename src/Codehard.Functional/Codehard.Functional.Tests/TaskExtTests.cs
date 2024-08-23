@@ -24,8 +24,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var aff = Task().ToEffUnit();
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.Single(result.ToArray());
@@ -45,8 +45,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var aff = Task().ToEffUnit();
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -66,8 +66,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var aff = Task().ToEffUnit();
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -86,8 +86,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var aff = EffUnit(async () => await Task());
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.True(result.IsSucc);
@@ -103,8 +103,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var aff = EffUnit(async () => await Task());
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -121,8 +121,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var aff = EffUnit(async () => await Task());
+        var result = await aff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);

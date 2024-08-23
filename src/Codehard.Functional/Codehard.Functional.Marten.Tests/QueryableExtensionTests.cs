@@ -1,3 +1,5 @@
+using LanguageExt;
+using LanguageExt.UnsafeValueAccess;
 using Marten;
 using Marten.Services.Json;
 using Weasel.Core;
@@ -31,8 +33,8 @@ public class QueryableExtensionTests
         });
 
         _ = await session
-            .SaveChangesAff()
-            .Run();
+            .SaveChangesEff()
+            .RunAsync();
 
         // Act
         var fin =
@@ -41,7 +43,7 @@ public class QueryableExtensionTests
                      .Query<EntityA>()
                      .Where(a => a.Id == id)
                      .SingleOrNoneAff()
-                     .Run();
+                     .RunAsync();
         
         // Assert
         Assert.True(fin.IsSucc);
@@ -50,7 +52,7 @@ public class QueryableExtensionTests
         
         Assert.True(opt.IsSome);
         
-        var entity = opt.IfNoneUnsafe(() => null);
+        var entity = opt.ValueUnsafe();
         
         Assert.Equal(id, entity!.Id);
         Assert.Equal(entityNameValue, entity.Name);

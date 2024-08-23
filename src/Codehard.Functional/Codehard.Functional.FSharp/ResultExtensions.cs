@@ -29,19 +29,6 @@ namespace Codehard.Functional.FSharp
         }
 
         /// <summary>
-        /// Convert F# Result to Aff
-        /// </summary>
-        public static Aff<T> ToAff<T, TError>(
-            this FSharpResult<T, TError> result,
-            Func<TError, Error> errorMapper)
-        {
-            return
-                result.IsError
-                    ? FailAff<T>(errorMapper(result.ErrorValue))
-                    : SuccessAff(result.ResultValue);
-        }
-
-        /// <summary>
         /// Convert F# Result to Eff
         /// </summary>
         public static Eff<T> ToEff<T, TError>(
@@ -57,16 +44,16 @@ namespace Codehard.Functional.FSharp
         /// <summary>
         /// Convert Task of F# Result to Aff
         /// </summary>
-        public static Aff<T> ToAff<T, TError>(
+        public static Eff<T> ToEff<T, TError>(
             this Task<FSharpResult<T, TError>> resultTask,
             Func<TError, Error> errorMapper)
         {
             return
-                Aff(async () => await resultTask)
-                .Bind(result =>
-                    result.IsError
-                        ? FailAff<T>(errorMapper(result.ErrorValue))
-                        : SuccessAff(result.ResultValue));
+                liftEff(() => resultTask)
+                    .Bind(result =>
+                        result.IsError
+                            ? FailEff<T>(errorMapper(result.ErrorValue))
+                            : SuccessEff(result.ResultValue));
         }
     }
 }
