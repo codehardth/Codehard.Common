@@ -50,6 +50,10 @@ public class TestDbContext : DbContext, IDomainEventDbContext
 
     public DbSet<ImmutableEntityC> ImmCs { get; set; }
 
+    public DbSet<Root> Roots { get; set; }
+
+    public DbSet<MaterializedRoot> MaterializedRoots { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         this.builder(modelBuilder);
@@ -60,6 +64,8 @@ public class TestDbContext : DbContext, IDomainEventDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddDomainEventPublisherInterceptor(this.publisher);
+        optionsBuilder.AddEntityToMaterializedViewInterceptor<Root, MaterializedRoot>(
+            r => new MaterializedRoot(r.Id, r.Value, r.Children.Last().Value));
     }
 
     public Task PublishDomainEventAsync(IDomainEvent domainEvent)

@@ -1,3 +1,4 @@
+using Codehard.Common.DomainModel;
 using Codehard.Infrastructure.EntityFramework.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,5 +19,21 @@ public static class DbContextOptionsBuilderExtensions
         PublishDomainEventDelegate? @delegate = default)
     {
         optionsBuilder.AddInterceptors(new DomainEventPublisherInterceptor(@delegate));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
+    /// <param name="delegate"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TMaterializedView"></typeparam>
+    public static void AddEntityToMaterializedViewInterceptor<TEntity, TMaterializedView>(
+        this DbContextOptionsBuilder optionsBuilder,
+        MaterializedEntityTransformerDelegate<TEntity, TMaterializedView> @delegate)
+        where TEntity : class, IAggregateRoot
+        where TMaterializedView : class
+    {
+        optionsBuilder.AddInterceptors(new EntityToMaterializedViewInterceptor<TEntity, TMaterializedView>(@delegate));
     }
 }
