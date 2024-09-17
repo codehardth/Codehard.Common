@@ -60,10 +60,9 @@ internal class DomainEventPublisherInterceptor : SaveChangesInterceptor
         return result;
     }
 
-
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
-        DbContextEventData eventData,
-        InterceptionResult<int> result,
+    public override async ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData,
+        int result,
         CancellationToken cancellationToken = default)
     {
         var context = eventData.Context;
