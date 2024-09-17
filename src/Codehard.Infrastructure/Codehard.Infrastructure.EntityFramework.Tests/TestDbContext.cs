@@ -64,8 +64,6 @@ public class TestDbContext : DbContext, IDomainEventDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddDomainEventPublisherInterceptor(this.publisher);
-        optionsBuilder.AddEntityToMaterializedViewInterceptor<Root, MaterializedRoot>(
-            r => new MaterializedRoot(r.Id, r.Value, r.Children.Last().Value));
     }
 
     public Task PublishDomainEventAsync(IDomainEvent domainEvent)

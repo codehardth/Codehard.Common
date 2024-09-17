@@ -9,12 +9,12 @@ public class RootConfiguration : EntityTypeConfigurationBase<Root, TestDbContext
     {
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Value)
-            .IsRequired();
+               .IsRequired();
         builder.OwnsMany(r => r.Children, childBuilder =>
         {
             childBuilder.HasKey(c => c.Id);
             childBuilder.Property(c => c.Value)
-                .IsRequired();
+                        .IsRequired();
         });
     }
 }
@@ -25,12 +25,22 @@ public class MatViewRootConfiguration : EntityTypeConfigurationBase<Materialized
     {
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id)
-            .ValueGeneratedOnAdd();
+               .ValueGeneratedOnAdd();
         builder.Property(r => r.RootId)
-            .IsRequired();
+               .IsRequired();
         builder.Property(r => r.Value)
-            .IsRequired();
+               .IsRequired();
         builder.Property(r => r.LastestChildValue)
-            .IsRequired();
+               .IsRequired();
+    }
+}
+
+public class NonRelateEntityConfiguration : EntityTypeConfigurationBase<CompletelyNonRelated, TestDbContext>
+{
+    protected override void EntityConfigure(EntityTypeBuilder<CompletelyNonRelated> builder)
+    {
+        builder.HasKey(c => c.Id);
+        builder.Property(c => c.CreatedAt)
+               .IsRequired();
     }
 }
