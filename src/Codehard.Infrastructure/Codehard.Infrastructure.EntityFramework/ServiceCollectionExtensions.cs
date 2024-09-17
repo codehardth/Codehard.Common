@@ -21,67 +21,20 @@ public static class DbContextOptionsBuilderExtensions
         return optionsBuilder.AddInterceptors(new DomainEventPublisherInterceptor(@delegate));
     }
 
-    public static DbContextOptionsBuilder AddRecomputeMaterializedViewIntercetor<TEntity, TEvent>(
+    /// <summary>
+    /// Registers an interceptor to recompute the Materialized View when given event published.
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
+    /// <param name="refreshMaterializedViewQuery"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEvent"></typeparam>
+    /// <returns></returns>
+    public static DbContextOptionsBuilder AddRecomputeMaterializedViewInterceptor<TEntity, TEvent>(
         this DbContextOptionsBuilder optionsBuilder,
         string refreshMaterializedViewQuery) where TEvent : IDomainEvent
         where TEntity : class, IEntity
     {
         return optionsBuilder.AddInterceptors(
             new RecomputeMaterializedViewInterceptor<TEntity, TEvent>(refreshMaterializedViewQuery));
-    }
-
-    public static DbContextOptionsBuilder<TContext> AddEntityToMaterializedViewInterceptor<TContext, TEntity,
-        TMaterializedView>(
-        this DbContextOptionsBuilder<TContext> optionsBuilder,
-        MaterializedEntityTransformerDelegate<TEntity, TMaterializedView> @delegate)
-        where TContext : DbContext
-        where TEntity : class, IAggregateRoot
-        where TMaterializedView : class
-    {
-        return optionsBuilder.AddInterceptors(
-            new EntityToMaterializedViewInterceptor<TEntity, TMaterializedView>(@delegate));
-    }
-
-    public static DbContextOptionsBuilder<TContext> AddEntityToMaterializedViewInterceptor<TContext, TEntity, TRelate1,
-        TMaterializedView>(
-        this DbContextOptionsBuilder<TContext> optionsBuilder,
-        MaterializedEntityTransformerDelegate<TEntity, TRelate1, TMaterializedView> @delegate)
-        where TContext : DbContext
-        where TEntity : class, IAggregateRoot
-        where TRelate1 : class, IEntity
-        where TMaterializedView : class
-    {
-        return optionsBuilder.AddInterceptors(
-            new EntityToMaterializedViewInterceptor<TEntity, TRelate1, TMaterializedView>(@delegate));
-    }
-
-    public static DbContextOptionsBuilder<TContext> AddEntityToMaterializedViewInterceptor<TContext, TEntity, TRelate1,
-        TRelate2, TMaterializedView>(
-        this DbContextOptionsBuilder<TContext> optionsBuilder,
-        MaterializedEntityTransformerDelegate<TEntity, TRelate1, TRelate2, TMaterializedView> @delegate)
-        where TContext : DbContext
-        where TEntity : class, IAggregateRoot
-        where TRelate1 : class, IEntity
-        where TRelate2 : class, IEntity
-        where TMaterializedView : class
-    {
-        return optionsBuilder.AddInterceptors(
-            new EntityToMaterializedViewInterceptor<TEntity, TRelate1, TRelate2, TMaterializedView>(@delegate));
-    }
-
-    public static DbContextOptionsBuilder<TContext> AddEntityToMaterializedViewInterceptor<TContext, TEntity, TRelate1,
-        TRelate2, TRelate3, TMaterializedView>(
-        this DbContextOptionsBuilder<TContext> optionsBuilder,
-        MaterializedEntityTransformerDelegate<TEntity, TRelate1, TRelate2, TRelate3, TMaterializedView> @delegate)
-        where TContext : DbContext
-        where TEntity : class, IAggregateRoot
-        where TRelate1 : class, IEntity
-        where TRelate2 : class, IEntity
-        where TRelate3 : class, IEntity
-        where TMaterializedView : class
-    {
-        return optionsBuilder.AddInterceptors(
-            new EntityToMaterializedViewInterceptor<TEntity, TRelate1, TRelate2, TRelate3, TMaterializedView>(
-                @delegate));
     }
 }
