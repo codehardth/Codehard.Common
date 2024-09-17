@@ -196,7 +196,6 @@ public class DddDbContext : DbContext
         base.AddRange(entities);
     }
     
-    
     /// <summary>
     /// Asynchronously adds the given aggregate root entities to the context.
     /// </summary>
