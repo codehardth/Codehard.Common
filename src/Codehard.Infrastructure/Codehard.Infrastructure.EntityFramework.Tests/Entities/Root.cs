@@ -2,6 +2,8 @@
 
 namespace Codehard.Infrastructure.EntityFramework.Tests.Entities;
 
+public record RootCreatedEvent(Guid Id, DateTimeOffset Timestamp) : IDomainEvent<Guid>;
+
 public class Root : Entity<Guid>, IAggregateRoot<Guid>
 {
     public Root()
@@ -13,6 +15,7 @@ public class Root : Entity<Guid>, IAggregateRoot<Guid>
         Id = id;
         Value = value;
         Children = children;
+        AddDomainEvent(new RootCreatedEvent(id, DateTimeOffset.Now));
     }
 
     public override Guid Id { get; protected init; }
@@ -59,4 +62,17 @@ public class MaterializedRoot : Entity<int>
     public string Value { get; set; }
 
     public string LastestChildValue { get; set; }
+}
+
+public class CompletelyNonRelated : Entity<int>
+{
+    public CompletelyNonRelated(int id, DateTime createdAt)
+    {
+        this.Id = id;
+        this.CreatedAt = createdAt;
+    }
+
+    public override int Id { get; protected init; }
+
+    public DateTime CreatedAt { get; set; }
 }
