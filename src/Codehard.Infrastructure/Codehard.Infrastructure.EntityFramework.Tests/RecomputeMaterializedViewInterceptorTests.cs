@@ -12,8 +12,7 @@ namespace Codehard.Infrastructure.EntityFramework.Tests;
 
 public class RecomputeMaterializedViewInterceptorTests
 {
-    public class InterceptorStub<TEntity, TEvent> : RecomputeMaterializedViewInterceptor<TEntity, TEvent>
-        where TEntity : class, IEntity
+    public class InterceptorStub<TEvent> : RecomputeMaterializedViewInterceptor<TEvent>
         where TEvent : IDomainEvent
     {
         public int RecomputeTimes { get; private set; }
@@ -34,7 +33,7 @@ public class RecomputeMaterializedViewInterceptorTests
     public async Task WhenExpectedEventOccur_ShouldRecompute()
     {
         // Arrange
-        var interceptor = new InterceptorStub<Root, RootCreatedEvent>();
+        var interceptor = new InterceptorStub<RootCreatedEvent>();
 
         var assembly = Assembly.GetExecutingAssembly();
         var options = new DbContextOptionsBuilder<TestDbContext>()

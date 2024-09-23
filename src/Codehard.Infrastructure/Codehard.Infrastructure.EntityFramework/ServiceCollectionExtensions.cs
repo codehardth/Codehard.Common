@@ -22,19 +22,18 @@ public static class DbContextOptionsBuilderExtensions
     }
 
     /// <summary>
-    /// Registers an interceptor to recompute the Materialized View when given event published.
+    /// Registers an interceptor to recompute the Materialized View when the given event published.
     /// </summary>
     /// <param name="optionsBuilder"></param>
     /// <param name="refreshMaterializedViewQuery"></param>
-    /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    public static DbContextOptionsBuilder AddRecomputeMaterializedViewInterceptor<TEntity, TEvent>(
+    public static DbContextOptionsBuilder AddRecomputeMaterializedViewInterceptor<TEvent>(
         this DbContextOptionsBuilder optionsBuilder,
-        string refreshMaterializedViewQuery) where TEvent : IDomainEvent
-        where TEntity : class, IEntity
+        string refreshMaterializedViewQuery) 
+        where TEvent : IDomainEvent
     {
         return optionsBuilder.AddInterceptors(
-            new RecomputeMaterializedViewInterceptor<TEntity, TEvent>(refreshMaterializedViewQuery));
+            new RecomputeMaterializedViewInterceptor<TEvent>(refreshMaterializedViewQuery));
     }
 }
