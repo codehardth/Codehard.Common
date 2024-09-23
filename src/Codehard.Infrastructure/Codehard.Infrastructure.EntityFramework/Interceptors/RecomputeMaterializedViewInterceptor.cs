@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Codehard.Infrastructure.EntityFramework.Interceptors;
 
-public class RecomputeMaterializedViewInterceptor<TEntity, TEvent> : SaveChangesInterceptor
-    where TEntity : class, IEntity
+public class RecomputeMaterializedViewInterceptor<TEvent> : SaveChangesInterceptor
     where TEvent : IDomainEvent
 {
     public RecomputeMaterializedViewInterceptor(string materializedViewRefreshQuery)
@@ -25,7 +24,10 @@ public class RecomputeMaterializedViewInterceptor<TEntity, TEvent> : SaveChanges
         }
 
         var events =
-            context.ChangeTracker.Entries<TEntity>().SelectMany(e => e.Entity.Events);
+            context.ChangeTracker.Entries()
+                   .Where(e => e.Entity is IEntity)
+                   .Select(e => e.Entity as IEntity)
+                   .SelectMany(e => e!.Events);
 
         if (events.All(e => e.GetType() != typeof(TEvent)))
         {
@@ -50,7 +52,9 @@ public class RecomputeMaterializedViewInterceptor<TEntity, TEvent> : SaveChanges
         }
 
         var events =
-            context.ChangeTracker.Entries<TEntity>().SelectMany(e => e.Entity.Events);
+            context.ChangeTracker.Entries().Where(e => e.Entity is IEntity)
+                   .Select(e => e.Entity as IEntity)
+                   .SelectMany(e => e!.Events);
 
         if (events.All(e => e.GetType() != typeof(TEvent)))
         {
