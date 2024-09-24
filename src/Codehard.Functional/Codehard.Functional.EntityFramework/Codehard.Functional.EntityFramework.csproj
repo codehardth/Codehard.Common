@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.0</Version>
+        <Version>3.0.1</Version>
         <Description>A functional extensions for Entity Framework.</Description>
         <PackageProjectUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</PackageProjectUrl>
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</RepositoryUrl>
