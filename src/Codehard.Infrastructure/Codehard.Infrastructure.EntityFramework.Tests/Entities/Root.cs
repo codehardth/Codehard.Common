@@ -18,7 +18,7 @@ public class Root : Entity<Guid>, IAggregateRoot<Guid>
         AddDomainEvent(new RootCreatedEvent(id, DateTimeOffset.Now));
     }
 
-    public override Guid Id { get; protected init; }
+    public override Guid Id { get; init; }
 
     public string Value { get; set; }
 
@@ -37,7 +37,7 @@ public class Child : Entity<int>
         Value = value;
     }
 
-    public override int Id { get; protected init; }
+    public override int Id { get; init; }
 
     public string Value { get; set; }
 }
@@ -55,7 +55,7 @@ public class MaterializedRoot : Entity<int>
         LastestChildValue = lastestChildValue;
     }
 
-    public override int Id { get; protected init; }
+    public override int Id { get; init; }
 
     public Guid RootId { get; set; }
 
@@ -72,7 +72,7 @@ public class CompletelyNonRelated : Entity<int>
         this.CreatedAt = createdAt;
     }
 
-    public override int Id { get; protected init; }
+    public override int Id { get; init; }
 
     public DateTime CreatedAt { get; set; }
 }
