@@ -7,6 +7,9 @@ namespace Codehard.Common.AspNetCore.Attributes;
 /// </summary>
 public sealed class NonProductionAttribute : DisallowOnEnvironmentAttribute
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NonProductionAttribute"/> class.
+    /// </summary>
     public NonProductionAttribute() : base(Environments.Production)
     {
     }

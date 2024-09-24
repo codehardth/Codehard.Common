@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Codehard.Common.AspNetCore.Middlewares;
 
+/// <summary>
+/// Middleware for logging HTTP requests and responses.
+/// </summary>
 public class RequestResponseLoggingMiddleware
 {
     private readonly RequestDelegate next;
@@ -19,6 +22,11 @@ public class RequestResponseLoggingMiddleware
         "refreshtoken",
     };
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RequestResponseLoggingMiddleware"/> class.
+    /// </summary>
+    /// <param name="next">The next middleware in the pipeline.</param>
+    /// <param name="logger">The logger to log request and response information.</param>
     public RequestResponseLoggingMiddleware(
         RequestDelegate next,
         ILogger<RequestResponseLoggingMiddleware> logger)
@@ -27,6 +35,11 @@ public class RequestResponseLoggingMiddleware
         this.logger = logger;
     }
 
+    /// <summary>
+    /// Invokes the middleware to log the request and response.
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task Invoke(HttpContext context)
     {
         var request = await FormatRequest(context.Request);

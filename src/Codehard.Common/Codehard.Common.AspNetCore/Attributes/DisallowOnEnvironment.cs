@@ -12,11 +12,19 @@ public class DisallowOnEnvironmentAttribute : ActionFilterAttribute
 {
     private readonly string environmentName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DisallowOnEnvironmentAttribute"/> class.
+    /// </summary>
+    /// <param name="environmentName">The name of the environment in which the action is not allowed to execute.</param>
     public DisallowOnEnvironmentAttribute(string environmentName)
     {
         this.environmentName = environmentName;
     }
 
+    /// <summary>
+    /// Called before the action method is executed.
+    /// </summary>
+    /// <param name="context">The action executing context.</param>
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         var environment = context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
