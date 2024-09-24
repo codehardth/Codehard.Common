@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Codehard.Infrastructure.EntityFramework.Interceptors;
 
+[Obsolete("This class has been superseded by DomainEventInterceptor")]
 public class RecomputeMaterializedViewInterceptor<TEvent> : SaveChangesInterceptor
     where TEvent : IDomainEvent
 {
