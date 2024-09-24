@@ -32,7 +32,7 @@ public class ModelBuilderExtensionsTests
         var actualEntityTypes = context.Model.GetEntityTypes().Count();
         
         // +2 because of the Money type and the Nullable Money type
-        Assert.Equal(expectedEntityTypes + 2, actualEntityTypes);
+        Assert.Equal(expectedEntityTypes + 3, actualEntityTypes);
 
         static SqliteConnection CreateInMemoryDatabase()
         {

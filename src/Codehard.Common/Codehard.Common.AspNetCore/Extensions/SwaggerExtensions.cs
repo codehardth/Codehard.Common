@@ -4,6 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Codehard.Common.AspNetCore.Extensions;
 
+/// <summary>
+/// Provides extension methods for configuring Swagger in an ASP.NET Core application.
+/// </summary>
 public static class SwaggerExtensions
 {
     /// <summary>
