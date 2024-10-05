@@ -79,7 +79,7 @@ public record HttpResultError : Error, ISerializable
     }
 
     /// <inheritdoc/>
-    public override bool Is<E>()
+    public override bool IsType<E>()
     {
         return this.Exception
             .Match(

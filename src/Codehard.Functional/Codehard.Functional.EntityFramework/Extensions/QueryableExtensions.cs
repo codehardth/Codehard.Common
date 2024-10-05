@@ -169,13 +169,13 @@ public static class QueryableExtensions
     /// An Aff&lt;TSource&gt; that represents the asynchronous operation.
     /// The Aff monad wraps the result, which is the only element of the sequence satisfying the specified condition.
     /// </returns>
-    public static Aff<TSource> SingleOrFailAff<TSource>(
+    public static Eff<TSource> SingleOrFailEff<TSource>(
         this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate,
         CancellationToken ct = default)
     {
         return
-            Aff(async () =>
+            liftEff(async () =>
                 await source.SingleAsync(predicate, ct));
     }
     
