@@ -31,7 +31,7 @@ namespace Codehard.Functional.FSharp.Tests
             var fin = fSharpResult.ToFin(ResultType.mapError);
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => fin.ThrowIfFail());
         }
         
@@ -60,7 +60,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -89,7 +89,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = await aff.RunAsync();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -118,7 +118,7 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
