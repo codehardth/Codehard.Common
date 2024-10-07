@@ -42,7 +42,7 @@ namespace Codehard.Functional.FSharp
         }
 
         /// <summary>
-        /// Convert Task of F# Result to Aff
+        /// Convert Task of F# Result to Eff
         /// </summary>
         public static Eff<T> ToEff<T, TError>(
             this Task<FSharpResult<T, TError>> resultTask,

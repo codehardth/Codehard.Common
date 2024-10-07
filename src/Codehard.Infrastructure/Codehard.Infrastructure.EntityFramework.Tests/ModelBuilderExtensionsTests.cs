@@ -14,7 +14,9 @@ public class ModelBuilderExtensionsTests
         var options = new DbContextOptionsBuilder<TestDbContext>()
             .UseSqlite(CreateInMemoryDatabase())
             .Options;
+        
         var assembly = Assembly.GetExecutingAssembly();
+        
         var expectedEntityTypes =
             assembly
                 .GetTypes()

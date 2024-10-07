@@ -350,7 +350,7 @@ public static class EffectExtensions
 
     #endregion
 
-    #region Aff<Option<A>>
+    #region Eff<Option<A>>
 
     public static Eff<A> MapNoneToOK<A>(this Eff<Option<A>> ma, string message = "")
         => ma.Bind(opt => opt.ToEffWithFailToOK(message));

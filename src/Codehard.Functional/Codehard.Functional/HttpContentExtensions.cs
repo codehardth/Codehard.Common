@@ -47,12 +47,12 @@ public static class FunctionalHttpContentExtensions
     }
     
     /// <summary>
-    /// Reads the HTTP content as an optional object in an asynchronous manner and wraps the result in an Aff monad.
+    /// Reads the HTTP content as an optional object in an asynchronous manner and wraps the result in an Eff monad.
     /// </summary>
     /// <typeparam name="T">The type of the object to deserialize from the HTTP content.</typeparam>
     /// <param name="httpContent">The HTTP content to read from.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-    /// <returns>An Aff monad containing an Option of the deserialized object.</returns>
+    /// <returns>An Eff monad containing an Option of the deserialized object.</returns>
     public static Eff<Option<T>> ReadAsOptionalObjectEff<T>(
         this HttpContent httpContent,
         CancellationToken cancellationToken = default)

@@ -12,7 +12,7 @@ namespace Codehard.Functional.FSharp;
 public static class Prelude
 {
     /// <summary>
-    /// Wrap execution that returns Task of F# Result in Aff
+    /// Wrap execution that returns Task of F# Result in Eff
     /// </summary>
     public static Eff<T> Eff<T, TError>(
         Func<Task<FSharpResult<T, TError>>> resultTaskF,
@@ -27,9 +27,9 @@ public static class Prelude
     }
     
     /// <summary>
-    /// Wrap execution that returns Task of F# Unit in Aff
+    /// Wrap execution that returns Task of F# Unit in Eff
     /// </summary>
-    public static Eff<Unit> Aff<TError>(
+    public static Eff<Unit> Eff<TError>(
         Func<Task<FSharpResult<Microsoft.FSharp.Core.Unit, TError>>> resultTaskF,
         Func<TError, Error> errorMapper)
     {

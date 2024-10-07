@@ -48,10 +48,10 @@ namespace Codehard.Functional.Logger.Tests
 
             Mock<ILogger> mockedLogger = new Mock<ILogger>();
 
-            var aff = FailEff<Unit>(Error.New(failMessage));
+            var eff = FailEff<Unit>(Error.New(failMessage));
 
             // Act
-            _ = await aff.WithLog(mockedLogger.Object).RunAsync();
+            _ = await eff.WithLog(mockedLogger.Object).RunAsync();
 
             // Assert
             VerifyLogLevel(LogLevel.Information, 1);
@@ -76,10 +76,10 @@ namespace Codehard.Functional.Logger.Tests
             // Arrange
             Mock<ILogger> mockedLogger = new Mock<ILogger>();
 
-            var aff = SuccessEff(unit);
+            var eff = SuccessEff(unit);
 
             // Act
-            _ = await aff.WithLog(mockedLogger.Object).RunAsync();
+            _ = await eff.WithLog(mockedLogger.Object).RunAsync();
 
             // Assert
             VerifyLogLevel(LogLevel.Information, 2);

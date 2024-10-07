@@ -227,7 +227,7 @@ public static class OptionExtensions
     /// <param name="optional">The Option&lt;T&gt; to match.</param>
     /// <param name="ifSomeAsync">The asynchronous function to execute if the Option contains a value. The function takes the value as a parameter and returns a Task of type T.</param>
     /// <param name="ifNoneAsync">The asynchronous function to execute if the Option does not contain a value. The function returns a Task of type T.</param>
-    /// <returns>An Aff&lt;T&gt; monad representing the result of the executed function.</returns>
+    /// <returns>An Eff&lt;T&gt; monad representing the result of the executed function.</returns>
     public static Eff<T> MatchAsEff<T>(
         this Option<T> optional,
         Func<T, Task<T>> ifSomeAsync,
