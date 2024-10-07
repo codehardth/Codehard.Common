@@ -17,12 +17,13 @@ public static class Commons
         bool @override = true)
         => ma.MapFail(err =>
         {
-            var message = messageOpt.IfNone(string.Empty);
+            var message = messageOpt.IfNone(code.ToString);
             
             return
                 err switch
                 {
                     HttpResultError hre when !@override => hre,
+                    //_ => new Expected(message, (int)code, HttpResultError.New(code, message, errorCode, data, err))
                     _ => 
                         HttpResultError.New(
                             code, message, errorCode, data, err),

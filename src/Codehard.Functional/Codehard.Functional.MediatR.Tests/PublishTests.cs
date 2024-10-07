@@ -14,7 +14,7 @@ public class PublishTests
     }
     
     [Fact]
-    public async Task WhenPublishMessage_ShouldNotifidEachHandlersCorrectly()
+    public async Task WhenPublishMessage_ShouldNotifiedEachHandlersCorrectly()
     {
         // Arrange
         var builder = new StringBuilder();
@@ -24,8 +24,8 @@ public class PublishTests
         // Act
         var mediator = container.GetInstance<IMediator>();
 
-        await mediator.PublishAff(new Ping { Message = "Ping" })
-                      .RunAsync();
+        _ = await mediator.PublishEff(new Ping { Message = "Ping" })
+                          .RunAsync();
 
         // Assert
         var result = builder.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);

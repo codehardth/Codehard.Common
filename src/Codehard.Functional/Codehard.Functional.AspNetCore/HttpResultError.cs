@@ -79,33 +79,26 @@ public record HttpResultError : Error, ISerializable
     }
 
     /// <inheritdoc/>
-    public override bool IsType<E>()
-    {
-        return this.Exception
-            .Match(
-                Some: ex => ex is E,
-                None: () => false);
-    }
-
-    /// <inheritdoc/>
     public override ErrorException ToErrorException() =>
-        new ExceptionalException(this.Message, this.Code);
+        IsExceptional
+            ? new WrappedErrorExceptionalException(this)
+            : new WrappedErrorExpectedException(this);
 
     /// <summary>
-    /// Create an 'HttpResultError' error.
+    /// Creates a new instance of <see cref="HttpResultError"/>.
     /// </summary>
-    /// <param name="statusCode"></param>
-    /// <param name="message"></param>
-    /// <param name="errorCode"></param>
-    /// <param name="data"></param>
-    /// <param name="error"></param>
-    /// <returns></returns>
+    /// <param name="statusCode">The HTTP status code associated with the error.</param>
+    /// <param name="message">The error message.</param>
+    /// <param name="errorCode">An optional error code.</param>
+    /// <param name="data">Optional additional data related to the error.</param>
+    /// <param name="inner">An optional inner error.</param>
+    /// <returns>A new instance of <see cref="HttpResultError"/>.</returns>
     public static HttpResultError New(
         HttpStatusCode statusCode,
         string message,
         Option<string> errorCode = default,
         Option<object> data = default,
-        Option<Error> error = default)
+        Option<Error> inner = default)
     {
         return
             new HttpResultError(
@@ -113,6 +106,6 @@ public record HttpResultError : Error, ISerializable
                 message,
                 errorCode,
                 data,
-                error);
+                inner);
     }
 }

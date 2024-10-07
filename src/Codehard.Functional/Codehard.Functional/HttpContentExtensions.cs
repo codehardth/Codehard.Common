@@ -53,7 +53,7 @@ public static class FunctionalHttpContentExtensions
     /// <param name="httpContent">The HTTP content to read from.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>An Aff monad containing an Option of the deserialized object.</returns>
-    public static Eff<Option<T>> ReadAsOptionalObjectAff<T>(
+    public static Eff<Option<T>> ReadAsOptionalObjectEff<T>(
         this HttpContent httpContent,
         CancellationToken cancellationToken = default)
     {

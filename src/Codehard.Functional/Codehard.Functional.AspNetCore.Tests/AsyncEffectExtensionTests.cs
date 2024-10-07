@@ -11,7 +11,7 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingHttpStatusCode()
     {
         // Arrange
-        var eff = liftEff(() => ValueTask.FromException<int>(new Exception("Something went wrong")));
+        var eff = liftEff(async () => await ValueTask.FromException<int>(new Exception("Something went wrong")));
 
         // Act
         var res =
@@ -23,6 +23,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -37,7 +38,7 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingErrorMessage()
     {
         // Arrange
-        var eff = liftEff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+        var eff = FailEff<int>(Error.New("Something went wrong"));
 
         // Act
         var res =
@@ -49,6 +50,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -61,7 +63,7 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingObject()
     {
         // Arrange
-        var aff = liftEff(() => ValueTask.FromException<int>(new Exception("Something went crazy")));
+        var aff = liftEff(async () => await ValueTask.FromException<int>(new Exception("Something went crazy")));
 
         // Act
         var res =
@@ -73,6 +75,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -85,7 +88,10 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerErrorWithMessageFunc_ShouldHaveHttpResultErrorWithCorrespondingMessage()
     {
         // Arrange
-        var aff = liftEff(() => ValueTask.FromException<int>(new Exception("Something went crazy")));
+        var aff =
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something went crazy")));
 
         // Act
         var res =
@@ -97,6 +103,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -108,7 +115,9 @@ public class AsyncEffectExtensionTests
     {
         // Arrange
         var aff =
-            liftEff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something not right")));
 
         // Act
         var res =
@@ -121,6 +130,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -131,7 +141,10 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToOkWithNotOverrideOptionOnAlreadyMapFailInternalServerError_ShouldNotOverrideInternalServerError()
     {
         // Arrange
-        var aff = liftEff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+        var aff =
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something not right")));
 
         // Act
         var res =
@@ -144,6 +157,7 @@ public class AsyncEffectExtensionTests
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;

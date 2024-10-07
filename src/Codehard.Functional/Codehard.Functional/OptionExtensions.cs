@@ -188,7 +188,7 @@ public static class OptionExtensions
     /// <param name="optional">The Option to check for a value.</param>
     /// <param name="ifSome">The function to execute if the Option contains a value. The function takes the value as a parameter and returns an Eff monad representing a unit of work.</param>
     /// <returns>An Eff monad representing a unit of work. If the Option contains a value, the monad represents the work defined by the function. If the Option does not contain a value, the monad represents a unit of work that does nothing.</returns>
-    public static Eff<Unit> IfSomeAsyncAsAff<T>(
+    public static Eff<Unit> IfSomeAsyncAsEff<T>(
         this Option<T> optional, Func<T, Task<Unit>> ifSome)
         => optional.Match(
             Some: val => liftEff(async () => await ifSome(val)),

@@ -107,7 +107,7 @@ namespace Codehard.Functional.Logger.Tests
             var error = HttpResultError.New(
                 HttpStatusCode.InternalServerError,
                 "Outer error",
-                error: innerError);
+                inner: innerError);
 
             var mockedLogger = new Mock<ILogger>();
 
