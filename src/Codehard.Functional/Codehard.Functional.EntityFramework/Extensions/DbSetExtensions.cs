@@ -21,7 +21,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, TEntity entity)
         where TEntity : class
     {
-        return Eff(() => dbSet.Add(entity));
+        return liftEff(() => dbSet.Add(entity));
     }
     
     /// <summary>
@@ -35,7 +35,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.AddRange(entities);
 
@@ -54,7 +54,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.AddRange(entities);
 
@@ -73,7 +73,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, TEntity entity)
         where TEntity : class
     {
-        return Eff(() => dbSet.Update(entity));
+        return liftEff(() => dbSet.Update(entity));
     }
     
     /// <summary>
@@ -87,7 +87,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.UpdateRange(entities);
 
@@ -106,7 +106,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.UpdateRange(entities);
 
@@ -125,7 +125,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, TEntity entity)
         where TEntity : class
     {
-        return Eff(() => dbSet.Remove(entity));
+        return liftEff(() => dbSet.Remove(entity));
     }
     
     /// <summary>
@@ -139,7 +139,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.RemoveRange(entities);
 
@@ -158,7 +158,7 @@ public static class DbSetExtensions
         this DbSet<TEntity> dbSet, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbSet.RemoveRange(entities);
 

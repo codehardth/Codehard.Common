@@ -4,12 +4,12 @@ using LanguageExt.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Codehard.Functional.MassTransit.CombinedAffTypes
+namespace Codehard.Functional.MassTransit.CombinedEffTypes
 {
     /// <summary>
     /// Aff pair with Masstransit ConsumeContext
     /// </summary>
-    public readonly struct AffWithConsumeContext<TRes>
+    public readonly struct EffWithConsumeContext<TRes>
     {
         private readonly Eff<TRes> effect;
 
@@ -18,7 +18,7 @@ namespace Codehard.Functional.MassTransit.CombinedAffTypes
         /// <summary>
         /// Construct Aff with ConsumeContext
         /// </summary>
-        public AffWithConsumeContext(Eff<TRes> effect, ConsumeContext consumeContext)
+        public EffWithConsumeContext(Eff<TRes> effect, ConsumeContext consumeContext)
         {
             this.effect = effect;
             this.consumeContext = consumeContext;

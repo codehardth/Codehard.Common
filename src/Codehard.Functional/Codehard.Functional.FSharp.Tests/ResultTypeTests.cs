@@ -65,28 +65,28 @@ namespace Codehard.Functional.FSharp.Tests
         }
         
         [Fact]
-        public async Task WhenConvertTaskOfOkResultToAff_ShouldRunToSuccess()
+        public async Task WhenConvertTaskOfOkResultToEff_ShouldRunToSuccess()
         {
             // Arrange
             var fSharpResult = Task.FromResult(ResultType.getOkResult());
 
             // Act
-            var aff = fSharpResult.ToEff(ResultType.mapError);
-            var result = (await aff.RunAsync()).ThrowIfFail();
+            var eff = fSharpResult.ToEff(ResultType.mapError);
+            var result = (await eff.RunAsync()).ThrowIfFail();
 
             // Assert
             Assert.Equal(0, result);
         }
 
         [Fact]
-        public async Task WhenConvertTaskOfErrorResultToAff_ShouldRunToFail()
+        public async Task WhenConvertTaskOfErrorResultToEff_ShouldRunToFail()
         {
             // Arrange
             var fSharpResult = Task.FromResult(ResultType.getErrorResult());
 
             // Act
-            var aff = fSharpResult.ToEff(ResultType.mapError);
-            var result = await aff.RunAsync();
+            var eff = fSharpResult.ToEff(ResultType.mapError);
+            var result = await eff.RunAsync();
 
             // Assert
             Assert.Throws<WrappedErrorExpectedException>(
@@ -123,10 +123,10 @@ namespace Codehard.Functional.FSharp.Tests
         }
         
         [Fact]
-        public async Task WhenWrapTaskOfUnitOkResultInAff_ShouldRunToSuccess()
+        public async Task WhenWrapTaskOfUnitOkResultInEff_ShouldRunToSuccess()
         {
             // Act
-            var eff = Aff(
+            var eff = Eff(
                 () => Task.FromResult(ResultType.getUnitOkResult()),
                 ResultType.mapError);
             

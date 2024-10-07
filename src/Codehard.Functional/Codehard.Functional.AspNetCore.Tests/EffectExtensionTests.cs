@@ -92,11 +92,11 @@ public class EffectExtensionTests
     public void WhenMapFailToInternalServerErrorWithMessageFunc_ShouldHaveHttpResultErrorWithCorrespondingMessage()
     {
         // Arrange
-        var aff = FailEff<int>(new Exception("Something went crazy"));
+        var eff = FailEff<int>(new Exception("Something went crazy"));
 
         // Act
         var res =
-            aff.MapFailToInternalServerError(
+            eff.MapFailToInternalServerError(
                     err => $"The error message is {err.Message}")
                .Run();
 

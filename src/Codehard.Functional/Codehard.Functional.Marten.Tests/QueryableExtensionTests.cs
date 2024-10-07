@@ -9,7 +9,7 @@ namespace Codehard.Functional.Marten.Tests;
 public class QueryableExtensionTests
 {
     [Fact]
-    public async Task WhenQueryWithSingleOrNoneAff_ShouldReturnResultCorrectly()
+    public async Task WhenQueryWithSingleOrNoneEff_ShouldReturnResultCorrectly()
     {
         // Arrange
         var store = DocumentStore
@@ -17,9 +17,7 @@ public class QueryableExtensionTests
         
         store.Options.AutoCreateSchemaObjects = AutoCreate.All;
         store.Options.DatabaseSchemaName = "sch" + Guid.NewGuid().ToString().Replace("-", string.Empty);
-        store.Options.UseDefaultSerialization(
-            serializerType: SerializerType.SystemTextJson,
-            enumStorage: EnumStorage.AsString);
+        store.Options.UseSystemTextJsonForSerialization(enumStorage: EnumStorage.AsString);
         
         var session = store.IdentitySession();
         var id = Guid.NewGuid();
@@ -42,7 +40,7 @@ public class QueryableExtensionTests
                 store.QuerySession()
                      .Query<EntityA>()
                      .Where(a => a.Id == id)
-                     .SingleOrNoneAff()
+                     .SingleOrNoneEff()
                      .RunAsync();
         
         // Assert

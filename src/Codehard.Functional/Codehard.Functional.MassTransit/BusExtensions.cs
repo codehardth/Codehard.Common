@@ -7,9 +7,9 @@ namespace MassTransit;
 public static class BusExtensions
 {
     /// <summary>
-    /// Publish message as an Async Effect
+    /// Publish message as an Effect
     /// </summary>
-    public static Eff<Unit> PublishAsAff<T>(this IBus bus, T message)
+    public static Eff<Unit> PublishAsEff<T>(this IBus bus, T message)
         where T : class
     {
         return liftEff(() => bus.Publish(message).ToUnit());

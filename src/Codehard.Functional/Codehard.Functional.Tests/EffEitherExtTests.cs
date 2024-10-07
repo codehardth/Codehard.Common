@@ -1,6 +1,6 @@
 namespace Codehard.Functional.Tests;
 
-public class AffEitherExtTests
+public class EffEitherExtTests
 {
     [Fact]
     public void WhenCallMapNoneToLeftOnEffOfNone_ShouldGetEffOfLeft()
@@ -75,14 +75,14 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenGuardEitherAsyncOnAffOfRightWithFalsePredicateAndLeftAsync_ShouldGetAffOfLeft()
+    public async Task WhenGuardEitherAsyncOnEffOfRightWithFalsePredicateAndLeftAsync_ShouldGetEffOfLeft()
     {
         // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
+        var eff = SuccessEff(Right<string, int>(1));
 
         // Act
         var result =
-            (await aff.GuardEitherAsync(
+            (await eff.GuardEitherAsync(
                     i => i > 2,
                     _ => ValueTask.FromResult("Something wrong"))
                 .RunAsync())
@@ -94,14 +94,14 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenGuardEitherAsyncOnAffOfRightWithFalsePredicateAsyncAndLeftAsync_ShouldGetAffOfLeft()
+    public async Task WhenGuardEitherAsyncOnEffOfRightWithFalsePredicateAsyncAndLeftAsync_ShouldGetEffOfLeft()
     {
         // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
+        var eff = SuccessEff(Right<string, int>(1));
 
         // Act
         var result =
-            (await aff.GuardEitherAsync(
+            (await eff.GuardEitherAsync(
                     i => ValueTask.FromResult(i > 2),
                     _ => ValueTask.FromResult("Something wrong"))
                 .RunAsync())
@@ -113,32 +113,15 @@ public class AffEitherExtTests
     }
 
     [Fact]
-    public async Task WhenMapRightOnAffOfRight_ShouldMapToNewValue()
+    public async Task WhenMapRightOnEffOfRight_ShouldMapToNewValue()
     {
         // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
+        var eff = SuccessEff(Right<string, int>(1));
 
         // Act
         var result =
-            (await aff.MapRight(i => i + 1)
+            (await eff.MapRight(i => i + 1)
                       .RunAsync())
-            .ThrowIfFail();
-
-        // Assert
-        Assert.True(result.IsRight);
-        Assert.Equal(2, result.RightSpan()[0]);
-    }
-    
-    [Fact]
-    public async Task WhenMapRightAsyncOnAffOfRight_ShouldMapToNewValue()
-    {
-        // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
-
-        // Act
-        var result =
-            (await aff.MapRightAsync(i => ValueTask.FromResult(i + 1))
-                .RunAsync())
             .ThrowIfFail();
 
         // Assert
@@ -164,16 +147,16 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenDoIfRightOnAffOfRight_ShouldDoAction()
+    public async Task WhenDoIfRightOnEffOfRight_ShouldDoAction()
     {
         // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
+        var eff = SuccessEff(Right<string, int>(1));
         var number = 0;
         var action = new Action<int>(i => number = i);
         
         // Act
         var result =
-            (await aff.DoIfRight(action)
+            (await eff.DoIfRight(action)
                 .RunAsync())
             .ThrowIfFail();
 
@@ -184,15 +167,15 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenDoIfRightOnAffOfLeft_ShouldNotDoAction()
+    public async Task WhenDoIfRightOnEffOfLeft_ShouldNotDoAction()
     {
         // Arrange
-        var aff = SuccessEff(Left<string, int>("Something wrong"));
+        var eff = SuccessEff(Left<string, int>("Something wrong"));
         var number = 0;
         var action = new Action<int>(i => number = i);
         
         // Act
-        _ = (await aff.DoIfRight(action)
+        _ = (await eff.DoIfRight(action)
                 .RunAsync())
             .ThrowIfFail();
 
@@ -201,10 +184,10 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenDoIfRightAsyncOnAffOfRight_ShouldDoAction()
+    public async Task WhenDoIfRightAsyncOnEffOfRight_ShouldDoAction()
     {
         // Arrange
-        var aff = SuccessEff(Right<string, int>(1));
+        var eff = SuccessEff(Right<string, int>(1));
         var number = 0;
         var actionFunc = new Func<int, ValueTask<Unit>>(
             i =>
@@ -216,7 +199,7 @@ public class AffEitherExtTests
         
         // Act
         _ =
-            (await aff.DoIfRightAsync(actionFunc)
+            (await eff.DoIfRightAsync(actionFunc)
                 .RunAsync())
             .ThrowIfFail();
 
@@ -225,10 +208,10 @@ public class AffEitherExtTests
     }
     
     [Fact]
-    public async Task WhenDoIfRightAsyncOnAffOfLeft_ShouldNotDoAction()
+    public async Task WhenDoIfRightAsyncOnEffOfLeft_ShouldNotDoAction()
     {
         // Arrange
-        var aff = SuccessEff(Left<string, int>("Something wrong"));
+        var eff = SuccessEff(Left<string, int>("Something wrong"));
         var number = 0;
         var actionFunc = new Func<int, ValueTask<Unit>>(
             i =>
@@ -240,7 +223,7 @@ public class AffEitherExtTests
         
         // Act
         _ =
-            (await aff.DoIfRightAsync(actionFunc)
+            (await eff.DoIfRightAsync(actionFunc)
                 .RunAsync())
             .ThrowIfFail();
 

@@ -4,12 +4,12 @@
 namespace Codehard.Functional;
 
 /// <summary>
-/// Provides a collection of utility methods to work with Aff&lt;Option&gt; monad and parallel execution of effects.
+/// Provides a collection of utility methods to work with Eff&lt;Option&gt; monad and parallel execution of effects.
 /// </summary>
 public static class Prelude
 {
     /// <summary>
-    /// Lift an asynchronous effect into the Aff&lt;Option&gt; monad
+    /// Lift an asynchronous effect into the Eff&lt;Option&gt; monad
     /// </summary>
     public static Eff<Option<A>> EffOption<A>(Func<ValueTask<A?>> f)
         where A : class
@@ -18,7 +18,7 @@ public static class Prelude
     }
 
     /// <summary>
-    /// Lift an asynchronous effect into the Aff&lt;Option&gt; monad
+    /// Lift an asynchronous effect into the Eff&lt;Option&gt; monad
     /// </summary>
     public static Eff<Option<A>> EffOption<A>(Func<ValueTask<A?>> f)
         where A : struct
@@ -47,12 +47,12 @@ public static class Prelude
     /// <summary>
     /// Run the effects in parallel, wait for them all to finish, then discard all the results into a single unit
     /// </summary>
-    /// <param name="affs"></param>
+    /// <param name="effs"></param>
     /// <returns></returns>
-    public static Eff<Unit> IterParallel<A>(params Eff<A>[] affs)
+    public static Eff<Unit> IterParallel<A>(params Eff<A>[] effs)
     {
         return
-            liftEff(async () => await Task.WhenAll(affs.Select(aff => aff.Run().AsTask())))
+            liftEff(async () => await Task.WhenAll(effs.Select(eff => eff.Run().AsTask())))
                 .Bind(fins =>
                     fins.Any(f => f.IsFail)
                         ? FailEff<Unit>(
@@ -64,7 +64,7 @@ public static class Prelude
     }
     
     /// <summary>
-    /// Wrap Task of no returned result in Aff&lt;Unit&gt;
+    /// Wrap Task of no returned result in Eff&lt;Unit&gt;
     /// </summary>
     public static Eff<Unit> EffUnit(Func<ValueTask> f)
     {
