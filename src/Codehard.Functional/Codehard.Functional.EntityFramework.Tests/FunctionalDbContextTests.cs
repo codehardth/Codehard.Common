@@ -42,12 +42,12 @@ public class FunctionalDbContextTests
 
         _ = await effDbContext.AddAsync(entity)
             .Bind(_ => effDbContext.SaveChangesAsync())
-            .RunUnit();
+            .RunAsync();
 
         // Assert
         var result =
             await effDbContext.FindAsync<EntityA>(new object[] { entityId })
-                .Run();
+                .RunAsync();
 
         var entityOpt = result.ThrowIfFail();
         

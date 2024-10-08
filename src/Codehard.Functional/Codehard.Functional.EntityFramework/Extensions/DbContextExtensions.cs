@@ -16,22 +16,10 @@ public static class DbContextExtensions
     /// <param name="dbContext">The DbContext instance.</param>
     /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
-    public static Aff<int> SaveChangesAff(
+    public static Eff<int> SaveChangesAsyncEff(
         this DbContext dbContext, CancellationToken ct = default)
     {
-        return
-            Aff(async () => await dbContext.SaveChangesAsync(ct));
-    }
-    
-    /// <summary>
-    /// Synchronously saves all changes made in this context to the database.
-    /// </summary>
-    /// <param name="dbContext">The DbContext instance.</param>
-    /// <returns>An Eff&lt;int&gt; that represents the synchronous save operation. The result contains the number of state entries written to the database.</returns>
-    public static Eff<int> SaveChangesEff(this DbContext dbContext)
-    {
-        return
-            Eff(() => dbContext.SaveChanges());
+        return liftEff(() => dbContext.SaveChangesAsync(ct));
     }
     
     /// <summary>
@@ -45,8 +33,7 @@ public static class DbContextExtensions
         this DbContext dbContext, params object[] keyValues)
         where TEntity : class
     {
-        return
-            Eff(() => Optional(dbContext.Find<TEntity>(keyValues)));
+        return liftEff(() => Optional(dbContext.Find<TEntity>(keyValues)));
     }
     
     /// <summary>
@@ -55,13 +42,12 @@ public static class DbContextExtensions
     /// <param name="dbContext">The DbContext instance.</param>
     /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
     /// <typeparam name="TEntity">The type of the entity to be found.</typeparam>
-    /// <returns>An Aff&lt;Option&lt;TEntity&gt;&gt; that represents the asynchronous find operation. The result contains the entity found, or None if not found.</returns>
-    public static Aff<Option<TEntity>> FindAff<TEntity>(
+    /// <returns>An Eff&lt;Option&lt;TEntity&gt;&gt; that represents the asynchronous find operation. The result contains the entity found, or None if not found.</returns>
+    public static Eff<Option<TEntity>> FindAsyncEff<TEntity>(
         this DbContext dbContext, params object?[]? keyValues)
         where TEntity : class
     {
-        return
-            Aff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues)));
+        return liftEff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues)));
     }
     
     /// <summary>
@@ -71,28 +57,26 @@ public static class DbContextExtensions
     /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
     /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <typeparam name="TEntity">The type of the entity to be found.</typeparam>
-    /// <returns>An Aff&lt;Option&lt;TEntity&gt;&gt; that represents the asynchronous find operation. The result contains the entity found, or None if not found.</returns>
-    public static Aff<Option<TEntity>> FindAff<TEntity>(
+    /// <returns>An Eff&lt;Option&lt;TEntity&gt;&gt; that represents the asynchronous find operation. The result contains the entity found, or None if not found.</returns>
+    public static Eff<Option<TEntity>> FindAsyncEff<TEntity>(
         this DbContext dbContext, object?[]? keyValues, CancellationToken ct)
         where TEntity : class
     {
-        return
-            Aff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues, ct)));
+        return liftEff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues, ct)));
     }
 
     public static Eff<EntityEntry<TEntity>> AddEff<TEntity>(
         this DbContext dbContext, TEntity entity)
         where TEntity : class
     {
-        return
-            Eff(() => dbContext.Add(entity));
+        return liftEff(() => dbContext.Add(entity));
     }
     
     public static Eff<Unit> AddRangeEff<TEntity>(
         this DbContext dbContext, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.AddRange(entities);
 
@@ -111,7 +95,7 @@ public static class DbContextExtensions
         this DbContext dbContext, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.AddRange(entities);
 
@@ -131,7 +115,7 @@ public static class DbContextExtensions
         where TEntity : class
     {
         return
-            Eff(() => dbContext.Update(entity));
+            liftEff(() => dbContext.Update(entity));
     }
     
     /// <summary>
@@ -145,7 +129,7 @@ public static class DbContextExtensions
         this DbContext dbContext, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.UpdateRange(entities);
 
@@ -164,7 +148,7 @@ public static class DbContextExtensions
         this DbContext dbContext, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.UpdateRange(entities);
 
@@ -184,7 +168,7 @@ public static class DbContextExtensions
         where TEntity : class
     {
         return
-            Eff(() => dbContext.Remove(entity));
+            liftEff(() => dbContext.Remove(entity));
     }
     
     /// <summary>
@@ -198,7 +182,7 @@ public static class DbContextExtensions
         this DbContext dbContext, params TEntity[] entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.RemoveRange(entities);
 
@@ -217,7 +201,7 @@ public static class DbContextExtensions
         this DbContext dbContext, IEnumerable<TEntity> entities)
         where TEntity : class
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             dbContext.RemoveRange(entities);
 
