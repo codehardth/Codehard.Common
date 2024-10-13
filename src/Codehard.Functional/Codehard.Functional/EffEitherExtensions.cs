@@ -43,59 +43,68 @@ public static class EffEitherExtensions
     }
     
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
-        this Eff<Either<TLeft, T>> eitherValueAff,
+        this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, ValueTask<bool>> predicateAsync,
         Func<T, TLeft> leftF)
     {
         return
-            from eitherValue in eitherValueAff
-            from res in
-                liftEff(() =>
-                    eitherValue.BindAsync(async val =>
-                        await predicateAsync(val)
-                            ? Right<TLeft, T>(val)
-                            : Left<TLeft, T>(leftF(val))))
-            select res;
+            eitherValueEff
+                .Bind(eitherValue =>
+                    (from eitherValue2 in EitherT.lift<TLeft, Eff, T>(eitherValue)
+                        from flag in liftEff(async () => await predicateAsync(eitherValue2))
+                        from b in
+                            flag
+                                ? Right<TLeft, T>(eitherValue2)
+                                : Left<TLeft, T>(leftF(eitherValue2))
+                        select b)
+                    .Run()
+                );
     }
     
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
-        this Eff<Either<TLeft, T>> eitherValueAff,
+        this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, bool> predicate,
         Func<T, ValueTask<TLeft>> leftAsync)
     {
         return
-            from eitherValue in eitherValueAff
-            from res in 
-                liftEff(() =>
-                    eitherValue.BindAsync(async val =>
-                        predicate(val)
-                            ? Right<TLeft, T>(val)
-                            : Left<TLeft, T>(await leftAsync(val))))
-            select res;
+            eitherValueEff
+                .Bind(eitherValue =>
+                    (from eitherValue2 in EitherT.lift<TLeft, Eff, T>(eitherValue)
+                        from flag in liftEff(() => predicate(eitherValue2))
+                        from b in
+                            flag
+                                ? SuccessEff(Right<TLeft, T>(eitherValue2))
+                                : liftEff(async () => Left<TLeft, T>(await leftAsync(eitherValue2)))
+                        select b)
+                    .Run().Map(x => x.Flatten<TLeft, T>())
+                );
     }
     
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
-        this Eff<Either<TLeft, T>> eitherValueAff,
+        this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, ValueTask<bool>> predicateAsync,
         Func<T, ValueTask<TLeft>> leftAsync)
     {
         return
-            from eitherValue in eitherValueAff
-            from res in
-                liftEff(() =>
-                    eitherValue.BindAsync(async val =>
-                        await predicateAsync(val)
-                            ? Right<TLeft, T>(val)
-                            : Left<TLeft, T>(await leftAsync(val))))
-            select res;
+            eitherValueEff
+                .Bind(eitherValue =>
+                    (from eitherValue2 in EitherT.lift<TLeft, Eff, T>(eitherValue)
+                        from flag in liftEff(async () => await predicateAsync(eitherValue2))
+                        from b in
+                            flag
+                                ? SuccessEff(Right<TLeft, T>(eitherValue2))
+                                : liftEff(async () => Left<TLeft, T>(await leftAsync(eitherValue2)))
+                        select b)
+                    .Run().Map(x => x.Flatten<TLeft, T>())
+                );
     }
     
     public static Eff<Either<TLeft, TRight>> MapRight<T, TRight, TLeft>(
-        this Eff<Either<TLeft, T>> eitherValueAff,
+        this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, TRight> mapF)
     {
         return
-            eitherValueAff
+            eitherValueEff
                 .Map(eitherValue =>
                     eitherValue.Map(mapF));
     }
@@ -105,39 +114,36 @@ public static class EffEitherExtensions
         Func<T, ValueTask<TRight>> mapAsync)
     {
         return
-            from eitherValue in eitherValueEff
-            from res in
-                liftEff(() =>
-                    eitherValue
-                        .MapAsync(async val =>
-                            await mapAsync(val)))
-            select res;
+            eitherValueEff
+                .Bind(eitherValue =>
+                    (from eitherValue2 in EitherT.lift<TLeft, Eff, T>(eitherValue)
+                        from b in liftEff(async () => await mapAsync(eitherValue2))
+                        select b)
+                    .Run()
+                );
     }
     
     public static Eff<Either<TLeft, TRight>> DoIfRight<TRight, TLeft>(
-        this Eff<Either<TLeft, TRight>> eitherValueAff,
+        this Eff<Either<TLeft, TRight>> eitherValueEff,
         Action<TRight> f)
     {
         return
-            eitherValueAff
+            eitherValueEff
                 .Map(eitherValue =>
                     eitherValue.Do(f));
     }
     
     public static Eff<Either<TLeft, TRight>> DoIfRightAsync<TRight, TLeft>(
-        this Eff<Either<TLeft, TRight>> eitherValueAff,
+        this Eff<Either<TLeft, TRight>> eitherValueEff,
         Func<TRight, ValueTask<Unit>> f)
     {
         return
-            from eitherValue in eitherValueAff
-            from res in
-                liftEff(() =>
-                    eitherValue
-                        .MapAsync(async val =>
-                        {
-                            await f(val);
-                            return val;
-                        }))
-            select res;
+            eitherValueEff
+                .Bind(eitherValue =>
+                    (from eitherValue2 in EitherT.lift<TLeft, Eff, TRight>(eitherValue)
+                        from b in liftEff(async () => await f(eitherValue2))
+                        select eitherValue2)
+                    .Run()
+                );
     }
 }

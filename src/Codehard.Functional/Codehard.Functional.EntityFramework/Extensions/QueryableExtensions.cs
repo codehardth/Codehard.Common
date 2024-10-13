@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using LanguageExt;
+using LanguageExt.Traits;
 
 using static LanguageExt.Prelude;
 
@@ -21,11 +22,40 @@ public static class QueryableExtensions
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a <see cref="List{T}"/> that contains elements from the input sequence.
     /// </returns>
-    public static Eff<List<T>> ToListAsyncEff<T>(
+    public static Eff<List<T>> ToListEff<T>(
         this IQueryable<T> source, CancellationToken ct = default)
     {
         return liftEff(() => source.ToListAsync(ct));
     }
+    
+    /// <summary>
+    /// Asynchronously converts an IQueryable&lt;T&gt; into a list within a K monad.
+    /// </summary>
+    /// <typeparam name="RT">The runtime environment type that implements Readable&lt;RT, EnvIO&gt; and Monad&lt;RT&gt;.</typeparam>
+    /// <typeparam name="T">The type of elements in the IQueryable.</typeparam>
+    /// <param name="source">The IQueryable to be converted to a list.</param>
+    /// <returns>
+    /// A K&lt;RT, List&lt;T&gt;&gt; representing the asynchronous operation.
+    /// The K monad wraps the result, which is the list of elements.
+    /// </returns>
+    public static K<RT, List<T>> ToListEffRt<RT, T>(
+        this IQueryable<T> source)
+        where RT : Readable<RT, EnvIO>, Monad<RT>
+    {
+        return
+            from env in Readable.ask<RT, EnvIO>()
+            from io in liftIO(() => source.ToListAsync(env.Token))
+            select io;
+    }
+    
+    // public static ReaderT<RT, IO, List<T>> ToListRT2<RT, T>()
+    //     where RT : Readable<RT, QueryableEnv<T>>, Monad<RT>
+    // {
+    //     return
+    //         from env in Readable.ask<RT, QueryableEnv<T>>()
+    //         from io in Eff<QueryableEnv<T>, List<T>>.Lift(env => env.Queryable.ToListAsync(env.CancellationToken))
+    //         select io;
+    // }
     
     /// <summary>
     /// Asynchronously converts a sequence to an array within an Eff monad.

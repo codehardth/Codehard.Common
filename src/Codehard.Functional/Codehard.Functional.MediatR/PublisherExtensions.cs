@@ -17,7 +17,7 @@ public static class PublisherExtensions
     /// <param name="publisher">The publisher to use for publishing the notification.</param>
     /// <param name="notification">The notification to publish.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="Eff{Unit}"/> representing the asynchronous operation.</returns>
+    /// <returns>An <see cref="LanguageExt.Eff{Unit}"/> representing the asynchronous operation.</returns>
     public static Eff<LanguageExt.Unit> PublishEff<TNotification>(
         this IPublisher publisher,
         TNotification notification,
