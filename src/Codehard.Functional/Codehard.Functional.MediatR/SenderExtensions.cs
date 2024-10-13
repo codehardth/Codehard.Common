@@ -18,7 +18,7 @@ public static class SenderExtensions
     /// <param name="sender">The sender to use for sending the command.</param>
     /// <param name="command">The command to send.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="Eff{TCommandResult}"/> representing the asynchronous operation.</returns>
+    /// <returns>An <see cref="LanguageExt.Eff{TCommandResult}"/> representing the asynchronous operation.</returns>
     public static Eff<TCommandResult> SendCommandEff<TCommand, TCommandResult>(
         this ISender sender,
         TCommand command,
@@ -40,7 +40,7 @@ public static class SenderExtensions
     /// <param name="sender">The sender to use for sending the query.</param>
     /// <param name="query">The query to send.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="Eff{TQueryResult}"/> representing the asynchronous operation.</returns>
+    /// <returns>An <see cref="LanguageExt.Eff{TQueryResult}"/> representing the asynchronous operation.</returns>
     public static Eff<TQueryResult> SendQueryEff<TQuery, TQueryResult>(
         this ISender sender,
         TQuery query,
