@@ -20,7 +20,7 @@ public static class QueryableExtensions
     /// <param name="ifTrue">The predicate to apply when the condition is true.</param>
     /// <param name="ifFalse">An optional predicate to apply when the condition is false. If not provided, the original collection is returned.</param>
     /// <returns>An IQueryable collection filtered based on the specified condition and predicates.</returns>
-    public static IQueryable<T> WhereIfTrue<T>(
+    public static IQueryable<T> WhereIf<T>(
         this IQueryable<T> queryable,
         bool condition,
         Expression<Func<T, bool>> ifTrue,

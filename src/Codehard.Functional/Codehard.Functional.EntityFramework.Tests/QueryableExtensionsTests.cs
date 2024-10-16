@@ -1,13 +1,14 @@
-﻿using System.Reflection;
-using Codehard.Functional.EntityFramework.Tests.Entities;
-using Codehard.Infrastructure.EntityFramework.Extensions;
+using System.Reflection;
 using LanguageExt;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
+using Codehard.Functional.EntityFramework.Tests.Entities;
+using Codehard.Infrastructure.EntityFramework.Extensions;
+
 namespace Codehard.Functional.EntityFramework.Tests;
 
-public class FunctionalDbContextTests
+public class QueryableExtensionsTests
 {
     private static SqliteConnection CreateInMemoryDatabase()
     {
@@ -17,7 +18,7 @@ public class FunctionalDbContextTests
     }
     
     [Fact]
-    public async Task ShouldGenerateDbContext()
+    public async Task ToListEffRt_ShouldReturnList()
     {
         // Arrange
         var assembly = Assembly.GetExecutingAssembly();
@@ -29,30 +30,30 @@ public class FunctionalDbContextTests
             options,
             builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly));
         await context.Database.EnsureCreatedAsync();
-
-        var entityId = Guid.NewGuid();
         
-        // Act
-        var entity = new EntityA()
+        var entityId = Guid.NewGuid();
+        var entity = new EntityA
         {
             Id = entityId,
         };
         
-        var effDbContext = new EffTestDbContext(context);
+        context.As.Add(entity);
+        await context.SaveChangesAsync();
 
-        _ = await effDbContext.AddAsync(entity)
-            .Bind(_ => effDbContext.SaveChangesAsync())
-            .RunAsync();
+        var queryable = context.As.AsQueryable();
+
+        // Act
+        var result =
+            queryable
+                .ToListEff()
+                .RunAsync(EnvIO.New(token: CancellationToken.None));
 
         // Assert
-        var result =
-            await effDbContext.FindAsync<EntityA>(new object[] { entityId })
-                .RunAsync();
-
-        var entityOpt = result.ThrowIfFail();
+        var list = await result;
         
-        var entity2 = entityOpt.IfNone(() => throw new Exception("Entity not found"));
+        var resultEntity = list.ThrowIfFail();
         
-        Assert.Equal(entity.Id, entity2.Id);
+        Assert.NotNull(resultEntity);
+        Assert.Single(resultEntity);
     }
 }
