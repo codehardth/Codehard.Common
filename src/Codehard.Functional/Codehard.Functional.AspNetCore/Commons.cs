@@ -1,7 +1,7 @@
 ﻿namespace Codehard.Functional.AspNetCore;
 
 /// <summary>
-/// 
+/// Provides common extension methods for handling errors and mapping failures to HTTP result errors.
 /// </summary>
 public static class Commons
 {
@@ -23,7 +23,6 @@ public static class Commons
                 err switch
                 {
                     HttpResultError hre when !@override => hre,
-                    //_ => new Expected(message, (int)code, HttpResultError.New(code, message, errorCode, data, err))
                     _ => 
                         HttpResultError.New(
                             code, message, errorCode, data, err),

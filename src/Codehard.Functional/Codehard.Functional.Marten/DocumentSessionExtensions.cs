@@ -6,19 +6,18 @@ using static LanguageExt.Prelude;
 namespace Marten;
 
 /// <summary>
-/// 
+/// Provides extension methods for Marten's IDocumentSession to work with Eff monads.
 /// </summary>
 public static class DocumentSessionExtensions
 {
     /// <summary>
     /// Save changes to the database
     /// </summary>
-    public static Eff<Unit> SaveChangesEff(
-        this IDocumentSession documentSession, CancellationToken cancellationToken = default)
+    public static Eff<Unit> SaveChangesEff(this IDocumentSession documentSession)
     {
-        return liftEff(
-            async () =>
-            await documentSession.SaveChangesAsync(cancellationToken).ToUnit());
+        return liftIO(
+            async env =>
+            await documentSession.SaveChangesAsync(env.Token).ToUnit());
     }
     
     /// <summary>
