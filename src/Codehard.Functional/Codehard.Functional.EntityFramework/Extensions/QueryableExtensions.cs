@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using LanguageExt;
-using LanguageExt.Traits;
 
 using static LanguageExt.Prelude;
 
@@ -18,58 +17,25 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to create a list from.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
-    /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a <see cref="List{T}"/> that contains elements from the input sequence.
+    /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a <see cref="System.Collections.Generic.List{T}"/> that contains elements from the input sequence.
     /// </returns>
-    public static Eff<List<T>> ToListEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<List<T>> ToListEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.ToListAsync(ct));
+        return liftIO(env => source.ToListAsync(env.Token));
     }
-    
-    /// <summary>
-    /// Asynchronously converts an IQueryable&lt;T&gt; into a list within a K monad.
-    /// </summary>
-    /// <typeparam name="RT">The runtime environment type that implements Readable&lt;RT, EnvIO&gt; and Monad&lt;RT&gt;.</typeparam>
-    /// <typeparam name="T">The type of elements in the IQueryable.</typeparam>
-    /// <param name="source">The IQueryable to be converted to a list.</param>
-    /// <returns>
-    /// A K&lt;RT, List&lt;T&gt;&gt; representing the asynchronous operation.
-    /// The K monad wraps the result, which is the list of elements.
-    /// </returns>
-    public static K<RT, List<T>> ToListEffRt<RT, T>(
-        this IQueryable<T> source)
-        where RT : Readable<RT, EnvIO>, Monad<RT>
-    {
-        return
-            from env in Readable.ask<RT, EnvIO>()
-            from io in liftIO(() => source.ToListAsync(env.Token))
-            select io;
-    }
-    
-    // public static ReaderT<RT, IO, List<T>> ToListRT2<RT, T>()
-    //     where RT : Readable<RT, QueryableEnv<T>>, Monad<RT>
-    // {
-    //     return
-    //         from env in Readable.ask<RT, QueryableEnv<T>>()
-    //         from io in Eff<QueryableEnv<T>, List<T>>.Lift(env => env.Queryable.ToListAsync(env.CancellationToken))
-    //         select io;
-    // }
     
     /// <summary>
     /// Asynchronously converts a sequence to an array within an Eff monad.
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to create an array from.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps an array that contains elements from the input sequence.
     /// </returns>
-    public static Eff<T[]> ToArrayEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<T[]> ToArrayEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.ToArrayAsync(ct));
+        return liftIO(env => source.ToArrayAsync(env.Token));
     }
 
     /// <summary>
@@ -77,14 +43,12 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to check for emptiness.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a boolean value that is true if the source sequence contains any elements; otherwise, false.
     /// </returns>
-    public static Eff<bool> AnyEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<bool> AnyEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.AnyAsync(ct));
+        return liftIO(env => source.AnyAsync(env.Token));
     }
     
     /// <summary>
@@ -115,8 +79,7 @@ public static class QueryableExtensions
     /// The task result contains the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
     public static Task<Option<TSource>> SingleOrNoneAsync<TSource>(
-        this IQueryable<TSource> source,
-        CancellationToken ct = default)
+        this IQueryable<TSource> source, CancellationToken ct = default)
     {
         return
             source.SingleOrDefaultAsync(ct)
@@ -129,16 +92,14 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation. 
     /// The Eff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
     public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(
-        this IQueryable<TSource> source,
-        CancellationToken ct = default)
+        this IQueryable<TSource> source)
     {
-        return liftEff(() => source.SingleOrNoneAsync(ct));
+        return liftIO(env => source.SingleOrNoneAsync(env.Token));
     }
     
     /// <summary>
@@ -171,7 +132,6 @@ public static class QueryableExtensions
     /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
     /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation.
     /// The Eff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence satisfying the specified condition,
@@ -179,12 +139,11 @@ public static class QueryableExtensions
     /// </returns>
     public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(
         this IQueryable<TSource> source,
-        Expression<Func<TSource, bool>> predicate,
-        CancellationToken ct = default)
+        Expression<Func<TSource, bool>> predicate)
     {
         return
-            liftEff(async () =>
-                await source.SingleOrNoneAsync(predicate, ct));
+            liftIO(async env =>
+                await source.SingleOrNoneAsync(predicate, env.Token));
     }
     
     /// <summary>
@@ -194,19 +153,17 @@ public static class QueryableExtensions
     /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
     /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;TSource&gt; that represents the asynchronous operation.
     /// The Eff monad wraps the result, which is the only element of the sequence satisfying the specified condition.
     /// </returns>
     public static Eff<TSource> SingleOrFailEff<TSource>(
         this IQueryable<TSource> source,
-        Expression<Func<TSource, bool>> predicate,
-        CancellationToken ct = default)
+        Expression<Func<TSource, bool>> predicate)
     {
         return
-            liftEff(async () =>
-                await source.SingleAsync(predicate, ct));
+            liftIO(async env =>
+                await source.SingleAsync(predicate, env.Token));
     }
     
     /// <summary>
@@ -233,16 +190,14 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;T&gt; to get the first element from.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;T&gt;&gt; that represents the asynchronous operation. 
     /// The Eff monad wraps the result, which contains the first element of the sequence as an Option&lt;T&gt;,
     /// or a None value if the sequence is empty.
     /// </returns>
-    public static Eff<Option<T>> FirstOrNoneEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<Option<T>> FirstOrNoneEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.FirstOrNoneAsync(ct));
+        return liftIO(env => source.FirstOrNoneAsync(env.Token));
     }
     
     /// <summary>
@@ -275,7 +230,6 @@ public static class QueryableExtensions
     /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;T&gt; to get the first element from.</param>
     /// <param name="predicate">A lambda expression representing the condition to satisfy.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;T&gt;&gt; that represents the asynchronous operation.
     /// The Eff monad wraps the result, which contains the first element of the sequence satisfying the specified condition as an Option&lt;T&gt;,
@@ -283,10 +237,9 @@ public static class QueryableExtensions
     /// </returns>
     public static Eff<Option<T>> FirstOrNoneEff<T>(
         this IQueryable<T> source,
-        Expression<Func<T, bool>> predicate,
-        CancellationToken ct = default)
+        Expression<Func<T, bool>> predicate)
     {
-        return liftEff(() => source.FirstOrNoneAsync(predicate, ct));
+        return liftIO(env => source.FirstOrNoneAsync(predicate, env.Token));
     }
     
     /// <summary>
@@ -294,14 +247,12 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps an integer that represents the number of elements in the input sequence.
     /// </returns>
-    public static Eff<int> CountEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<int> CountEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.CountAsync(ct));
+        return liftIO(env => source.CountAsync(env.Token));
     }
     
     /// <summary>
@@ -310,16 +261,14 @@ public static class QueryableExtensions
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps an integer that represents the number of elements in the input sequence that satisfy the condition.
     /// </returns>
     public static Eff<int> CountEff<T>(
         this IQueryable<T> source,
-        Expression<Func<T, bool>> predicate,
-        CancellationToken ct = default)
+        Expression<Func<T, bool>> predicate)
     {
-        return liftEff(() => source.CountAsync(predicate, ct));
+        return liftIO(env => source.CountAsync(predicate, env.Token));
     }
     
     /// <summary>
@@ -327,15 +276,13 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a long integer that represents the number of elements in the input sequence.
     /// </returns>
     public static Eff<long> LongCountEff<T>(
-        this IQueryable<T> source,
-        CancellationToken ct = default)
+        this IQueryable<T> source)
     {
-        return liftEff(() => source.LongCountAsync(ct));
+        return liftIO(env => source.LongCountAsync(env.Token));
     }
     
     /// <summary>
@@ -344,15 +291,13 @@ public static class QueryableExtensions
     /// <typeparam name="T">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">An <see cref="IQueryable{T}"/> to count the elements of.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff monad that represents the asynchronous operation. The Eff monad wraps a long integer that represents the number of elements in the input sequence that satisfy the condition.
     /// </returns>
     public static Eff<long> LongCountEff<T>(
         this IQueryable<T> source,
-        Expression<Func<T, bool>> predicate,
-        CancellationToken ct = default)
+        Expression<Func<T, bool>> predicate)
     {
-        return liftEff(() => source.LongCountAsync(predicate, ct));
+        return liftIO(env => source.LongCountAsync(predicate, env.Token));
     }
 }

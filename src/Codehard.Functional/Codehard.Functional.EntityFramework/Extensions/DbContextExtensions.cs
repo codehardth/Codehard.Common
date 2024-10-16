@@ -14,12 +14,10 @@ public static class DbContextExtensions
     /// Asynchronously saves all changes made in this context to the database.
     /// </summary>
     /// <param name="dbContext">The DbContext instance.</param>
-    /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
-    public static Eff<int> SaveChangesAsyncEff(
-        this DbContext dbContext, CancellationToken ct = default)
+    public static Eff<int> SaveChangesAsyncEff(this DbContext dbContext)
     {
-        return liftEff(() => dbContext.SaveChangesAsync(ct));
+        return liftIO(env => dbContext.SaveChangesAsync(env.Token));
     }
     
     /// <summary>
@@ -47,22 +45,12 @@ public static class DbContextExtensions
         this DbContext dbContext, params object?[]? keyValues)
         where TEntity : class
     {
-        return liftEff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues)));
-    }
-    
-    /// <summary>
-    /// Asynchronously finds an entity with the given primary key values and wraps the result in an Option.
-    /// </summary>
-    /// <param name="dbContext">The DbContext instance.</param>
-    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
-    /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
-    /// <typeparam name="TEntity">The type of the entity to be found.</typeparam>
-    /// <returns>An Eff&lt;Option&lt;TEntity&gt;&gt; that represents the asynchronous find operation. The result contains the entity found, or None if not found.</returns>
-    public static Eff<Option<TEntity>> FindAsyncEff<TEntity>(
-        this DbContext dbContext, object?[]? keyValues, CancellationToken ct)
-        where TEntity : class
-    {
-        return liftEff(async () => Optional(await dbContext.FindAsync<TEntity>(keyValues, ct)));
+        return
+            liftIO(
+                async env =>
+                Optional(
+                    await dbContext.FindAsync<TEntity>(
+                        keyValues, env.Token)));
     }
 
     public static Eff<EntityEntry<TEntity>> AddEff<TEntity>(

@@ -16,12 +16,11 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of elements in the IQueryable.</typeparam>
     /// <param name="source">The IQueryable to be converted to a read-only list.</param>
-    /// <param name="ct">A CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>An Eff&lt;IReadOnlyList&lt;T&gt;&gt; representing the asynchronous operation. 
     /// The Eff monad wraps the result, which is the read-only list of elements.</returns>
-    public static Eff<IReadOnlyList<T>> ToListEff<T>(this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<IReadOnlyList<T>> ToListEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.ToListAsync(ct));
+        return liftIO(env => source.ToListAsync(env.Token));
     }
     
     /// <summary>
@@ -47,15 +46,13 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="TSource">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;TSource&gt; to get the single element from.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;TSource&gt;&gt; that represents the asynchronous operation. 
     /// The Eff monad wraps the result, which is an Option&lt;TSource&gt; containing the only element of the sequence, or a None value if the sequence is empty.
     /// </returns>
-    public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(
-        this IQueryable<TSource> source, CancellationToken ct = default)
+    public static Eff<Option<TSource>> SingleOrNoneEff<TSource>(this IQueryable<TSource> source)
     {
-        return liftEff(() => source.SingleOrNoneAsync(ct));
+        return liftIO(env => source.SingleOrNoneAsync(env.Token));
     }
     
     /// <summary>
@@ -105,16 +102,14 @@ public static class QueryableExtensions
     /// </summary>
     /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
     /// <param name="source">The IQueryable&lt;T&gt; to get the first element from.</param>
-    /// <param name="ct">The CancellationToken to observe while waiting for the task to complete.</param>
     /// <returns>
     /// An Eff&lt;Option&lt;T&gt;&gt; that represents the asynchronous operation. 
     /// The Eff monad wraps the result, which contains the first element of the sequence as an Option&lt;T&gt;,
     /// or a None value if the sequence is empty.
     /// </returns>
-    public static Eff<Option<T>> FirstOrNoneEff<T>(
-        this IQueryable<T> source, CancellationToken ct = default)
+    public static Eff<Option<T>> FirstOrNoneEff<T>(this IQueryable<T> source)
     {
-        return liftEff(() => source.FirstOrNoneAsync(ct));
+        return liftIO(env => source.FirstOrNoneAsync(env.Token));
     }
     
     /// <summary>

@@ -16,18 +16,16 @@ public static class PublisherExtensions
     /// <typeparam name="TNotification">The type of the notification.</typeparam>
     /// <param name="publisher">The publisher to use for publishing the notification.</param>
     /// <param name="notification">The notification to publish.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An <see cref="LanguageExt.Eff{Unit}"/> representing the asynchronous operation.</returns>
     public static Eff<LanguageExt.Unit> PublishEff<TNotification>(
         this IPublisher publisher,
-        TNotification notification,
-        CancellationToken cancellationToken = default)
+        TNotification notification)
         where TNotification : INotification
     {
         return
-            liftEff(async () =>
+            liftIO(async env =>
             {
-                await publisher.Publish(notification, cancellationToken);
+                await publisher.Publish(notification, env.Token);
                 return unit;
             });
     }
