@@ -1,3 +1,5 @@
+using LanguageExt;
+using LanguageExt.UnsafeValueAccess;
 using Marten;
 using Marten.Services.Json;
 using Weasel.Core;
@@ -7,7 +9,7 @@ namespace Codehard.Functional.Marten.Tests;
 public class QueryableExtensionTests
 {
     [Fact]
-    public async Task WhenQueryWithSingleOrNoneAff_ShouldReturnResultCorrectly()
+    public async Task WhenQueryWithSingleOrNoneEff_ShouldReturnResultCorrectly()
     {
         // Arrange
         var store = DocumentStore
@@ -15,9 +17,7 @@ public class QueryableExtensionTests
         
         store.Options.AutoCreateSchemaObjects = AutoCreate.All;
         store.Options.DatabaseSchemaName = "sch" + Guid.NewGuid().ToString().Replace("-", string.Empty);
-        store.Options.UseDefaultSerialization(
-            serializerType: SerializerType.SystemTextJson,
-            enumStorage: EnumStorage.AsString);
+        store.Options.UseSystemTextJsonForSerialization(enumStorage: EnumStorage.AsString);
         
         var session = store.IdentitySession();
         var id = Guid.NewGuid();
@@ -31,8 +31,8 @@ public class QueryableExtensionTests
         });
 
         _ = await session
-            .SaveChangesAff()
-            .Run();
+            .SaveChangesEff()
+            .RunAsync();
 
         // Act
         var fin =
@@ -40,8 +40,8 @@ public class QueryableExtensionTests
                 store.QuerySession()
                      .Query<EntityA>()
                      .Where(a => a.Id == id)
-                     .SingleOrNoneAff()
-                     .Run();
+                     .SingleOrNoneEff()
+                     .RunAsync();
         
         // Assert
         Assert.True(fin.IsSucc);
@@ -50,7 +50,7 @@ public class QueryableExtensionTests
         
         Assert.True(opt.IsSome);
         
-        var entity = opt.IfNoneUnsafe(() => null);
+        var entity = opt.ValueUnsafe();
         
         Assert.Equal(id, entity!.Id);
         Assert.Equal(entityNameValue, entity.Name);
