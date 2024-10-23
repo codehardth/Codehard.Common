@@ -114,9 +114,10 @@ public static class ControllerExtensions
     public static async Task<IActionResult> RunToResultAsync<T>(
         this Eff<T> eff,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
+        ILogger? logger = default,
+        CancellationToken cancellationToken = default)
     {
-        var fin = await eff.RunAsync();
+        var fin = await eff.RunAsync(EnvIO.New(token: cancellationToken));
         
         return
             fin.MatchToResult(
