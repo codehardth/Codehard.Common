@@ -34,6 +34,8 @@ public class ErrorWrapperActionResult : IActionResult
     {
         this.Error.ErrorCode.IfSome(errCode =>
             context.HttpContext.Response.Headers.Add("x-error-code", errCode));
+        
+        context.HttpContext.Response.Headers.Add("x-trace-id", context.HttpContext.TraceIdentifier);
 
         await this.Error.Data
             .Map(
@@ -45,6 +47,7 @@ public class ErrorWrapperActionResult : IActionResult
                             new ObjectResult(
                                 new
                                 {
+                                    TraceId = context.HttpContext.TraceIdentifier,
                                     ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
                                     ErrorMessage = this.Error.Message,
                                 })
@@ -82,6 +85,7 @@ public class ErrorWrapperActionResult : IActionResult
             expando["ErrorInfo"] =
                 new
                 {
+                    TraceId = context.HttpContext.TraceIdentifier,
                     ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
                     ErrorMessage = this.Error.Message,
                 };
