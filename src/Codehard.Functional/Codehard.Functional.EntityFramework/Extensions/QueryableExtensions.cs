@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using LanguageExt;
-
 using static LanguageExt.Prelude;
 
 // ReSharper disable once CheckNamespace

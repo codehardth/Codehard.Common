@@ -35,6 +35,8 @@ public class ModelBuilderExtensionsTests
         
         // +2 because of the Money type and the Nullable Money type
         Assert.Equal(expectedEntityTypes + 3, actualEntityTypes);
+        
+        return;
 
         static SqliteConnection CreateInMemoryDatabase()
         {
