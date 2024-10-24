@@ -1,4 +1,5 @@
 using System.Dynamic;
+using Microsoft.AspNetCore.Http;
 
 namespace Codehard.Functional.AspNetCore;
 
@@ -34,7 +35,7 @@ public class ErrorWrapperActionResult : IActionResult
     {
         this.Error.ErrorCode.IfSome(errCode =>
             context.HttpContext.Response.Headers.Add("x-error-code", errCode));
-        
+
         context.HttpContext.Response.Headers.Add("x-trace-id", context.HttpContext.TraceIdentifier);
 
         await this.Error.Data
@@ -62,12 +63,14 @@ public class ErrorWrapperActionResult : IActionResult
                     })
             .Match(
                 ar => ar.ExecuteResultAsync(context),
-                None: () =>
+                None: async () =>
                 {
                     context.HttpContext.Response.StatusCode = (int)this.Error.StatusCode;
-
-                    return Task.CompletedTask;
+                    context.HttpContext.Response.ContentType = "text/plain";
+                    await context.HttpContext.Response.WriteAsync(context.HttpContext.TraceIdentifier);
                 });
+
+        return;
 
         ObjectResult AddErrorInfo(ObjectResult objectResult)
         {

@@ -24,13 +24,13 @@ public static class ControllerExtensions
             err switch
             {
                 HttpResultError hre => new ErrorWrapperActionResult(hre),
-                _ => new ObjectResult(err.Message)
-                {
-                    StatusCode =
+                _ => new ErrorWrapperActionResult(
+                    HttpResultError.New(
                         Enum.IsDefined(typeof(HttpStatusCode), err.Code)
-                            ? err.Code
-                            : (int)HttpStatusCode.InternalServerError,
-                }
+                            ? (HttpStatusCode)err.Code
+                            : HttpStatusCode.InternalServerError,
+                        err.Message,
+                        error: err)),
             };
     }
 
@@ -50,18 +50,7 @@ public static class ControllerExtensions
         return fin
             .Match(
                 res => MapToActionResult(successStatusCode, res),
-                err =>
-                {
-                    switch (err)
-                    {
-                        case HttpResultError hre:
-                            logger?.Log(hre);
-                            return MapErrorToActionResult(hre);
-                        default:
-                            logger?.Log(err);
-                            return MapErrorToActionResult(err);
-                    }
-                });
+                MapErrorToActionResult);
     }
 
     /// <summary>
