@@ -60,9 +60,9 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
             this.logger.LogError(
                 message: "TraceId: {TraceId}, {Path}, {Query}, {Method}, {ResponseStatus}, {ErrorCode}",
                 traceId,
-                context.HttpContext.Request.Path,
-                context.HttpContext.Request.Query,
-                context.HttpContext.Request.Method,
+                Sanitize(context.HttpContext.Request.Path),
+                Sanitize(context.HttpContext.Request.QueryString.Value),
+                Sanitize(context.HttpContext.Request.Method),
                 error.StatusCode,
                 error.ErrorCode.IfNoneUnsafe(default(string)));
 
@@ -87,10 +87,19 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
                 exception: exception,
                 message: "TraceId: {TraceId}, {Path}, {Query}, {Method}, {ResponseStatus}",
                 traceId,
-                context.HttpContext.Request.Path,
-                context.HttpContext.Request.Query,
-                context.HttpContext.Request.Method,
+                Sanitize(context.HttpContext.Request.Path),
+                Sanitize(context.HttpContext.Request.QueryString.Value),
+                Sanitize(context.HttpContext.Request.Method),
                 HttpStatusCode.InternalServerError);
         }
+    }
+    
+    private static string Sanitize(string? input)
+    {
+        return new string(
+            input
+                ?.Replace(Environment.NewLine, "")
+                .Replace("\n", "")
+                .Replace("\r", ""));
     }
 }
