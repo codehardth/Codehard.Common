@@ -17,7 +17,7 @@ public static class LoggerExtensions
 
                     return
                         error.Exception.Match(
-                            Some: ex => logger.LogError(ex, error.Message),
+                            Some: ex => logger.LogError(ex, "{Message}", error.Message),
                             None: () =>
                             {
                                 if (string.IsNullOrWhiteSpace(error.Message))

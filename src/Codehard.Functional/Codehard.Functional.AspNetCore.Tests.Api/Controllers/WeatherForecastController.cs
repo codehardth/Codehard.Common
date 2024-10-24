@@ -13,11 +13,11 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<WeatherForecastController> logger;
 
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
-        _logger = logger;
+        this.logger = logger;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -40,6 +40,12 @@ public class WeatherForecastController : ControllerBase
         return eff.RunToResult();
     }
     
+    [HttpGet(template: "Get500WithThrowException")]
+    public IActionResult Get500WithThrowException()
+    {
+        throw new Exception("Error Msg");
+    }
+    
     [HttpGet(template: "Get500FailWithMsgEff")]
     public IActionResult Get500FailWithMsgEff()
     {
@@ -51,13 +57,24 @@ public class WeatherForecastController : ControllerBase
         return eff.RunToResult();
     }
     
+    [HttpGet(template: "Get500FailWithExceptionEff")]
+    public IActionResult Get500FailWithExceptionEff()
+    {
+        var eff =
+            Eff<IEnumerable<WeatherForecast>>(
+                () => throw new Exception("Error Msg"));
+
+        return eff.RunToResult();
+    }
+    
     [HttpGet(template: "Get500FailWithMsgAndErrCodeEff")]
     public IActionResult Get500FailWithMsgAndErrCodeEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(HttpResultError.New(
-            HttpStatusCode.InternalServerError,
-            "Error Msg",
-            errorCode: "Err001"));
+        var eff = FailEff<IEnumerable<WeatherForecast>>(
+            HttpResultError.New(
+                HttpStatusCode.InternalServerError,
+                "Error Msg",
+                errorCode: "Err001"));
 
         return eff.RunToResult();
     }
