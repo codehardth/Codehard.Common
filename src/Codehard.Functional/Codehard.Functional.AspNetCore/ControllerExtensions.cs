@@ -2,6 +2,9 @@
 
 namespace Codehard.Functional.AspNetCore;
 
+/// <summary>
+/// Provides extension methods for converting functional results into ASP.NET Core action results.
+/// </summary>
 public static class ControllerExtensions
 {
     private static IActionResult MapToActionResult<T>(HttpStatusCode statusCode, T result)
@@ -50,7 +53,18 @@ public static class ControllerExtensions
         return fin
             .Match(
                 res => MapToActionResult(successStatusCode, res),
-                MapErrorToActionResult);
+                err =>
+                {
+                    switch (err)
+                    {
+                        case HttpResultError hre:
+                            logger?.Log(hre);
+                            return MapErrorToActionResult(hre);
+                        default:
+                            logger?.Log(err);
+                            return MapErrorToActionResult(err);
+                    }
+                });
     }
 
     /// <summary>
