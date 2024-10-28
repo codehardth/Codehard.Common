@@ -42,11 +42,12 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
             case ErrorWrapperActionResult ewar:
                 LogHttpResultError(ewar.Error);
                 break;
+            
             case IStatusCodeActionResult statusCodeResult:
             {
                 if(statusCodeResult.StatusCode == StatusCodes.Status500InternalServerError)
                 {
-                    LogError(context.Exception);
+                    Log(context.Exception);
                 }
 
                 break;
@@ -57,7 +58,16 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
         
         void LogHttpResultError(HttpResultError error)
         {
-            this.logger.LogError(
+            var logLevel =
+                error.StatusCode switch
+                {
+                    >= HttpStatusCode.InternalServerError => LogLevel.Error,
+                    >= HttpStatusCode.BadRequest => LogLevel.Warning,
+                    _ => LogLevel.Information
+                };
+            
+            this.logger.Log(
+                logLevel: logLevel,
                 message: "TraceId: {TraceId}, {Path}, {Query}, {Method}, {ResponseStatus}, {ErrorCode}",
                 traceId,
                 Sanitize(context.HttpContext.Request.Path),
@@ -74,16 +84,25 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
             errorOpt.Iter(
                 Some: error =>
                 {
-                    LogError(
+                    Log(
                         exception: error.Exception.IfNoneUnsafe(default(Exception)));
                     
                     LogErrorOpt(error.Inner);
                 });
         }
 
-        void LogError(Exception? exception)
+        void Log(Exception? exception)
         {
-            this.logger.LogError(
+            var logLevel =
+                exception switch
+                {
+                    InvalidOperationException => LogLevel.Warning,
+                    default(Exception) => LogLevel.Information,
+                    _ => LogLevel.Error,
+                };
+            
+            this.logger.Log(
+                logLevel: logLevel,
                 exception: exception,
                 message: "TraceId: {TraceId}, {Path}, {Query}, {Method}, {ResponseStatus}",
                 traceId,
