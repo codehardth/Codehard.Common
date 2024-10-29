@@ -33,7 +33,7 @@ public static class ControllerExtensions
                             ? (HttpStatusCode)err.Code
                             : HttpStatusCode.InternalServerError,
                         err.Message,
-                        error: err)),
+                        inner: err)),
             };
     }
 
