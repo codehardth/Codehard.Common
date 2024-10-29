@@ -13,7 +13,7 @@ public class TaskExtTests
     }
 
     [Fact]
-    public async Task WhenRunToUnitAffWithValueTask_ShouldReturnSuccAffOfUnit()
+    public async Task WhenRunToUnitEffWithValueTask_ShouldReturnSuccEffOfUnit()
     {
         // Arrange
         ValueTask Task()
@@ -24,16 +24,16 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var eff = Task().ToEffUnit();
+        var result = await eff.RunAsync();
 
         // Assert
-        Assert.Single(result.Succs());
-        Assert.Equal(unit, result.Succs().First());
+        Assert.Single(result.ToArray());
+        Assert.Equal(unit, result.ToArray().First());
     }
     
     [Fact]
-    public async Task WhenRunToUnitAffWithValueTask_ShouldReturnFailAffOfUnit()
+    public async Task WhenRunToUnitEffWithValueTask_ShouldReturnFailEffOfUnit()
     {
         // Arrange
         // Do not remove async keyword!
@@ -45,8 +45,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var eff = Task().ToEffUnit();
+        var result = await eff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -54,7 +54,7 @@ public class TaskExtTests
     }
     
     [Fact]
-    public async Task WhenRunToUnitAffWithTask_ShouldReturnFailAffOfUnit()
+    public async Task WhenRunToUnitEffWithTask_ShouldReturnFailEffOfUnit()
     {
         // Arrange
         // Do not remove async keyword!
@@ -66,8 +66,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = Task().ToAffUnit();
-        var result = await aff.Run();
+        var eff = Task().ToEffUnit();
+        var result = await eff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -75,7 +75,7 @@ public class TaskExtTests
     }
     
     [Fact]
-    public async Task WhenWarpValueTaskInAffUnit_ShouldReturnSuccAffOfUnit()
+    public async Task WhenWarpValueTaskInEffUnit_ShouldReturnSuccEffOfUnit()
     {
         // Arrange
         ValueTask Task()
@@ -86,15 +86,15 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var eff = EffUnit(async () => await Task());
+        var result = await eff.RunAsync();
 
         // Assert
         Assert.True(result.IsSucc);
     }
     
     [Fact]
-    public async Task WhenWarpValueTaskInAffUnit_ShouldReturnFailAffOfUnit()
+    public async Task WhenWarpValueTaskInEffUnit_ShouldReturnFailEffOfUnit()
     {
         // Arrange
         ValueTask Task()
@@ -103,8 +103,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var eff = EffUnit(async () => await Task());
+        var result = await eff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);
@@ -112,7 +112,7 @@ public class TaskExtTests
     }
     
     [Fact]
-    public async Task WhenWrapValueTaskInAffUnit_ShouldReturnSuccAffOfUnit()
+    public async Task WhenWrapValueTaskInEffUnit_ShouldReturnSuccEffOfUnit()
     {
         // Arrange
         Task Task()
@@ -121,8 +121,8 @@ public class TaskExtTests
         }
 
         // Act
-        var aff = AffUnit(async () => await Task());
-        var result = await aff.Run();
+        var eff = EffUnit(async () => await Task());
+        var result = await eff.RunAsync();
 
         // Assert
         Assert.True(result.IsFail);

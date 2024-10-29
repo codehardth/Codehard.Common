@@ -15,7 +15,7 @@ public class FunctionalDbContextTests
         connection.Open();
         return connection;
     }
-    
+
     [Fact]
     public async Task ShouldGenerateDbContext()
     {
@@ -24,35 +24,37 @@ public class FunctionalDbContextTests
         var options = new DbContextOptionsBuilder<TestDbContext>()
             .UseSqlite(CreateInMemoryDatabase())
             .Options;
-        
+
         await using var context = new TestDbContext(
             options,
             builder => builder.ApplyConfigurationsFromAssemblyFor<TestDbContext>(assembly));
         await context.Database.EnsureCreatedAsync();
 
         var entityId = Guid.NewGuid();
-        
+
         // Act
-        var entity = new EntityA()
+        var entity = new EntityA
         {
-            Id = entityId,
+            Id = entityId
         };
-        
+
         var effDbContext = new EffTestDbContext(context);
 
-        _ = await effDbContext.AddAsync(entity)
+        _ = await effDbContext
+            .AddAsync(entity)
             .Bind(_ => effDbContext.SaveChangesAsync())
-            .RunUnit();
+            .RunAsync();
 
         // Assert
         var result =
-            await effDbContext.FindAsync<EntityA>(new object[] { entityId })
-                .Run();
+            await effDbContext
+                .FindAsync<EntityA>([entityId])
+                .RunAsync();
 
         var entityOpt = result.ThrowIfFail();
-        
+
         var entity2 = entityOpt.IfNone(() => throw new Exception("Entity not found"));
-        
+
         Assert.Equal(entity.Id, entity2.Id);
     }
 }

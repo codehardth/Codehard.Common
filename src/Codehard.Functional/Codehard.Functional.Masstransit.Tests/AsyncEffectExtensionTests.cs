@@ -2,6 +2,7 @@ using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Codehard.Functional.MassTransit.Exceptions;
+using LanguageExt;
 using static LanguageExt.Prelude;
 
 namespace Codehard.Functional.Masstransit.Tests;
@@ -9,7 +10,7 @@ namespace Codehard.Functional.Masstransit.Tests;
 public class AsyncEffectExtensionTests
 {
     [Fact]
-    public async Task WhenUseToAffOnGetResponseToSendMessageWithRequestClient_ShouldGetConsumedAndResponded()
+    public async Task WhenUseToEffOnGetResponseToSendMessageWithRequestClient_ShouldGetConsumedAndResponded()
     {
         await using var provider = new ServiceCollection()
             .AddMassTransitTestHarness(cfg => { cfg.AddConsumer<TestConsumer>(); })
@@ -21,14 +22,15 @@ public class AsyncEffectExtensionTests
 
         var client = harness.GetRequestClient<PingMessage>();
 
-        var fin = await client
-            .GetResponse<PongMessage, PingFaultMessage>(
-                new PingMessage
-                {
-                    ShouldSuccess = true,
-                })
-            .ToAff()
-            .Run();
+        var fin =
+            await client
+                .GetResponse<PongMessage, PingFaultMessage>(
+                    new PingMessage
+                    { 
+                        ShouldSuccess = true,
+                    })
+                .ToEff()
+                .RunAsync();
 
         Assert.True(fin.IsSucc);
 
@@ -40,7 +42,7 @@ public class AsyncEffectExtensionTests
     }
 
     [Fact]
-    public async Task WhenUseToAffOnGetResponseToSendMessage_AndExpectFailMessage_ShouldReturnFaultMessageException()
+    public async Task WhenUseToEffOnGetResponseToSendMessage_AndExpectFailMessage_ShouldReturnFaultMessageException()
     {
         await using var provider = new ServiceCollection()
             .AddMassTransitTestHarness(cfg => { cfg.AddConsumer<TestConsumer>(); })
@@ -52,14 +54,15 @@ public class AsyncEffectExtensionTests
 
         var client = harness.GetRequestClient<PingMessage>();
 
-        var fin = await client
-            .GetResponse<PongMessage, PingFaultMessage>(
-                new PingMessage
-                {
-                    ShouldSuccess = false,
-                })
-            .ToAff()
-            .Run();
+        var fin =
+            await client
+                .GetResponse<PongMessage, PingFaultMessage>(
+                    new PingMessage
+                    {
+                        ShouldSuccess = false,
+                    })
+                .ToEff()
+                .RunAsync();
 
         Assert.True(fin.IsFail);
 

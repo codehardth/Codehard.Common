@@ -1,4 +1,5 @@
 using Codehard.Functional.Logger;
+using LanguageExt.UnsafeValueAccess;
 
 namespace Codehard.Functional.AspNetCore;
 
@@ -18,10 +19,10 @@ public static class LoggingExtensions
         {
             case >= HttpStatusCode.InternalServerError:
                 logger.LogError(
-                    exception: error.Exception.IfNoneUnsafe(default(Exception)),
+                    exception: error.Exception.ValueUnsafe(),
                     message: "{ResponseStatus}, {ErrorCode}, {Message}",
                     error.StatusCode,
-                    error.ErrorCode.IfNoneUnsafe(default(string)),
+                    error.ErrorCode.ValueUnsafe(),
                     error.Message);
 
                 error.Inner.Do(
@@ -31,10 +32,10 @@ public static class LoggingExtensions
             
             case >= HttpStatusCode.BadRequest:
                 logger.LogWarning(
-                    exception: error.Exception.IfNoneUnsafe(default(Exception)),
+                    exception: error.Exception.ValueUnsafe(),
                     message: "{ResponseStatus}, {ErrorCode}, {Message}",
                     error.StatusCode,
-                    error.ErrorCode.IfNoneUnsafe(default(string)),
+                    error.ErrorCode.ValueUnsafe(),
                     error.Message);
 
                 error.Inner.Do(

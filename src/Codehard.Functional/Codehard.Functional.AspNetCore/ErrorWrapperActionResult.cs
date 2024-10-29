@@ -1,4 +1,5 @@
 using System.Dynamic;
+using LanguageExt.UnsafeValueAccess;
 using Microsoft.AspNetCore.Http;
 
 namespace Codehard.Functional.AspNetCore;
@@ -49,7 +50,7 @@ public class ErrorWrapperActionResult : IActionResult
                                 new
                                 {
                                     TraceId = context.HttpContext.TraceIdentifier,
-                                    ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
+                                    ErrorCode = this.Error.ErrorCode.ValueUnsafe(),
                                     ErrorMessage = this.Error.Message,
                                 })
                             {
@@ -89,7 +90,7 @@ public class ErrorWrapperActionResult : IActionResult
                 new
                 {
                     TraceId = context.HttpContext.TraceIdentifier,
-                    ErrorCode = this.Error.ErrorCode.IfNoneUnsafe(default(string)),
+                    ErrorCode = this.Error.ErrorCode.ValueUnsafe(),
                     ErrorMessage = this.Error.Message,
                 };
 

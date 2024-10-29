@@ -1,4 +1,5 @@
 // ReSharper disable once CheckNamespace
+
 namespace LanguageExt;
 
 /// <summary>
@@ -11,7 +12,7 @@ public static class EnumerableExtensions
     /// </summary>
     public static Option<T> FirstOrNone<T>(this IEnumerable<T> source)
     {
-        return source.HeadOrNone();
+        return source.FirstOrDefault();
     }
 
     /// <summary>
@@ -19,13 +20,14 @@ public static class EnumerableExtensions
     /// </summary>
     public static Option<T> FirstOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
-        return source
-            .Map(Prelude.Optional)
-            .FirstOrDefault(
-                iOpt =>  iOpt.Filter(predicate).IsSome,
-                Option<T>.None);
+        return
+            source
+                .Select(Prelude.Optional)
+                .FirstOrDefault(
+                    iOpt => iOpt.Filter(predicate).IsSome,
+                    Option<T>.None);
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence,
     /// or a None value if the sequence is empty;
@@ -33,11 +35,12 @@ public static class EnumerableExtensions
     /// </summary>
     public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source)
     {
-        return Eff(() => source
-            .Map(Prelude.Optional)
-            .SingleOrDefault(Option<T>.None));
+        return
+            liftEff(() =>
+                source.Select(Prelude.Optional)
+                    .SingleOrDefault(Option<T>.None));
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence,
     /// or a None value if the sequence is empty;
@@ -47,7 +50,7 @@ public static class EnumerableExtensions
     {
         return SingleEff(source).Run();
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence,
     /// or a None value if the sequence is empty;
@@ -57,7 +60,7 @@ public static class EnumerableExtensions
     {
         return SingleFin(source).ThrowIfFail();
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence,
     /// or a None value if the sequence is empty;
@@ -67,8 +70,8 @@ public static class EnumerableExtensions
     {
         return SingleFin(source)
             .Match(
-                Succ: i => i,
-                Fail: _ => Option<T>.None);
+                i => i,
+                _ => Option<T>.None);
     }
 
     /// <summary>
@@ -77,13 +80,14 @@ public static class EnumerableExtensions
     /// </summary>
     public static Eff<Option<T>> SingleEff<T>(this IEnumerable<T> source, Func<T, bool> predicate)
     {
-        return Eff(() => source
-            .Map(Prelude.Optional)
-            .SingleOrDefault(
-                iOpt =>  iOpt.Filter(predicate).IsSome,
-                Option<T>.None));
+        return
+            liftEff(() =>
+                source.Select(Prelude.Optional)
+                    .SingleOrDefault(
+                        iOpt => iOpt.Filter(predicate).IsSome,
+                        Option<T>.None));
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
     /// this method return an ExceptionalError if more than one element satisfies the condition.
@@ -92,7 +96,7 @@ public static class EnumerableExtensions
     {
         return SingleEff(source, predicate).Run();
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
     /// this method throw exception if more than one element satisfies the condition.
@@ -102,7 +106,7 @@ public static class EnumerableExtensions
         return SingleFin(source, predicate)
             .ThrowIfFail();
     }
-    
+
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition or a None value if no such element exists;
     /// this method return a None if more than one element satisfies the condition.
@@ -111,8 +115,8 @@ public static class EnumerableExtensions
     {
         return SingleFin(source, predicate)
             .Match(
-                Succ: i => i,
-                Fail: _ => Option<T>.None);
+                i => i,
+                _ => Option<T>.None);
     }
 
     /// <summary>
@@ -122,10 +126,7 @@ public static class EnumerableExtensions
         this IEnumerable<T> source,
         Func<T, bool> predicate)
     {
-        if (source.IsNullOrEmpty())
-        {
-            return (Enumerable.Empty<T>(), Enumerable.Empty<T>());
-        }
+        if (source.IsNullOrEmpty()) return (Enumerable.Empty<T>(), Enumerable.Empty<T>());
 
         var matched = source.Where(predicate);
         var unmatched = source.Except(matched);
@@ -153,7 +154,7 @@ public static class EnumerableExtensions
                 ? Some(source.All(predicate))
                 : None;
     }
-    
+
     /// <summary>
     /// Filters the collection based on an optional flag and a function that generates a predicate based on the flag.
     /// </summary>
@@ -167,10 +168,12 @@ public static class EnumerableExtensions
         this IEnumerable<T1> source,
         Option<T2> flagOpt,
         Func<T2, Func<T1, bool>> predicateConstructor)
-        => flagOpt.Match(
-            Some: val => source.Where(predicateConstructor(val)),
-            None: source);
-    
+    {
+        return flagOpt.Match(
+            val => source.Where(predicateConstructor(val)),
+            source);
+    }
+
     /// <summary>
     /// Filters the collection based on an optional predicate.
     /// </summary>
@@ -181,9 +184,11 @@ public static class EnumerableExtensions
     public static IEnumerable<T> WhereOptional<T>(
         this IEnumerable<T> source,
         Option<Func<T, bool>> predicateOpt)
-        => predicateOpt.Match(
-            Some: source.Where,
-            None: source);
+    {
+        return predicateOpt.Match(
+            source.Where,
+            source);
+    }
 
     /// <summary>
     /// Skips a specified number of elements from the beginning of the collection based on an optional count.
@@ -195,7 +200,9 @@ public static class EnumerableExtensions
     public static IEnumerable<T> SkipOptional<T>(
         this IEnumerable<T> source,
         Option<int> countOpt)
-        => countOpt.Match(
-            Some: source.Skip,
-            None: source);
+    {
+        return countOpt.Match(
+            source.Skip,
+            source);
+    }
 }

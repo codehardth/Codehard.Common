@@ -4,23 +4,23 @@ using LanguageExt.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Codehard.Functional.MassTransit.CombinedAffTypes
+namespace Codehard.Functional.MassTransit.CombinedEffTypes
 {
     /// <summary>
     /// Aff pair with Masstransit ConsumeContext
     /// </summary>
-    public readonly struct AffWithConsumeContext<TRes>
+    public readonly struct EffWithConsumeContext<TRes>
     {
-        private readonly Aff<TRes> aff;
+        private readonly Eff<TRes> effect;
 
         private readonly ConsumeContext consumeContext;
 
         /// <summary>
         /// Construct Aff with ConsumeContext
         /// </summary>
-        public AffWithConsumeContext(Aff<TRes> aff, ConsumeContext consumeContext)
+        public EffWithConsumeContext(Eff<TRes> effect, ConsumeContext consumeContext)
         {
-            this.aff = aff;
+            this.effect = effect;
             this.consumeContext = consumeContext;
         }
 
@@ -36,14 +36,14 @@ namespace Codehard.Functional.MassTransit.CombinedAffTypes
             var consumeContext = this.consumeContext;
 
             var respAff =
-                aff.Match(
+                effect.Match(
                         Succ: res =>
                             consumeContext.RespondAsync<TSuccResp>(res),
                         Fail: err =>
                             consumeContext.RespondAsync<TFailResp>(errorRespMsgFunc(err)))
                     .Map(static _ => unit);
 
-            var respFin = await respAff.Run();
+            var respFin = await respAff.RunAsync();
             logger?.LogIfFail(respFin);
 
             return respFin;
