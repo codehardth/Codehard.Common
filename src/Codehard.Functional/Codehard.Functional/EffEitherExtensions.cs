@@ -8,12 +8,12 @@ public static class EffEitherExtensions
     public static Eff<Either<TLeft, T>> MapNoneToLeft<T, TLeft>(
         this Eff<Option<T>> optEff, Func<TLeft> leftF)
     {
-        return 
+        return
             optEff.Map(
                 valOpt =>
                     valOpt.ToEither(leftF));
     }
-    
+
     public static Eff<Either<TLeft, T>> GuardToLeft<T, TLeft>(
         this Eff<T> eff,
         Func<T, bool> predicate,
@@ -26,7 +26,7 @@ public static class EffEitherExtensions
                         ? Right<TLeft, T>(val)
                         : Left<TLeft, T>(leftF()));
     }
-    
+
     public static Eff<Either<TLeft, T>> GuardEither<T, TLeft>(
         this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, bool> predicate,
@@ -41,7 +41,7 @@ public static class EffEitherExtensions
                                 ? Right<TLeft, T>(val)
                                 : Left<TLeft, T>(leftF())));
     }
-    
+
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
         this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, ValueTask<bool>> predicateAsync,
@@ -60,7 +60,7 @@ public static class EffEitherExtensions
                     .Run()
                 );
     }
-    
+
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
         this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, bool> predicate,
@@ -79,7 +79,7 @@ public static class EffEitherExtensions
                     .Run().Map(x => x.Flatten<TLeft, T>())
                 );
     }
-    
+
     public static Eff<Either<TLeft, T>> GuardEitherAsync<T, TLeft>(
         this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, ValueTask<bool>> predicateAsync,
@@ -98,7 +98,7 @@ public static class EffEitherExtensions
                     .Run().Map(x => x.Flatten<TLeft, T>())
                 );
     }
-    
+
     public static Eff<Either<TLeft, TRight>> MapRight<T, TRight, TLeft>(
         this Eff<Either<TLeft, T>> eitherValueEff,
         Func<T, TRight> mapF)
@@ -122,7 +122,7 @@ public static class EffEitherExtensions
                     .Run()
                 );
     }
-    
+
     public static Eff<Either<TLeft, TRight>> DoIfRight<TRight, TLeft>(
         this Eff<Either<TLeft, TRight>> eitherValueEff,
         Action<TRight> f)
@@ -132,7 +132,7 @@ public static class EffEitherExtensions
                 .Map(eitherValue =>
                     eitherValue.Do(f));
     }
-    
+
     public static Eff<Either<TLeft, TRight>> DoIfRightAsync<TRight, TLeft>(
         this Eff<Either<TLeft, TRight>> eitherValueEff,
         Func<TRight, ValueTask<Unit>> f)

@@ -35,9 +35,9 @@ public class ErrorWrapperActionResult : IActionResult
     public async Task ExecuteResultAsync(ActionContext context)
     {
         this.Error.ErrorCode.IfSome(errCode =>
-            context.HttpContext.Response.Headers.Add("x-error-code", errCode));
+            context.HttpContext.Response.Headers.Append("x-error-code", errCode));
 
-        context.HttpContext.Response.Headers.Add("x-trace-id", context.HttpContext.TraceIdentifier);
+        context.HttpContext.Response.Headers.Append("x-trace-id", context.HttpContext.TraceIdentifier);
 
         await this.Error.Data
             .Map(
