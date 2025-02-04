@@ -1,5 +1,5 @@
 // ReSharper disable once CheckNamespace
-namespace LanguageExt;
+namespace System.Linq;
 
 /// <summary>
 /// Extension methods for working with IEnumerable collections.

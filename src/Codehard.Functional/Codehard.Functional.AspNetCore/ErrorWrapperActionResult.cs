@@ -1,5 +1,6 @@
 using System.Dynamic;
-using Microsoft.AspNetCore.Http;
+using System.Net.Mime;
+using System.Text;
 
 namespace Codehard.Functional.AspNetCore;
 
@@ -65,9 +66,14 @@ public class ErrorWrapperActionResult : IActionResult
                 ar => ar.ExecuteResultAsync(context),
                 None: async () =>
                 {
-                    context.HttpContext.Response.StatusCode = (int)this.Error.StatusCode;
-                    context.HttpContext.Response.ContentType = "text/plain";
-                    await context.HttpContext.Response.WriteAsync(context.HttpContext.TraceIdentifier);
+                    var responseWrapper = new HttpResponseWrapper(context.HttpContext.Response)
+                    {
+                        StatusCode = (int)this.Error.StatusCode,
+                        ContentType = MediaTypeNames.Text.Plain
+                    };
+
+                    await responseWrapper.WriteAsync(
+                        context.HttpContext.TraceIdentifier, Encoding.UTF8, CancellationToken.None);
                 });
 
         return;
