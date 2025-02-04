@@ -10,7 +10,7 @@ public class PublishTests
 {
     public class Ping : INotification
     {
-        public string Message { get; init; }
+        public required string Message { get; init; }
     }
     
     [Fact]
