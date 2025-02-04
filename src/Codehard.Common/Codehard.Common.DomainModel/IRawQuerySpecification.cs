@@ -7,6 +7,7 @@ namespace Codehard.Common.DomainModel;
 public interface IRawQuerySpecification<in T> : ISpecification<T>
 {
     /// <summary>
+    /// Gets the raw query string.
     /// </summary>
     public string Query { get; }
 }

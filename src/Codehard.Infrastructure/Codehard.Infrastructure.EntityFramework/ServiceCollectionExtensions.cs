@@ -1,4 +1,3 @@
-using Codehard.Common.DomainModel;
 using Codehard.Infrastructure.EntityFramework.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,21 +18,5 @@ public static class DbContextOptionsBuilderExtensions
         PublishDomainEventDelegate? @delegate = default)
     {
         return optionsBuilder.AddInterceptors(new DomainEventPublisherInterceptor(@delegate));
-    }
-
-    /// <summary>
-    /// Registers an interceptor to recompute the Materialized View when the given event published.
-    /// </summary>
-    /// <param name="optionsBuilder"></param>
-    /// <param name="refreshMaterializedViewQuery"></param>
-    /// <typeparam name="TEvent"></typeparam>
-    /// <returns></returns>
-    public static DbContextOptionsBuilder AddRecomputeMaterializedViewInterceptor<TEvent>(
-        this DbContextOptionsBuilder optionsBuilder,
-        string refreshMaterializedViewQuery) 
-        where TEvent : IDomainEvent
-    {
-        return optionsBuilder.AddInterceptors(
-            new RecomputeMaterializedViewInterceptor<TEvent>(refreshMaterializedViewQuery));
     }
 }

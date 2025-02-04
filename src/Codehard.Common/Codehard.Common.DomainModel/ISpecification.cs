@@ -7,7 +7,7 @@ namespace Codehard.Common.DomainModel;
 public interface ISpecification<in T>
 {
     /// <summary>
-    /// Verify if the <see cref="obj"/> is satisfied by this specification.
+    /// Verify if the <paramref name="obj"/> is satisfied by this specification.
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>

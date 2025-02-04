@@ -33,7 +33,7 @@ public static class ControllerExtensions
                             ? (HttpStatusCode)err.Code
                             : HttpStatusCode.InternalServerError,
                         err.Message,
-                        error: err)),
+                        inner: err)),
             };
     }
 
@@ -95,27 +95,6 @@ public static class ControllerExtensions
                     }
                 });
     }
-
-    /// <summary>
-    /// Run the async effect into IActionResult in an asynchronous manner.
-    /// </summary>
-    /// <param name="aff"></param>
-    /// <param name="successStatusCode"></param>
-    /// <param name="logger"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public static ValueTask<IActionResult> RunToResultAsync<T>(
-        this Aff<T> aff,
-        HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
-    {
-        return aff
-            .Run()
-            .Map(fin => fin
-                .MatchToResult(
-                    successStatusCode: successStatusCode,
-                    logger: logger));
-    }
     
     /// <summary>
     /// Run the effect into IActionResult in a synchronous manner.
@@ -128,6 +107,20 @@ public static class ControllerExtensions
         return eff
             .Run()
             .MatchToResult(
+                successStatusCode: successStatusCode,
+                logger: logger);
+    }
+    
+    public static async Task<IActionResult> RunToResultAsync<T>(
+        this Eff<T> eff,
+        HttpStatusCode successStatusCode = HttpStatusCode.OK,
+        ILogger? logger = default,
+        CancellationToken cancellationToken = default)
+    {
+        var fin = await eff.RunAsync(EnvIO.New(token: cancellationToken));
+        
+        return
+            fin.MatchToResult(
                 successStatusCode: successStatusCode,
                 logger: logger);
     }

@@ -73,6 +73,7 @@ internal sealed record DomainEntityDefinition(
             declaration.GetAllUsings()
                 .Select(u => u.Name.ToString())
                 .ToImmutableArray();
+        
         var @namespace = symbol.ContainingNamespace.GetSafeDisplayName();
         var accessibility = symbol.DeclaredAccessibility;
         var entityName = symbol.Name;

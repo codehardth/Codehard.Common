@@ -24,7 +24,7 @@ public interface IRepository<T> : IQueryable<T>
     ValueTask<T?> GetByIdAsync(object[] id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Queries a data using given <see cref="specification"/>.
+    /// Queries a data using given <paramref name="specification"/>.
     /// </summary>
     /// <param name="specification"></param>
     /// <param name="cancellationToken"></param>

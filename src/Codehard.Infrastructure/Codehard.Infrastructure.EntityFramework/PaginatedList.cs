@@ -8,38 +8,34 @@ namespace Codehard.Infrastructure.EntityFramework;
 /// <inheritdoc />
 public sealed class PaginatedList<T> : IPaginatedList<T>
 {
-    private readonly int count;
-    private readonly int page;
-    private readonly int size;
-
     private readonly IReadOnlyList<T> source;
 
     private PaginatedList(IReadOnlyList<T> source, int count, int page, int size)
     {
-        this.count = count;
-        this.page = page;
-        this.size = size;
+        this.TotalCount = count;
+        this.CurrentPage = page;
+        this.PageSize = size;
 
         this.source = source;
     }
 
     /// <inheritdoc />
-    public int CurrentPage => this.page;
+    public int CurrentPage { get; }
 
     /// <inheritdoc />
-    public int TotalPages => (int)Math.Ceiling(this.count / (double)this.size);
+    public int TotalPages => (int)Math.Ceiling(this.TotalCount / (double)this.PageSize);
 
     /// <inheritdoc />
-    public int PageSize => this.size;
+    public int PageSize { get; }
 
     /// <inheritdoc />
-    public int TotalCount => this.count;
+    public int TotalCount { get; }
 
     /// <inheritdoc />
-    public bool HasPrevious => this.page > 1;
+    public bool HasPrevious => this.CurrentPage > 1;
 
     /// <inheritdoc />
-    public bool HasNext => this.page < this.TotalPages;
+    public bool HasNext => this.CurrentPage < this.TotalPages;
 
     /// <inheritdoc />
     public int Count => this.source.Count;
