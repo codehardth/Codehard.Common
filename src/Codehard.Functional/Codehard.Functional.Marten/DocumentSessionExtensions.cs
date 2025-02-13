@@ -6,19 +6,18 @@ using static LanguageExt.Prelude;
 namespace Marten;
 
 /// <summary>
-/// 
+/// Provides extension methods for Marten's IDocumentSession to work with Eff monads.
 /// </summary>
 public static class DocumentSessionExtensions
 {
     /// <summary>
     /// Save changes to the database
     /// </summary>
-    public static Aff<Unit> SaveChangesAff(
-        this IDocumentSession documentSession, CancellationToken cancellationToken = default)
+    public static Eff<Unit> SaveChangesEff(this IDocumentSession documentSession)
     {
-        return Aff(
-            async () =>
-            await documentSession.SaveChangesAsync(cancellationToken).ToUnit());
+        return liftIO(
+            async env =>
+            await documentSession.SaveChangesAsync(env.Token).ToUnit());
     }
     
     /// <summary>
@@ -27,11 +26,11 @@ public static class DocumentSessionExtensions
     /// <typeparam name="T">The type of the entities to store.</typeparam>
     /// <param name="documentSession">The Marten IDocumentSession to use for storing entities.</param>
     /// <param name="entities">The entities to store in the document session.</param>
-    /// <returns>An Eff&lt;Unit&gt; representing the side-effect of storing entities in the document session.</returns>
+    /// <returns>An Eff&lt;Unit&gt; representing the side effect of storing entities in the document session.</returns>
     public static Eff<Unit> StoreEff<T>(this IDocumentSession documentSession, params T[] entities)
         where T : notnull
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             documentSession.Store(entities);
 
@@ -45,11 +44,11 @@ public static class DocumentSessionExtensions
     /// <typeparam name="T">The type of the entities to update.</typeparam>
     /// <param name="documentSession">The Marten IDocumentSession to use for updating entities.</param>
     /// <param name="entities">The entities to update in the document session.</param>
-    /// <returns>An Eff&lt;Unit&gt; representing the side-effect of updating entities in the document session.</returns>
+    /// <returns>An Eff&lt;Unit&gt; representing the side effect of updating entities in the document session.</returns>
     public static Eff<Unit> UpdateEff<T>(this IDocumentSession documentSession, params T[] entities)
         where T : notnull
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             documentSession.Update(entities);
 
@@ -62,12 +61,12 @@ public static class DocumentSessionExtensions
     /// </summary>
     /// <typeparam name="T">The type of the entities to update.</typeparam>
     /// <param name="documentSession">The Marten IDocumentSession to use for updating entities.</param>
-    /// <param name="entities">The entities to update in the document session.</param>
-    /// <returns>An Eff&lt;Unit&gt; representing the side-effect of updating entities in the document session.</returns>
+    /// <param name="entity">The entity to update in the document session.</param>
+    /// <returns>An Eff&lt;Unit&gt; representing the side effect of updating entities in the document session.</returns>
     public static Eff<Unit> DeleteEff<T>(this IDocumentSession documentSession, T entity)
         where T : notnull
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             documentSession.Delete(entity);
 
@@ -81,11 +80,11 @@ public static class DocumentSessionExtensions
     /// <typeparam name="T">The type of the entity to delete.</typeparam>
     /// <param name="documentSession">The Marten IDocumentSession to use for deleting the entity.</param>
     /// <param name="id">The identifier of the entity to delete.</param>
-    /// <returns>An Eff&lt;Unit&gt; representing the side-effect of deleting the entity from the document session.</returns>
+    /// <returns>An Eff&lt;Unit&gt; representing the side effect of deleting the entity from the document session.</returns>
     public static Eff<Unit> DeleteEff<T>(this IDocumentSession documentSession, Guid id)
         where T : notnull
     {
-        return Eff(() =>
+        return liftEff(() =>
         {
             documentSession.Delete<T>(id);
 

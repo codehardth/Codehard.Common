@@ -253,7 +253,7 @@ public static class ChangeTrackingExtensions
 
             // Invoke the Cast<T>() method with the original and modified collections
             return (IEnumerable)castMethod.Invoke(
-                null, new[] { collection })!;
+                null, [collection])!;
         }
         
         bool SequenceEqual(IEnumerable collection, IEnumerable? otherCollection)
@@ -268,8 +268,8 @@ public static class ChangeTrackingExtensions
 
             // Invoke the SequenceEqual<T>() method with the original and modified collections
             return (bool)sequenceEqualMethod.Invoke(
-                null, 
-                new[] { (object)collection, otherCollection })!;
+                null,
+                [(object)collection, otherCollection])!;
         }
 
         IEqualityComparer? CreatePrimaryKeyComparer()
@@ -283,7 +283,7 @@ public static class ChangeTrackingExtensions
 
             // Get the constructor for the CompositeEqualityComparer<T> class that takes an IReadOnlyCollection<Func<object, object?>> parameter
             var constructor = genericCompositeEqualityComparerType.GetConstructor(
-                new[] { typeof(IReadOnlyCollection<Func<object, object?>>) });
+                [typeof(IReadOnlyCollection<Func<object, object?>>)]);
 
             var primaryKeyProperties =
                 collectionEntry.Metadata.TargetEntityType.FindPrimaryKey()
@@ -298,7 +298,7 @@ public static class ChangeTrackingExtensions
             
             // Call the constructor to create an instance of the CompositeEqualityComparer<T> class
             var compositeEqualityComparerInstance =
-                constructor?.Invoke(new object?[] { propertyGetters });
+                constructor?.Invoke([propertyGetters]);
 
             return (IEqualityComparer?)compositeEqualityComparerInstance;
         }
@@ -314,30 +314,29 @@ public static class ChangeTrackingExtensions
             // Invoke the Except<T>() method with the original and modified collections
             return (IEnumerable)exceptMethod.Invoke(
                         null,
-                        new[] { collection, otherCollection, comparer })!;
+                        [collection, otherCollection, comparer])!;
         }
         
         void SetItemAsAdded(IEnumerable items)
         {
-            if (collectionType.IsGenericType 
-                && collectionType.GetGenericTypeDefinition() == typeof(List<>))
+            if (!collectionType.IsGenericType
+                || collectionType.GetGenericTypeDefinition() != typeof(List<>)) return;
+            
+            var listType = typeof(List<>).MakeGenericType(elementType);
+
+            // Get the MethodInfo object for the AddRange method
+            var addRangeMethod = listType.GetMethod(nameof(List<object>.AddRange));
+
+            // Call the AddRange method on the list object
+            addRangeMethod!.Invoke(
+                collectionEntry.CurrentValue,
+                [items]);
+                
+            foreach (var item in items)
             {
-                var listType = typeof(List<>).MakeGenericType(elementType);
-
-                // Get the MethodInfo object for the AddRange method
-                var addRangeMethod = listType.GetMethod(nameof(List<object>.AddRange));
-
-                // Call the AddRange method on the list object
-                addRangeMethod!.Invoke(
-                    collectionEntry.CurrentValue,
-                    new object[] { items });
+                var itemEntry = collectionEntry.FindEntry(item);
                 
-                foreach (var item in items)
-                {
-                    var itemEntry = collectionEntry.FindEntry(item);
-                
-                    itemEntry!.State = EntityState.Added;
-                }
+                itemEntry!.State = EntityState.Added;
             }
         }
 

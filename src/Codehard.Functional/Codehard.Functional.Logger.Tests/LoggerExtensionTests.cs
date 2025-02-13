@@ -20,7 +20,7 @@ namespace Codehard.Functional.Logger.Tests
             var mockedLogger = new Mock<ILogger>();
 
             // Act
-            LoggerExtensions.Log(mockedLogger.Object, error);
+            mockedLogger.Object.Log(error);
 
             // Assert
             VerifyLogMessage("1 : Inner error");
@@ -41,17 +41,17 @@ namespace Codehard.Functional.Logger.Tests
         }
 
         [Fact]
-        public async Task WhenRunFailAff_WithLog_ShouldLogInformation_ThenLogError()
+        public async Task WhenRunFailEff_WithLog_ShouldLogInformation_ThenLogError()
         {
             // Arrange
             const string failMessage = "fail successfully.";
 
             Mock<ILogger> mockedLogger = new Mock<ILogger>();
 
-            var aff = FailAff<Unit>(Error.New(failMessage));
+            var eff = FailEff<Unit>(Error.New(failMessage));
 
             // Act
-            _ = await aff.WithLog(mockedLogger.Object).Run();
+            _ = await eff.WithLog(mockedLogger.Object).RunAsync();
 
             // Assert
             VerifyLogLevel(LogLevel.Information, 1);
@@ -71,15 +71,15 @@ namespace Codehard.Functional.Logger.Tests
         }
 
         [Fact]
-        public async Task WhenRunAff_WithLog_ShouldLogInformation_Twice()
+        public async Task WhenRunEff_WithLog_ShouldLogInformation_Twice()
         {
             // Arrange
             Mock<ILogger> mockedLogger = new Mock<ILogger>();
 
-            var aff = SuccessAff(unit);
+            var eff = SuccessEff(unit);
 
             // Act
-            _ = await aff.WithLog(mockedLogger.Object).Run();
+            _ = await eff.WithLog(mockedLogger.Object).RunAsync();
 
             // Assert
             VerifyLogLevel(LogLevel.Information, 2);
@@ -107,7 +107,7 @@ namespace Codehard.Functional.Logger.Tests
             var error = HttpResultError.New(
                 HttpStatusCode.InternalServerError,
                 "Outer error",
-                error: innerError);
+                inner: innerError);
 
             var mockedLogger = new Mock<ILogger>();
 

@@ -1,5 +1,6 @@
 using System.Text;
 using Lamar;
+using LanguageExt;
 using MediatR;
 using Shouldly;
 
@@ -9,11 +10,11 @@ public class PublishTests
 {
     public class Ping : INotification
     {
-        public string Message { get; init; }
+        public required string Message { get; init; }
     }
     
     [Fact]
-    public async Task WhenPublishMessage_ShouldNotifidEachHandlersCorrectly()
+    public async Task WhenPublishMessage_ShouldNotifiedEachHandlersCorrectly()
     {
         // Arrange
         var builder = new StringBuilder();
@@ -23,8 +24,8 @@ public class PublishTests
         // Act
         var mediator = container.GetInstance<IMediator>();
 
-        await mediator.PublishAff(new Ping { Message = "Ping" })
-                      .Run();
+        _ = await mediator.PublishEff(new Ping { Message = "Ping" })
+                          .RunAsync();
 
         // Assert
         var result = builder.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);

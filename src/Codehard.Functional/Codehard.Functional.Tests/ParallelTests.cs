@@ -40,13 +40,13 @@ public class ParallelTests
         // Arrange
         var logger = new LogifyStub();
 
-        var affs =
+        var effs =
             Enumerable.Range(0, count)
-                .Map(i => Aff(async () => await logger.LogAsync(i)))
+                .Select(i => liftEff(async () => await logger.LogAsync(i)))
                 .ToArray();
 
         // Act
-        var fin = await IterParallel(affs).Run();
+        var fin = await IterParallel(effs).RunAsync();
 
         // Assert
         Assert.Equal(count, logger.InvokeCount);
@@ -59,13 +59,13 @@ public class ParallelTests
         // Arrange
         var logger = new LogifyStub();
 
-        var affs =
+        var effs =
             Enumerable.Range(0, 3)
-                .Map(_ => Aff(async () => await logger.LogAsync(null)))
+                .Select(_ => liftEff(async () => await logger.LogAsync(null)))
                 .ToArray();
 
         // Act
-        var fin = await IterParallel(affs).Run();
+        var fin = await IterParallel(effs).RunAsync();
 
         // Assert
         Assert.True(fin.IsFail);

@@ -23,13 +23,15 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+        return
+            Enumerable.Range(1, 5)
+                .Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                })
+                .ToArray();
     }
 
     [HttpGet(template: "GetSuccessEff")]
@@ -49,10 +51,11 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(template: "Get500FailWithMsgEff")]
     public IActionResult Get500FailWithMsgEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(
-            HttpResultError.New(
-                HttpStatusCode.InternalServerError,
-                "Error Msg"));
+        var eff =
+            FailEff<IEnumerable<WeatherForecast>>(
+                HttpResultError.New(
+                    HttpStatusCode.InternalServerError,
+                    "Error Msg"));
 
         return eff.RunToResult();
     }
@@ -61,8 +64,14 @@ public class WeatherForecastController : ControllerBase
     public IActionResult Get500FailWithExceptionEff()
     {
         var eff =
-            Eff<IEnumerable<WeatherForecast>>(
-                () => throw new Exception("Error Msg"));
+            liftEff(() =>
+            {
+                throw new Exception("Error Msg");
+
+#pragma warning disable CS0162 // Unreachable code detected
+                return default(IEnumerable<WeatherForecast>);
+#pragma warning restore CS0162 // Unreachable code detected
+            });
 
         return eff.RunToResult();
     }
@@ -70,11 +79,12 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(template: "Get500FailWithMsgAndErrCodeEff")]
     public IActionResult Get500FailWithMsgAndErrCodeEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(
-            HttpResultError.New(
-                HttpStatusCode.InternalServerError,
-                "Error Msg",
-                errorCode: "Err001"));
+        var eff =
+            FailEff<IEnumerable<WeatherForecast>>(
+                HttpResultError.New(
+                    HttpStatusCode.InternalServerError,
+                    "Error Msg",
+                    errorCode: "Err001"));
 
         return eff.RunToResult();
     }
@@ -82,15 +92,17 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(template: "Get500FailWithMsgErrCodeAndDataEff")]
     public IActionResult Get500FailWithMsgErrCodeAndDataEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(HttpResultError.New(
-            HttpStatusCode.InternalServerError,
-            "Error Msg",
-            errorCode: "Err001",
-            data: new
-            {
-                TraceId = Guid.NewGuid(),
-                CorrelationId = Guid.NewGuid(),
-            }));
+        var eff =
+            FailEff<IEnumerable<WeatherForecast>>(
+                HttpResultError.New(
+                    HttpStatusCode.InternalServerError,
+                    "Error Msg",
+                    errorCode: "Err001",
+                    data: new
+                    {
+                        TraceId = Guid.NewGuid(),
+                        CorrelationId = Guid.NewGuid(),
+                    }));
 
         return eff.RunToResult();
     }
@@ -98,11 +110,13 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(template: "Get400FailWithMsgErrCodeAndDataEff")]
     public IActionResult Get400FailWithMsgErrCodeAndDataEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(HttpResultError.New(
-            HttpStatusCode.BadRequest,
-            "Error Msg",
-            errorCode: "Err001",
-            data: this.BadRequest()));
+        var eff =
+            FailEff<IEnumerable<WeatherForecast>>(
+                HttpResultError.New(
+                    HttpStatusCode.BadRequest,
+                    "Error Msg",
+                    errorCode: "Err001",
+                    data: this.BadRequest()));
 
         return eff.RunToResult();
     }
@@ -110,15 +124,17 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(template: "Get401FailWithMsgErrCodeAndDataEff")]
     public IActionResult Get403FailWithMsgErrCodeAndDataEff()
     {
-        var eff = FailEff<IEnumerable<WeatherForecast>>(HttpResultError.New(
-            HttpStatusCode.BadRequest,
-            "Error Msg",
-            errorCode: "Err001",
-            data: this.Unauthorized(
-                new
-                {
-                    ErrorMessage = "Unauthorized error message",
-                })));
+        var eff =
+            FailEff<IEnumerable<WeatherForecast>>(
+                HttpResultError.New(
+                    HttpStatusCode.BadRequest,
+                    "Error Msg",
+                    errorCode: "Err001",
+                    data: this.Unauthorized(
+                        new
+                        {
+                            ErrorMessage = "Unauthorized error message",
+                        })));
 
         return eff.RunToResult();
     }

@@ -12,12 +12,19 @@ public abstract class Entity<TKey>
     where TKey : struct
 {
     private readonly Action<object, string> lazyLoader;
-    private readonly List<IDomainEvent<TKey>> events = new();
+    private readonly List<IDomainEvent<TKey>> events = [];
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Entity{TKey}"/> class.
+    /// </summary>
     protected Entity()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Entity{TKey}"/> class with a lazy loader.
+    /// </summary>
+    /// <param name="lazyLoader">The action responsible for loading navigation properties.</param>
     protected Entity(Action<object, string> lazyLoader)
     {
         this.lazyLoader = lazyLoader;

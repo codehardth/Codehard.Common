@@ -2,6 +2,7 @@
 using Codehard.Functional.MassTransit.Interfaces;
 using LanguageExt.Common;
 
+// ReSharper disable once CheckNamespace
 namespace MassTransit;
 
 /// <summary>
@@ -18,25 +19,25 @@ public static class ResponseExtensions
     /// An instance of <typeparamref name="TSucc"/> if the call is success,
     /// otherwise an error with <see cref="MassTransitFaultMessageException{T}"/> of <typeparamref name="TFail"/>.
     /// </returns>
-    public static Aff<TSucc> ToAff<TSucc, TFail>(this Task<Response<TSucc, TFail>> response)
+    public static Eff<TSucc> ToEff<TSucc, TFail>(this Task<Response<TSucc, TFail>> response)
         where TSucc : class, ICorrelatableMessage
         where TFail : class, IFaultMessage
     {
         return
-            Aff(async () => await response)
-            .Bind(r =>
-            {
-                r.Deconstruct(out var success, out var failure);
+            liftEff(async () => await response)
+                .Bind(r =>
+                {
+                    r.Deconstruct(out var success, out var failure);
 
-                return
-                    !success.IsCompletedSuccessfully
-                        ? failure.ToAff()
-                            .Map(f =>
-                                Error.New(
-                                    string.Empty,
-                                    (Exception) new MassTransitFaultMessageException<TFail>(f.Message)))
-                            .Bind(FailAff<TSucc>)
-                        : success.ToAff().Map(s => s.Message);
-            });
+                    return
+                        !success.IsCompletedSuccessfully
+                            ? liftEff(() => failure)
+                                .Map(f =>
+                                    Error.New(
+                                        string.Empty,
+                                        (Exception) new MassTransitFaultMessageException<TFail>(f.Message)))
+                                .Bind(FailEff<TSucc>)
+                            : liftEff(() => success).Map(s => s.Message);
+                });
     }
 }

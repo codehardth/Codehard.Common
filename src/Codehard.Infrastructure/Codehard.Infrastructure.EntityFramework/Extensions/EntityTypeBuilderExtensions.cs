@@ -1,5 +1,4 @@
 using System.Reflection;
-using Codehard.Common.DomainModel;
 using Codehard.Common.DomainModel.Types;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

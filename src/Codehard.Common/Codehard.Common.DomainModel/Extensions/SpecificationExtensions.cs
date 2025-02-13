@@ -32,12 +32,12 @@ public static class SpecificationExtensions
     }
 
     /// <summary>
-    /// Logically AndAlso the <see cref="spec1"/> and <see cref="spec2"/>.
+    /// Logically AndAlso the <paramref name="spec1"/> and <paramref name="spec2"/>.
     /// </summary>
-    /// <param name="spec1"></param>
-    /// <param name="spec2"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <param name="spec1">The first specification.</param>
+    /// <param name="spec2">The second specification.</param>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <returns>A new specification that represents the logical AndAlso of the two specifications.</returns>
     public static IExpressionSpecification<T> And<T>(
         this IExpressionSpecification<T> spec1,
         IExpressionSpecification<T> spec2)
@@ -65,7 +65,7 @@ public static class SpecificationExtensions
     }
 
     /// <summary>
-    /// Logically OrElse the <see cref="spec1"/> and <see cref="spec2"/>.
+    /// Logically OrElse the <paramref name="spec1"/> and <paramref name="spec2"/>.
     /// </summary>
     /// <param name="spec1"></param>
     /// <param name="spec2"></param>
@@ -98,7 +98,7 @@ public static class SpecificationExtensions
     }
 
     /// <summary>
-    /// Logically Not the <see cref="spec"/>/>.
+    /// Logically Not the <paramref name="spec"/>.
     /// </summary>
     /// <param name="spec"></param>
     /// <typeparam name="T"></typeparam>

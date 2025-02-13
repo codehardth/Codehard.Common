@@ -97,7 +97,7 @@ internal sealed class Compiler<TCodeGenerator>
                 new[]
                 {
                     MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(Aff<>).GetTypeInfo().Assembly.Location),
+                    MetadataReference.CreateFromFile(typeof(Eff<>).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(typeof(DbContext).GetTypeInfo().Assembly.Location),
                     MetadataReference.CreateFromFile(taskExtensions),
                     MetadataReference.CreateFromFile(netstandard),

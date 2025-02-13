@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using LanguageExt.UnsafeValueAccess;
 
 namespace Codehard.Functional.AspNetCore;
 
@@ -74,7 +75,7 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
                 Sanitize(context.HttpContext.Request.QueryString.Value),
                 Sanitize(context.HttpContext.Request.Method),
                 error.StatusCode,
-                error.ErrorCode.IfNoneUnsafe(default(string)));
+                error.ErrorCode.ValueUnsafe());
 
             LogErrorOpt(error.Inner);
         }
@@ -84,8 +85,7 @@ public class ErrorWrapperActionResultLoggingFilter : IAsyncActionFilter
             errorOpt.Iter(
                 Some: error =>
                 {
-                    Log(
-                        exception: error.Exception.IfNoneUnsafe(default(Exception)));
+                    Log(exception: error.Exception.ValueUnsafe());
                     
                     LogErrorOpt(error.Inner);
                 });

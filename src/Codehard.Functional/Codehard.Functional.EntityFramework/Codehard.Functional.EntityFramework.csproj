@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Version>3.0.1</Version>
@@ -10,19 +10,24 @@
         <RepositoryUrl>https://github.com/codehardth/Codehard.Common/tree/main/src/Codehard.Functional</RepositoryUrl>
         <PackageReleaseNotes>Add Codehard.Common dependency</PackageReleaseNotes>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LanguageExt.Core" Version="4.4.7" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.14" />
+        <PackageReference Include="LanguageExt.Core" Version="5.0.0-beta-46" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Traits\" />
     </ItemGroup>
 
 </Project>

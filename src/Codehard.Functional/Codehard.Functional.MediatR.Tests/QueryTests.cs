@@ -66,9 +66,9 @@ public class QueryTests
 
         var response =
             await mediator
-                .SendQueryAff<Ping, PongQueryResult>(new Ping { Message = "Ping" })
+                .SendQueryEff<Ping, PongQueryResult>(new Ping { Message = "Ping" })
                 .MapExpectedResultError()
-                .Run();
+                .RunAsync();
 
         // Assert
         Assert.True(response.IsSucc);
@@ -112,9 +112,9 @@ public class QueryTests
 
         var response =
             await mediator
-                .SendQueryAff<PingNotFound, PongQueryResult>(new PingNotFound { Message = "Ping" })
+                .SendQueryEff<PingNotFound, PongQueryResult>(new PingNotFound { Message = "Ping" })
                 .MapExpectedResultError()
-                .Run();
+                .RunAsync();
 
         // Assert
         Assert.True(response.IsSucc);

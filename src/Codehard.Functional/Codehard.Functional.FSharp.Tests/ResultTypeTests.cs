@@ -31,7 +31,7 @@ namespace Codehard.Functional.FSharp.Tests
             var fin = fSharpResult.ToFin(ResultType.mapError);
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => fin.ThrowIfFail());
         }
         
@@ -60,65 +60,36 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
         [Fact]
-        public async Task WhenConvertOkResultToAff_ShouldRunToSuccess()
-        {
-            // Arrange
-            var fSharpResult = ResultType.getOkResult();
-
-            // Act
-            var aff = fSharpResult.ToAff(ResultType.mapError);
-            var result = (await aff.Run()).ThrowIfFail();
-
-            // Assert
-            Assert.Equal(0, result);
-        }
-
-        [Fact]
-        public async Task WhenConvertErrorResultToAff_ShouldRunToFail()
-        {
-            // Arrange
-            var fSharpResult = ResultType.getErrorResult();
-
-            // Act
-            var aff = fSharpResult.ToAff(ResultType.mapError);
-            var result = await aff.Run();
-
-            // Assert
-            Assert.Throws<ExpectedException>(
-                () => result.ThrowIfFail());
-        }
-        
-        [Fact]
-        public async Task WhenConvertTaskOfOkResultToAff_ShouldRunToSuccess()
+        public async Task WhenConvertTaskOfOkResultToEff_ShouldRunToSuccess()
         {
             // Arrange
             var fSharpResult = Task.FromResult(ResultType.getOkResult());
 
             // Act
-            var aff = fSharpResult.ToAff(ResultType.mapError);
-            var result = (await aff.Run()).ThrowIfFail();
+            var eff = fSharpResult.ToEff(ResultType.mapError);
+            var result = (await eff.RunAsync()).ThrowIfFail();
 
             // Assert
             Assert.Equal(0, result);
         }
 
         [Fact]
-        public async Task WhenConvertTaskOfErrorResultToAff_ShouldRunToFail()
+        public async Task WhenConvertTaskOfErrorResultToEff_ShouldRunToFail()
         {
             // Arrange
             var fSharpResult = Task.FromResult(ResultType.getErrorResult());
 
             // Act
-            var aff = fSharpResult.ToAff(ResultType.mapError);
-            var result = await aff.Run();
+            var eff = fSharpResult.ToEff(ResultType.mapError);
+            var result = await eff.RunAsync();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
@@ -147,48 +118,19 @@ namespace Codehard.Functional.FSharp.Tests
             var result = eff.Run();
 
             // Assert
-            Assert.Throws<ExpectedException>(
+            Assert.Throws<WrappedErrorExpectedException>(
                 () => result.ThrowIfFail());
         }
         
         [Fact]
-        public async Task WhenWrapTaskOfOkResultInAff_ShouldRunToSuccess()
+        public async Task WhenWrapTaskOfUnitOkResultInEff_ShouldRunToSuccess()
         {
             // Act
-            var eff = Aff(
-                () => Task.FromResult(ResultType.getOkResult()),
-                ResultType.mapError);
-            
-            var result = (await eff.Run()).ThrowIfFail();
-
-            // Assert
-            Assert.Equal(0, result);
-        }
-        
-        [Fact]
-        public async Task WhenWrapTaskOfErrorResultInAff_ShouldRunToFail()
-        {
-            // Act
-            var eff = Aff(
-                () => Task.FromResult(ResultType.getErrorResult()),
-                ResultType.mapError);
-            
-            var result = await eff.Run();
-
-            // Assert
-            Assert.Throws<ExpectedException>(
-                () => result.ThrowIfFail());
-        }
-        
-        [Fact]
-        public async Task WhenWrapTaskOfUnitOkResultInAff_ShouldRunToSuccess()
-        {
-            // Act
-            var eff = Aff(
+            var eff = Eff(
                 () => Task.FromResult(ResultType.getUnitOkResult()),
                 ResultType.mapError);
             
-            var result = await eff.Run();
+            var result = await eff.RunAsync();
             
             // Assert
             Assert.IsType<Unit>(result.ThrowIfFail());

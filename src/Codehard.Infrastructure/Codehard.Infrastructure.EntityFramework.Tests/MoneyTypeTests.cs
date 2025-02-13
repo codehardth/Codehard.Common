@@ -18,7 +18,7 @@ public class MoneyTypeTests
     }
     
     [Fact]
-    public async void WhenAddNewEntity_ShouldPersistedToDb()
+    public async Task WhenAddNewEntity_ShouldPersistedToDb()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -41,7 +41,7 @@ public class MoneyTypeTests
         var newEntity = EntityA.Create();
         
         context.As.Add(newEntity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         context.Entry(newEntity).State = EntityState.Detached;
 
         // Assert

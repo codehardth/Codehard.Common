@@ -174,10 +174,10 @@ public readonly struct Eff{dbContext.Identifier}
             var methodGenericParameters = SourceReader.GetMethodGenericParameters(method);
             
             return
-                $"Aff<Unit> {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
+                $"Eff<Unit> {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
-                $"        return Aff(async () => {{ await self.dbContext.{method.Identifier}" +
+                $"        return liftEff(async () => {{ await self.dbContext.{method.Identifier}" +
                 $"({parameters}); return unit; }});" + "\n" +
                 $"    }}";
         }
@@ -210,10 +210,10 @@ public readonly struct Eff{dbContext.Identifier}
             }
                 
             return
-                $"Aff<{taskTypeArgumentName}> {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
+                $"Eff<{taskTypeArgumentName}> {method.Identifier}{methodGenericParameters}({declarationParameters})" + "\n" +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
-                $"        return Aff<{taskTypeArgumentName}>(async () => await self.dbContext.{method.Identifier}({parameters}));" + "\n" +
+                $"        return liftEff<{taskTypeArgumentName}>(async () => await self.dbContext.{method.Identifier}({parameters}));" + "\n" +
                 $"    }}";
         }
         
@@ -255,12 +255,12 @@ public readonly struct Eff{dbContext.Identifier}
             var parameters = SymbolReader.GetMethodCallParameters(methodSymbol);
 
             return
-                $"Aff<Unit> {methodSymbol.Name}{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}" +
+                $"Eff<Unit> {methodSymbol.Name}{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}" +
                 $"({declarationParameters})" + "\n" +
                 SymbolReader.GetMethodConstraints(methodSymbol) +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
-                $"        return Aff(async () => {{ await self.dbContext.{methodSymbol.Name}" +
+                $"        return liftEff(async () => {{ await self.dbContext.{methodSymbol.Name}" +
                 $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({parameters});" +
                 $" return unit; }});" + "\n" +
                 $"    }}";
@@ -290,12 +290,12 @@ public readonly struct Eff{dbContext.Identifier}
             }
             
             return
-                $"Aff<{taskTypeArgumentName}> {methodSymbol.Name}" +
+                $"Eff<{taskTypeArgumentName}> {methodSymbol.Name}" +
                 $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({declarationParameters})" + "\n" +
                 SymbolReader.GetMethodConstraints(methodSymbol) +
                 $"    {{" + "\n" +
                 $"        var self = this;" + "\n" +
-                $"        return Aff<{taskTypeArgumentName}>(async () => await self.dbContext.{methodSymbol.Name}" +
+                $"        return liftEff<{taskTypeArgumentName}>(async () => await self.dbContext.{methodSymbol.Name}" +
                 $"{SymbolReader.GetMethodGenericTypeParameters(methodSymbol)}({parameters}));" + "\n" +
                 $"    }}";
         }

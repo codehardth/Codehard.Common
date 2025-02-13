@@ -14,7 +14,9 @@ public class ModelBuilderExtensionsTests
         var options = new DbContextOptionsBuilder<TestDbContext>()
             .UseSqlite(CreateInMemoryDatabase())
             .Options;
+        
         var assembly = Assembly.GetExecutingAssembly();
+        
         var expectedEntityTypes =
             assembly
                 .GetTypes()
@@ -33,6 +35,8 @@ public class ModelBuilderExtensionsTests
         
         // +2 because of the Money type and the Nullable Money type
         Assert.Equal(expectedEntityTypes + 3, actualEntityTypes);
+        
+        return;
 
         static SqliteConnection CreateInMemoryDatabase()
         {

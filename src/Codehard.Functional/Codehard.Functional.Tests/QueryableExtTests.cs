@@ -13,7 +13,7 @@ public class QueryableExtTests
         // Act
         var res = list
             .AsQueryable()
-                .WhereIfTrue(
+                .WhereIf(
                 true,
                 n => n == 1);
 
@@ -31,7 +31,7 @@ public class QueryableExtTests
         // Act
         var res = list
             .AsQueryable()
-            .WhereIfTrue(
+            .WhereIf(
                 false,
                 n => n == 1,
                 n => n == 0);

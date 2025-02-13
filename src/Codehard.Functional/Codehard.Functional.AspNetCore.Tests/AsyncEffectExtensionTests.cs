@@ -1,4 +1,5 @@
 using System.Net;
+using LanguageExt;
 using LanguageExt.Common;
 using static LanguageExt.Prelude;
 
@@ -10,17 +11,19 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingHttpStatusCode()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something went wrong")));
+        var eff = liftEff(async () => await ValueTask.FromException<int>(new Exception("Something went wrong")));
 
         // Act
-        var res = await aff.MapFailToInternalServerError("Err001")
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError("Err001")
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -35,17 +38,19 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingErrorMessage()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+        var eff = FailEff<int>(Error.New("Something went wrong"));
 
         // Act
-        var res = await aff.MapFailToInternalServerError(message: "Error Message")
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError(message: "Error Message")
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -58,17 +63,19 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerError_ShouldHaveHttpResultErrorWithCorrespondingObject()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something went crazy")));
+        var eff = liftEff(async () => await ValueTask.FromException<int>(new Exception("Something went crazy")));
 
         // Act
-        var res = await aff.MapFailToInternalServerError(data: new SomeData(1, "2"))
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError(data: new SomeData(1, "2"))
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -81,18 +88,22 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToInternalServerErrorWithMessageFunc_ShouldHaveHttpResultErrorWithCorrespondingMessage()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something went crazy")));
+        var eff =
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something went crazy")));
 
         // Act
-        var res = await aff.MapFailToInternalServerError(
-                err => $"The error message is {err.Message}")
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError(err => $"The error message is {err.Message}")
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -103,18 +114,23 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToOkWithAlreadyMapFailInternalServerError_ShouldOverrideToOk()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+        var eff =
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something not right")));
 
         // Act
-        var res = await aff.MapFailToInternalServerError(message: "Error Message")
-            .MapFailToOK()
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError(message: "Error Message")
+                .MapFailToOK()
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
@@ -125,18 +141,23 @@ public class AsyncEffectExtensionTests
     public async Task WhenMapFailToOkWithNotOverrideOptionOnAlreadyMapFailInternalServerError_ShouldNotOverrideInternalServerError()
     {
         // Arrange
-        var aff = Aff(() => ValueTask.FromException<int>(new Exception("Something not right")));
+        var eff =
+            liftEff(
+                async () =>
+                await ValueTask.FromException<int>(new Exception("Something not right")));
 
         // Act
-        var res = await aff.MapFailToInternalServerError(message: "Error Message")
-            .MapFailToOK(@override: false)
-            .Run();
+        var res =
+            await eff.MapFailToInternalServerError(message: "Error Message")
+                .MapFailToOK(@override: false)
+                .RunAsync();
 
         // Assert
         Assert.True(res.IsFail);
         var error = res.Match(
             Succ: _ => Error.New("?"),
             Fail: err => err);
+        
         Assert.IsType<HttpResultError>(error);
 
         var httpResultErr = error as HttpResultError;
