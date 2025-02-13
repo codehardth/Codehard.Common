@@ -26,4 +26,8 @@
       <ProjectReference Include="..\..\Codehard.Common\Codehard.Common.DomainModel\Codehard.Common.DomainModel.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Traits\" />
+    </ItemGroup>
+
 </Project>
