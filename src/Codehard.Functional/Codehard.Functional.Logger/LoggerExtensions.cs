@@ -11,7 +11,7 @@ public static class LoggerExtensions
         this ILogger logger,
         Option<Error> errorOpt,
         LogLevel logLevel = LogLevel.Information,
-        IExceptionHandler? exceptionHandler = null)
+        Action<ILogger, Error, LogLevel>? exceptionHandler = null)
     {
         return
             errorOpt.Match(
@@ -19,8 +19,16 @@ public static class LoggerExtensions
                 {
                     Log(logger, error.Inner, logLevel);
 
-                    return exceptionHandler?.Handle(error, logger, logLevel) ??
-                           DefaultExceptionHandler.Instance.Handle(error, logger, logLevel);
+                    if (exceptionHandler != null)
+                    {
+                        exceptionHandler?.Invoke(logger, error, logLevel);
+                    }
+                    else
+                    {
+                        DefaultExceptionHandler.Handle(logger, error, logLevel);
+                    }
+
+                    return unit;
                 },
                 None: unit);
     }
@@ -56,7 +64,7 @@ public static class LoggerExtensions
         this ILogger logger,
         Error error,
         LogLevel logLevel = LogLevel.Information,
-        IExceptionHandler? exceptionHandler = null)
+        Action<ILogger, Error, LogLevel>? exceptionHandler = null)
     {
         Log(logger, Some(error), logLevel, exceptionHandler);
 
@@ -76,7 +84,7 @@ public static class LoggerExtensions
         this ILogger logger,
         Error error,
         LogLevel logLevel = LogLevel.Information,
-        IExceptionHandler? exceptionHandler = null)
+        Action<ILogger, Error, LogLevel>? exceptionHandler = null)
     {
         Log(logger, Some(error), logLevel, exceptionHandler);
 
@@ -96,7 +104,7 @@ public static class LoggerExtensions
         this ILogger logger,
         Fin<T> fin,
         LogLevel logLevel = LogLevel.Information,
-        IExceptionHandler? exceptionHandler = null)
+        Action<ILogger, Error, LogLevel>? exceptionHandler = null)
     {
         fin.IfFail(err => Log(logger, err, logLevel, exceptionHandler));
 
