@@ -17,7 +17,17 @@ public static class LoggerExtensions
 
                     return
                         error.Exception.Match(
-                            Some: ex => logger.LogError(ex, "{Message}", error.Message),
+                            Some: ex =>
+                            {
+                                if (ex is OperationCanceledException && logLevel < LogLevel.Error)
+                                {
+                                    logger.Log(logLevel, "{Message}", ex.Message);
+                                }
+                                else
+                                {
+                                    logger.LogError(ex, "{Message}", error.Message);
+                                }
+                            },
                             None: () =>
                             {
                                 if (string.IsNullOrWhiteSpace(error.Message))
