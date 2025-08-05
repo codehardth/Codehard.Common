@@ -72,8 +72,8 @@ public static class LoggerExtensions
     }
 
     /// <summary>
-    /// Log as error if an error contains exception, otherwise log information if there is a message within an error object.
-    /// Then returns the error back.
+    /// Log as an error if an error contains an exception, otherwise log information if there is a message within an error object.
+    /// Then returns the error.
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="error"></param>

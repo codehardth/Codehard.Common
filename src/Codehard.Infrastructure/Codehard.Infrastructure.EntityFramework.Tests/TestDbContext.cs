@@ -68,7 +68,7 @@ public class TestDbContext : DbContext, IDomainEventDbContext
 
     public Task PublishDomainEventAsync(IDomainEvent domainEvent)
     {
-        this.logger.LogInformation(domainEvent.ToString());
+        this.logger.LogInformation("{Message}", domainEvent.ToString());
 
         return Task.CompletedTask;
     }
