@@ -2,6 +2,12 @@ using LanguageExt.Common;
 
 namespace Codehard.Functional.Logger;
 
+/// <summary>
+/// Provides a default implementation for handling exceptions in a logging context.
+/// This class is intended to standardize how exceptions and errors are logged
+/// based on the provided parameters such as the error details, logger instance,
+/// and log level.
+/// </summary>
 public class DefaultExceptionHandler : IExceptionHandler
 {
     private static DefaultExceptionHandler instance = new DefaultExceptionHandler();
