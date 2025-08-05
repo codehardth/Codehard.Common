@@ -3,20 +3,17 @@ using LanguageExt.Common;
 namespace Codehard.Functional.Logger;
 
 /// <summary>
-/// Provides a default implementation for handling exceptions in a logging context.
-/// This class is intended to standardize how exceptions and errors are logged
-/// based on the provided parameters such as the error details, logger instance,
-/// and log level.
+/// Provides a default exception handling mechanism for logging errors using an <see cref="ILogger"/> instance.
 /// </summary>
-public class DefaultExceptionHandler : IExceptionHandler
+public static class DefaultExceptionHandler
 {
-    private static DefaultExceptionHandler instance = new DefaultExceptionHandler();
-    
-    public static DefaultExceptionHandler Instance => instance;
-    
-    private DefaultExceptionHandler() { }
-    
-    public Unit Handle(Error error, ILogger logger, LogLevel logLevel = LogLevel.Information)
+    /// <summary>
+    /// Handles logging of an error using the specified <see cref="ILogger"/> instance.
+    /// </summary>
+    /// <param name="logger">The logger used to log the error information.</param>
+    /// <param name="error">The error to be logged, containing an optional exception and message.</param>
+    /// <param name="logLevel">The logging level to use, defaults to <see cref="LogLevel.Information"/>.</param>
+    public static void Handle(ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
     {
         error.Exception.Match(
             Some: ex =>
@@ -35,7 +32,5 @@ public class DefaultExceptionHandler : IExceptionHandler
                     logger.Log(logLevel, "{Code} : {Message}", error.Code, error.Message);
                 }
             });
-
-        return unit;
     }
 }

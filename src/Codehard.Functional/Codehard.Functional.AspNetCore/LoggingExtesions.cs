@@ -46,18 +46,18 @@ public static class LoggingExtensions
 }
 
 /// <summary>
-/// Provides a centralized mechanism for handling exceptions and logging errors in a web API context.
-/// Implements the <see cref="IExceptionHandler"/> interface to process and log errors with optional context-specific behavior.
+/// Provides methods to handle and log exceptions in a structured format for web APIs.
 /// </summary>
-public class WebApiExceptionHandler : IExceptionHandler
+public static class WebApiExceptionHandler
 {
-    private static WebApiExceptionHandler instance = new();
-    
-    public static WebApiExceptionHandler Instance => instance;
-    
-    private WebApiExceptionHandler() { }
-    
-    public Unit Handle(Error error, ILogger logger, LogLevel logLevel = LogLevel.Information)
+    /// <summary>
+    /// Handles the specified error by logging it using the provided logger
+    /// and applying the given log level.
+    /// </summary>
+    /// <param name="logger">The logger used to record the error information.</param>
+    /// <param name="error">The error instance containing details to handle and log.</param>
+    /// <param name="logLevel">The severity level of the log entry. Defaults to Information.</param>
+    public static void Handle(ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
     {
         error.Exception.Match(
             Some: ex =>
@@ -83,7 +83,5 @@ public class WebApiExceptionHandler : IExceptionHandler
                     logger.Log(logLevel, "{Code} : {Message}", error.Code, error.Message);
                 }
             });
-
-        return unit;
     }
 }

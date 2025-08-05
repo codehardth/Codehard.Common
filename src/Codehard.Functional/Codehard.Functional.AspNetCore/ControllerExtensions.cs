@@ -48,7 +48,7 @@ public static class ControllerExtensions
     public static IActionResult MatchToResult<T>(
         this Fin<T> fin,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
+        ILogger? logger = null)
     {
         return fin
             .Match(
@@ -61,7 +61,7 @@ public static class ControllerExtensions
                             logger?.Log(hre);
                             return MapErrorToActionResult(hre);
                         default:
-                            logger?.Log(err, exceptionHandler: WebApiExceptionHandler.Instance);
+                            logger?.Log(err, exceptionHandler: WebApiExceptionHandler.Handle);
                             return MapErrorToActionResult(err);
                     }
                 });
@@ -74,7 +74,7 @@ public static class ControllerExtensions
     public static IActionResult MatchToResult<T>(
         this Fin<Option<T>> fin,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
+        ILogger? logger = null)
     {
         return fin
             .Match(
@@ -107,7 +107,7 @@ public static class ControllerExtensions
     public static ValueTask<IActionResult> RunToResultAsync<T>(
         this Aff<T> aff,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
+        ILogger? logger = null)
     {
         return aff
             .Run()
@@ -123,7 +123,7 @@ public static class ControllerExtensions
     public static IActionResult RunToResult<T>(
         this Eff<T> eff,
         HttpStatusCode successStatusCode = HttpStatusCode.OK,
-        ILogger? logger = default)
+        ILogger? logger = null)
     {
         return eff
             .Run()
