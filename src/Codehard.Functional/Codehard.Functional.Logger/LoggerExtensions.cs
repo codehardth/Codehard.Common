@@ -7,7 +7,11 @@ namespace Codehard.Functional.Logger;
 /// </summary>
 public static class LoggerExtensions
 {
-    private static Unit Log(this ILogger logger, Option<Error> errorOpt, LogLevel logLevel = LogLevel.Information)
+    private static Unit Log(
+        this ILogger logger,
+        Option<Error> errorOpt,
+        LogLevel logLevel = LogLevel.Information,
+        IExceptionHandler? exceptionHandler = null)
     {
         return
             errorOpt.Match(
@@ -15,30 +19,8 @@ public static class LoggerExtensions
                 {
                     Log(logger, error.Inner, logLevel);
 
-                    return
-                        error.Exception.Match(
-                            Some: ex =>
-                            {
-                                if (ex is OperationCanceledException && logLevel < LogLevel.Error)
-                                {
-                                    logger.Log(logLevel, "{Message}", ex.Message);
-                                }
-                                else
-                                {
-                                    logger.LogError(ex, "{Message}", error.Message);
-                                }
-                            },
-                            None: () =>
-                            {
-                                if (string.IsNullOrWhiteSpace(error.Message))
-                                {
-                                    logger.Log(logLevel, "{Code}", error.Code);
-                                }
-                                else
-                                {
-                                    logger.Log(logLevel, "{Code} : {Message}", error.Code, error.Message);
-                                }
-                            });
+                    return exceptionHandler?.Handle(error, logger, logLevel) ??
+                           DefaultExceptionHandler.Instance.Handle(error, logger, logLevel);
                 },
                 None: unit);
     }
@@ -68,10 +50,15 @@ public static class LoggerExtensions
     /// <param name="logger"></param>
     /// <param name="error"></param>
     /// <param name="logLevel"></param>
+    /// <param name="exceptionHandler"></param>
     /// <returns></returns>
-    public static Unit Log(this ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
+    public static Unit Log(
+        this ILogger logger,
+        Error error,
+        LogLevel logLevel = LogLevel.Information,
+        IExceptionHandler? exceptionHandler = null)
     {
-        Log(logger, Some(error), logLevel);
+        Log(logger, Some(error), logLevel, exceptionHandler);
 
         return unit;
     }
@@ -83,10 +70,15 @@ public static class LoggerExtensions
     /// <param name="logger"></param>
     /// <param name="error"></param>
     /// <param name="logLevel"></param>
+    /// <param name="exceptionHandler"></param>
     /// <returns></returns>
-    public static Error DoLog(this ILogger logger, Error error, LogLevel logLevel = LogLevel.Information)
+    public static Error DoLog(
+        this ILogger logger,
+        Error error,
+        LogLevel logLevel = LogLevel.Information,
+        IExceptionHandler? exceptionHandler = null)
     {
-        Log(logger, Some(error), logLevel);
+        Log(logger, Some(error), logLevel, exceptionHandler);
 
         return error;
     }
@@ -97,11 +89,16 @@ public static class LoggerExtensions
     /// <param name="logger"></param>
     /// <param name="fin"></param>
     /// <param name="logLevel"></param>
+    /// <param name="exceptionHandler"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static Fin<T> LogIfFail<T>(this ILogger logger, Fin<T> fin, LogLevel logLevel = LogLevel.Information)
+    public static Fin<T> LogIfFail<T>(
+        this ILogger logger,
+        Fin<T> fin,
+        LogLevel logLevel = LogLevel.Information,
+        IExceptionHandler? exceptionHandler = null)
     {
-        fin.IfFail(err => Log(logger, err, logLevel));
+        fin.IfFail(err => Log(logger, err, logLevel, exceptionHandler));
 
         return fin;
     }
