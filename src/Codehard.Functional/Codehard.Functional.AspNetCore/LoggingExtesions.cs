@@ -65,7 +65,7 @@ public static class WebApiExceptionHandler
                 if (ex is OperationCanceledException or TaskCanceledException &&
                     logLevel < LogLevel.Error)
                 {
-                    logger.Log(logLevel, "{Message}", ex.Message);
+                    logger.Log(logLevel, exception: ex, message: "{Message}", ex.Message);
                 }
                 else
                 {
