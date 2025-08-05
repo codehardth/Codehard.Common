@@ -61,7 +61,7 @@ public static class ControllerExtensions
                             logger?.Log(hre);
                             return MapErrorToActionResult(hre);
                         default:
-                            logger?.Log(err);
+                            logger?.Log(err, exceptionHandler: WebApiExceptionHandler.Instance);
                             return MapErrorToActionResult(err);
                     }
                 });
