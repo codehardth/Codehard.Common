@@ -69,7 +69,7 @@ public static class ControllerExtensions
 
     /// <summary>
     /// Match a Fin of Option <typeparamref name="T"/> into IActionResult.
-    /// When option is none the NotFound status is returned.
+    /// When the option is none, the NotFound status is returned.
     /// </summary>
     public static IActionResult MatchToResult<T>(
         this Fin<Option<T>> fin,
@@ -90,7 +90,7 @@ public static class ControllerExtensions
                             logger?.Log(hre);
                             return MapErrorToActionResult(hre);
                         default:
-                            logger?.Log(err);
+                            logger?.Log(err, exceptionHandler: WebApiExceptionHandler.Handle);
                             return MapErrorToActionResult(err);
                     }
                 });
@@ -118,7 +118,7 @@ public static class ControllerExtensions
     }
     
     /// <summary>
-    /// Run the effect into IActionResult in a synchronous manner.
+    /// Run the effect into IActionResult synchronously.
     /// </summary>
     public static IActionResult RunToResult<T>(
         this Eff<T> eff,
